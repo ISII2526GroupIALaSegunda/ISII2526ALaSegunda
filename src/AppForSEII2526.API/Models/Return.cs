@@ -2,7 +2,7 @@
 {        
     
     [Index(nameof(Name), IsUnique = true)]
-    public class Return
+    public class ReturnPurchaseOrder
     {
         public int Id { get; set; }
 
