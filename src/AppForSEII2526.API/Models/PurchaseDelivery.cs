@@ -5,5 +5,15 @@
         public DateTime Date { get; set; }
 
         public DeliveryAssignment DeliveryAssignment { get; set; }
+
+        public PriorityType Priority { get; set; }
+
+    }
+
+    public enum PriorityType
+    {
+        Low,
+        Medium,
+        High
     }
 }
