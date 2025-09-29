@@ -21,5 +21,11 @@
         public decimal TotalPrice { get; set; }
     }
 
+    public class PaymentMethod
+    {
+        string Paypal;
+        string CreditCard;
+    }
+
    
 }
