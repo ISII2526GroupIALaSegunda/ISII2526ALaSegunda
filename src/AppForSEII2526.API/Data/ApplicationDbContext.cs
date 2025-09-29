@@ -6,5 +6,5 @@ namespace AppForSEII2526.API.Data;
 
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options) {
 
-    public DbSet<BanReport>  banorders{ get; set; }
+    public DbSet<BanReport> BanReports{ get; set; }
 }
