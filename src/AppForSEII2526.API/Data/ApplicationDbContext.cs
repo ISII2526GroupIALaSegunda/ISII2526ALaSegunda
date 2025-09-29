@@ -11,4 +11,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<PurchaseProduct> PurchaseProducts { get; set; }
     public DbSet<ReturnProduct> ReturnProducts { get; set; }
 
+    public DbSet<DeliveryAssignment> DeliveryAssignments { get; set; }
+
 }
