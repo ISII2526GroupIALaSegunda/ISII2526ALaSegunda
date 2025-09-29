@@ -19,6 +19,8 @@
 
         [Precision(5, 2)]
         public decimal TotalPrice { get; set; }
+
+        public PaymentMethod PaymentMethod { get; set; }
     }
 
     public class PaymentMethod
