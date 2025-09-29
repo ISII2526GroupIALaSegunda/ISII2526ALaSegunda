@@ -18,5 +18,10 @@
         public int ProductId { get; set; }
 
         public int Stock { get; set; }
+
+        public Brand Brand { get; set; }
+
+        public IList<PurchaseProduct> PurchaseProducts { get; set; }
+
     }
 }
