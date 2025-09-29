@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="AppForSEII2526.API.Models.PurchaseDelivery">
+    <Position X="7.25" Y="2.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAgABAAAAAAAAAAA=</HashCode>
+      <FileName>Models\PurchaseDelivery.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="DeliveryAssignment" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="AppForSEII2526.API.Models.DeliveryAssignment">
+    <Position X="1.5" Y="2" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAICAAAAAAAAAAAAAAABAAAAAAAAAEAAABAAAAAAAAA=</HashCode>
+      <FileName>Models\DeliveryAssignment.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="PurchaseDeliveries" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
