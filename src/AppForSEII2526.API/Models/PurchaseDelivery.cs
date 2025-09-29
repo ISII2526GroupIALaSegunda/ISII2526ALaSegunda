@@ -2,6 +2,8 @@
 {
     public class PurchaseDelivery
     {
+        public int Id { get; set; }
+
         public DateTime Date { get; set; }
 
         public DeliveryAssignment DeliveryAssignment { get; set; }
