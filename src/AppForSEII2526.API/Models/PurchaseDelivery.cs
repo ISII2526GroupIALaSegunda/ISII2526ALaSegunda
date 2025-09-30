@@ -1,8 +1,9 @@
 ﻿namespace AppForSEII2526.API.Models
 {
+    [PrimaryKey(nameof(DeliveryAssignmentId))]
     public class PurchaseDelivery
     {
-        public int Id { get; set; }
+        public int DeliveryAssignmentId { get; set; }
 
         public DateTime Date { get; set; }
 
