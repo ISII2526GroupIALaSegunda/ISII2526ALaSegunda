@@ -32,5 +32,11 @@
         public int Rating { get; set; }
 
     }
+    public enum PaymentMethodTypes
+    {
+        CreditCard,
+        PayPal,
+        Cash
+    }
 
 }
