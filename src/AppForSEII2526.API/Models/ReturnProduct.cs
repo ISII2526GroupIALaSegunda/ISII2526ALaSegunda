@@ -7,5 +7,9 @@
         public int Quantity { get; set; }
 
         public string Reason { get; set; }
+
+        public ReturnPurchaseOrder ReturnPurchaseOrder { get; set; }
+
+        public PurchaseProduct PurchaseProduct { get; set; }
     }
 }

@@ -12,5 +12,7 @@
         public int Quantity { get; set; }
 
         public Product Product { get; set; }
+
+        public ReturnProduct ReturnProduct { get; set; }
     }
 }

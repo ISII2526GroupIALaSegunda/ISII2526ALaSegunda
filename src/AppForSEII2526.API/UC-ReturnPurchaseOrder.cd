@@ -12,6 +12,12 @@
   </Class>
   <Class Name="AppForSEII2526.API.Models.Product">
     <Position X="7.75" Y="3.5" Width="1.5" />
+    <AssociationLine Name="PurchaseProducts" Type="AppForSEII2526.API.Models.PurchaseProduct" FixedToPoint="true">
+      <Path>
+        <Point X="7.75" Y="4.25" />
+        <Point X="6.5" Y="4.25" />
+      </Path>
+    </AssociationLine>
     <TypeIdentifier>
       <HashCode>UAAAAAAAAQAgAAAAAAAAAAQAgAAAAAAAAAAAABABAAI=</HashCode>
       <FileName>Models\Product.cs</FileName>
@@ -25,25 +31,66 @@
   </Class>
   <Class Name="AppForSEII2526.API.Models.PurchaseProduct">
     <Position X="5" Y="3.75" Width="1.5" />
-    <AssociationLine Name="Product" Type="AppForSEII2526.API.Models.Product">
+    <AssociationLine Name="Product" Type="AppForSEII2526.API.Models.Product" FixedFromPoint="true">
+      <Path>
+        <Point X="6.5" Y="4.688" />
+        <Point X="7.75" Y="4.688" />
+      </Path>
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="0.16" Y="0.055" />
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>EAACAAAAAQAAAAAAAAAAAAAAAAAAACAAAAAAgAAAAAA=</HashCode>
+      <HashCode>EAACAAAAAQAAAAAAAAAAAAAAAAAAACAAAAgAgAAAAAA=</HashCode>
       <FileName>Models\PurchaseProduct.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="Product" />
+      <Property Name="ReturnProduct" />
     </ShowAsAssociation>
   </Class>
   <Class Name="AppForSEII2526.API.Models.ReturnProduct">
     <Position X="5" Y="1" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAACAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <HashCode>AAACAAACAAAAAAIAAAAAAAAAAAAAAQAAAAAAgAAAAAA=</HashCode>
       <FileName>Models\ReturnProduct.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ReturnPurchaseOrder" />
+      <Property Name="PurchaseProduct" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="AppForSEII2526.API.Models.ReturnPurchaseOrder">
+    <Position X="8.75" Y="0.5" Width="1.5" />
+    <AssociationLine Name="ReturnProducts" Type="AppForSEII2526.API.Models.ReturnProduct" FixedToPoint="true">
+      <Path>
+        <Point X="8.75" Y="2.063" />
+        <Point X="6.5" Y="2.063" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.043" Y="0.143" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAEDAAEAAAAAAAAAAAAAEAQAAAAgQAEBAAAAAAAAAAA=</HashCode>
+      <FileName>Models\ReturnPurchaseOrder.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Customer" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="ReturnProducts" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="AppForSEII2526.API.Models.ApplicationUser">
+    <Position X="11.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQgBAAAAAgCAAAAAAAAAAA=</HashCode>
+      <FileName>Models\ApplicationUser.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="ReturnPurchaseOrders" />
+    </ShowAsCollectionAssociation>
   </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>
