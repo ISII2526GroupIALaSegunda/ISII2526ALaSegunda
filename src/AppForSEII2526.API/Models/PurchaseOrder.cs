@@ -2,34 +2,32 @@
 {
     public class PurchaseOrder
     {
+        [Key]
         public int Id { get; set; }
-
-        public string? CustomerUserId { get; set; }
-
-        [Required, StringLength(120)]
-        public string NameSurname { get; set; } = default!;
 
         [Required, StringLength(60)]
         public string City { get; set; } = default!;
 
+        [Required, StringLength(120)]
         public string Street { get; set; } = default!;
 
-        public string PostCode { get; set; } = default!;
+        [Required, StringLength(20)]
+        public string PostalCode { get; set; } = default!;
+
+        [Required, StringLength(120)]
+        public string NameSurname { get; set; } = default!;
 
         [StringLength(500)]
         public string? Description { get; set; }
 
         public DateTime Date { get; set; }
 
-        [Range(0, 3)]
-        public int State { get; set; }
+        [Range(0, 5)]
+        public int? Rating { get; set; }
 
         [Precision(10, 2)]
-        
+        [Range(typeof(decimal), "0.00", "9999999999.99")]
         public decimal TotalPrice { get; set; }
-
-        [Range(0, 5)]
-        public int Rating { get; set; }
 
     }
     public enum PaymentMethodTypes
