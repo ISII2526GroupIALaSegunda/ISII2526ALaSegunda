@@ -33,4 +33,11 @@
 
     }
 
+
+    public enum PaymentMethodTypes
+    {
+        CreditCard,
+        PayPal,
+        Cash
+    }
 }
