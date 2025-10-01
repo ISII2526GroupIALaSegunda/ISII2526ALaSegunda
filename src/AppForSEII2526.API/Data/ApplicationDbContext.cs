@@ -9,5 +9,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
     public DbSet<PurchaseProduct> PurchaseProducts { get; set; }
     public DbSet<PurchaseDelivery> PurchaseDeliveries { get; set; }
+    public DbSet<BanReport> BanReports { get; set; }
 
 }
