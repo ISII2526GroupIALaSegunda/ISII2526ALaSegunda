@@ -2,7 +2,7 @@
 {
     public class CreditCard : PaymentMethod
     {
-        public string CreditCardNumber { get; set; } = "";
+        public string CreditCardNumber { get; set; }
         public DateTime ExpirationDate { get; set; }
     }
 }
