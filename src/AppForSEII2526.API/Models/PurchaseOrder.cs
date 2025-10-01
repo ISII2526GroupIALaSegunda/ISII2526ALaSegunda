@@ -31,6 +31,9 @@
         [Range(0, 5)]
         public int Rating { get; set; }
 
+        public PurchaseDelivery DriverAssigned { get; set; }
+        public List<PurchaseProduct> Products { get; set; }
+
     }
 
 }
