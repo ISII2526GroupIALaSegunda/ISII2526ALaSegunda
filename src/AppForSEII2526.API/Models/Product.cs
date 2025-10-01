@@ -22,6 +22,7 @@
         [Range(0, int.MaxValue)]
         public int Stock { get; set; }
 
-        public bool IsReturnable { get; set; }  
+        public bool IsReturnable { get; set; }
 
     }
+}

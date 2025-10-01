@@ -2,6 +2,6 @@
 {
     public class Bizum : PaymentMethod
     {
-        public string TelephoneNumber { get; set; } = "";
+        public string TelephoneNumber { get; set; }
     }
 }
