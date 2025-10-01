@@ -23,4 +23,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
     public DbSet<Brand> Brands { get; set; }
 
+    public DbSet<Product> Products { get; set; }
+
 }
