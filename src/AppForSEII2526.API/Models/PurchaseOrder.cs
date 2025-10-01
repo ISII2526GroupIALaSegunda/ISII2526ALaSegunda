@@ -29,6 +29,8 @@
         [Range(typeof(decimal), "0.00", "9999999999.99")]
         public decimal TotalPrice { get; set; }
 
+        public PurchaseState PurchaseState { get; set; }
+
     }
     public enum PurchaseState
     {
