@@ -30,11 +30,12 @@
         public decimal TotalPrice { get; set; }
 
     }
-    public enum PaymentMethodTypes
+    public enum PurchaseState
     {
-        CreditCard,
-        PayPal,
-        Cash
+        Request,
+        Processing,
+        Delivery,
+        Done
     }
 
 }
