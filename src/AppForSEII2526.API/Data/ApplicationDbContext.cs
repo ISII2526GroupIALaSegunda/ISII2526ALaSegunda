@@ -13,6 +13,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<CreditCard> CreditCards { get; set; }
     public DbSet<PayPal> PayPals { get; set; }
     public DbSet<Bizum> Bizums { get; set; }
+    public DbSet<DeliveryDriver> DeliveryDrivers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
