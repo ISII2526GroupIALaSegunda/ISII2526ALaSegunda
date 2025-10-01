@@ -21,8 +21,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
     }
 
-    
-    public DbSet<PurchaseProduct> PurchaseProducts { get; set; }
     public DbSet<Brand> Brands { get; set; }
 
 }
