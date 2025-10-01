@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="AppForSEII2526.API.Models.PurchaseDelivery">
+    <Position X="7.25" Y="4" Width="2.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAEBAAAAAAAAAAAAiABAAAAAAAAAAA=</HashCode>
+      <FileName>Models\PurchaseDelivery.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="DeliveryAssignment" />
+      <Property Name="Priority" />
+      <Property Name="PurchaseOrder" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="AppForSEII2526.API.Models.DeliveryAssignment">
+    <Position X="1.5" Y="3.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAICAAAAAAAAAAAAAAABAAAAAAAAAEAAABAAAAEAAAA=</HashCode>
+      <FileName>Models\DeliveryAssignment.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="DeliveryMan" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="PurchaseDeliveries" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="AppForSEII2526.API.Models.DeliveryDriver">
+    <Position X="1.75" Y="0.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAARAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>Models\DeliveryDriver.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AppForSEII2526.API.Models.PurchaseOrder">
+    <Position X="11.5" Y="4" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAACAgAAAIAAAAAAAAAAAAQAEBAAKAhAAAAAA=</HashCode>
+      <FileName>Models\PurchaseOrder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="AppForSEII2526.API.Models.PriorityType">
+    <Position X="7.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAgAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>Models\PurchaseDelivery.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
