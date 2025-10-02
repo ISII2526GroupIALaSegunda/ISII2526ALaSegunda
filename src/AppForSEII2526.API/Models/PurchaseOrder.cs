@@ -29,11 +29,13 @@
         public decimal TotalPrice { get; set; }
 
         public List<PurchaseProduct> PurchaseProducts { get; set; }
-        public PaymentMethod? PaymentMethod { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
         public PurchaseState State { get; set; }
         public ApplicationUser Customer { get; set; }
 
         public PurchaseDelivery DriverAssigned { get; set; }
+        public int PaymentMethodId { get; set; }
+
 
     }
     public enum PurchaseState

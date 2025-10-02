@@ -4,5 +4,6 @@
     {
         public int Id { get; set; }
         public ApplicationUser User { get; set; }
+        public ICollection<PurchaseOrder> PurchaseOrders { get; set; } 
     }
 }

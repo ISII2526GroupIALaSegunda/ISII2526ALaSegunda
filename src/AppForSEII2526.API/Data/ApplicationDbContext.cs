@@ -29,12 +29,23 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        
-    builder.Entity<ReturnProduct>()
-        .HasOne(rp => rp.PurchaseProduct)
-        .WithOne(pp => pp.ReturnProduct)
-        .HasForeignKey<ReturnProduct>(rp => new { rp.ProductId, rp.PurchaseOrderId })
-        .OnDelete(DeleteBehavior.NoAction);
+
+
+        builder.Entity<ReturnProduct>()
+            .HasOne(rp => rp.PurchaseProduct)
+            .WithOne(pp => pp.ReturnProduct)
+            .HasForeignKey<ReturnProduct>(rp => new { rp.ProductId, rp.PurchaseOrderId })
+            .OnDelete(DeleteBehavior.NoAction);
+
+
+        builder.Entity<PurchaseOrder>()
+            .HasOne(po => po.PaymentMethod)
+            .WithMany(pm => pm.PurchaseOrders)       
+            .HasForeignKey(po => po.PaymentMethodId)
+            .OnDelete(DeleteBehavior.NoAction);      
     }
+
+
+
     public DbSet<ReportCustomer> ReportCustomers { get; set; }
 }
