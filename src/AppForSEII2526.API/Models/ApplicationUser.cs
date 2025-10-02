@@ -23,9 +23,9 @@ public class ApplicationUser : IdentityUser {
     public DateTime AccountCreationDate { get; set; }
     public IList<PurchaseOrder>? PurchaseOrders { get; set; }
     
+    public List<Complaint> Complaints { get; set; }
 
-
-
+    public List<ReportCustomer> ReportCustomer { get; set; }
 
 
 }

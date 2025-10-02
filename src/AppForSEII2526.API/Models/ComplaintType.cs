@@ -6,6 +6,7 @@
 
         [StringLength(20, ErrorMessage = "Name should not be longer than 20 characters")]
         public string Name { get; set; }
+        
 
     }
 }

@@ -11,5 +11,7 @@
         public int ID { get; set; }
 
         public bool Processed { get; set; }
+        public ApplicationUser User { get; set; }
+        public ComplaintType Type { get; set; }
     }
 }
