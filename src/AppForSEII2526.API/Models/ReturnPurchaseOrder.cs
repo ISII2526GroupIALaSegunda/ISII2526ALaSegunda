@@ -6,6 +6,8 @@
     {
         public int Id { get; set; }
 
+        [StringLength(20, ErrorMessage = "Name can be neither longer than 20 characters nor shorter than 1", 
+        MinimumLength =1)]
         public string Name { get; set; }
 
         public DateTime Date { get; set; }
