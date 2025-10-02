@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace AppForSEII2526.API.Models;
 
+// Add profile data for application users by adding properties to the ApplicationUser class
+
+[Index(nameof(Name), IsUnique = true)]
 
 public class ApplicationUser : IdentityUser {
     [PersonalData]

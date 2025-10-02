@@ -5,9 +5,9 @@
     {
        
         public int PurchaseOrderId { get; set; }
-   
-        public int ProductId { get; set; }
 
+        public int ProductId { get; set; }
+   
         [Precision(10, 2)]
         public decimal Price { get; set; }
         [Range(1, int.MaxValue, ErrorMessage = "You must provide a quantity higher than 1")]
@@ -16,5 +16,7 @@
         public PurchaseOrder PurchaseOrder { get; set; }
 
 
+
+        public ReturnProduct ReturnProduct { get; set; }
     }
 }

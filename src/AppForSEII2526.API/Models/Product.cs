@@ -1,5 +1,7 @@
 ﻿namespace AppForSEII2526.API.Models
 {
+
+    [Index(nameof(Name), IsUnique = true)]
     public class Product
     {
         [Key]
@@ -24,6 +26,7 @@
 
         public bool IsReturnable { get; set; }
         public Brand Brand { get; set; }
+
         public IList<PurchaseProduct> PurchaseProducts { get; set; }
 
 
