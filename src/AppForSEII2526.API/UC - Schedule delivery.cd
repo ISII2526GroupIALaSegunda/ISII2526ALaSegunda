@@ -36,17 +36,27 @@
     </TypeIdentifier>
   </Class>
   <Class Name="AppForSEII2526.API.Models.PurchaseOrder">
-    <Position X="11.5" Y="4" Width="2" />
+    <Position X="11.5" Y="4" Width="3" />
     <TypeIdentifier>
-      <HashCode>AAACAAAAACAgAAAIAAAAAAAAAAAAQAEBAAKAhAAAAAA=</HashCode>
+      <HashCode>QAEDAAAAACAgAAAIIAAAEAAAAAAAQAEBAAIABAAAAAA=</HashCode>
       <FileName>Models\PurchaseOrder.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="State" />
+    </ShowAsAssociation>
   </Class>
   <Enum Name="AppForSEII2526.API.Models.PriorityType">
     <Position X="7.75" Y="6" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAgAAAAAAAAAAAAEAAA=</HashCode>
       <FileName>Models\PurchaseDelivery.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="AppForSEII2526.API.Models.PurchaseState">
+    <Position X="12.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAAAAAAACAAAAgAAAAAAAAAAAAAg=</HashCode>
+      <FileName>Models\PurchaseOrder.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Font Name="Segoe UI" Size="9" />
