@@ -30,6 +30,10 @@
         public decimal TotalPrice { get; set; }
 
         public PurchaseState PurchaseState { get; set; }
+        public IList<PurchaseProduct> PurchaseProducts { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
+        public PurchaseState State { get; set; }
+        public ApplicationUser Customer { get; set; }
 
     }
     public enum PurchaseState

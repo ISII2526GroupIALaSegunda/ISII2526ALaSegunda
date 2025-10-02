@@ -23,6 +23,9 @@
         public int Stock { get; set; }
 
         public bool IsReturnable { get; set; }
+        public Brand Branch { get; set; }
+        public IList<PurchaseProduct> PurchaseProducts { get; set; }
+
 
     }
 }

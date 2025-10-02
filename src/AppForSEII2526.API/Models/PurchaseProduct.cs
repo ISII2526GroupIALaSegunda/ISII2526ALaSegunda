@@ -2,9 +2,7 @@
 {
     public class PurchaseProduct
     {
-        [Key]
-        public int Id { get; set; }  
-
+       
         public int PurchaseOrderId { get; set; }
    
         public int ProductId { get; set; }
@@ -13,8 +11,9 @@
         public decimal Price { get; set; }
         [Range(1, int.MaxValue, ErrorMessage = "You must provide a quantity higher than 1")]
         public int Quantity { get; set; }
+        public Product Product { get; set; }
+        public PurchaseOrder PurchaseOrder { get; set; }
 
-    
 
     }
 }
