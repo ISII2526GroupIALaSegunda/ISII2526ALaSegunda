@@ -1,6 +1,6 @@
 ﻿namespace AppForSEII2526.API.Models
-{        
-    
+{
+
     [Index(nameof(Name), IsUnique = true)]
     public class ReturnPurchaseOrder
     {
@@ -12,7 +12,7 @@
 
         public double MoneyToReturn { get; set; }
 
-       [Precision(5,2)]
+        [Precision(5, 2)]
         public decimal NewTotalPrice { get; set; }
 
         public int? Rating { get; set; }
@@ -21,5 +21,5 @@
         public decimal TotalPrice { get; set; }
     }
 
-   
+
 }
