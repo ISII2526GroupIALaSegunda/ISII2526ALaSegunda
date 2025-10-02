@@ -1,5 +1,6 @@
 ﻿namespace AppForSEII2526.API.Models
 {
+    [PrimaryKey(nameof(PurchaseOrderId),nameof(ProductId))]
     public class PurchaseProduct
     {
        
