@@ -11,5 +11,7 @@
         public string PersonalMessage { get; set; }
 
         public IList<PurchaseDelivery> PurchaseDeliveries { get; set; }
+
+        public DeliveryDriver DeliveryMan { get; set; }
     }
 }
