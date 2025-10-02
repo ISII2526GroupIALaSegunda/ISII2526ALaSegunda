@@ -2,7 +2,6 @@
 {
     public class PurchaseOrder
     {
-        [Key]
         public int Id { get; set; }
 
         [Required, StringLength(60)]
@@ -29,7 +28,12 @@
         [Range(typeof(decimal), "0.00", "9999999999.99")]
         public decimal TotalPrice { get; set; }
 
-        public PurchaseState PurchaseState { get; set; }
+        public List<PurchaseProduct> PurchaseProducts { get; set; }
+        public PaymentMethod? PaymentMethod { get; set; }
+        public PurchaseState State { get; set; }
+        public ApplicationUser Customer { get; set; }
+
+        public PurchaseDelivery DriverAssigned { get; set; }
 
     }
     public enum PurchaseState
