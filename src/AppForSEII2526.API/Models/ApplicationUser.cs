@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 
 namespace AppForSEII2526.API.Models;
 
@@ -21,6 +22,9 @@ public class ApplicationUser : IdentityUser {
 
     public DateTime AccountCreationDate { get; set; }
     public IList<PurchaseOrder>? PurchaseOrders { get; set; }
+    
+
+
 
 
 

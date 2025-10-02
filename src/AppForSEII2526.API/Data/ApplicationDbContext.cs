@@ -36,4 +36,5 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         .HasForeignKey<ReturnProduct>(rp => new { rp.ProductId, rp.PurchaseOrderId })
         .OnDelete(DeleteBehavior.NoAction);
     }
+    public DbSet<ReportCustomer> ReportCustomers { get; set; }
 }
