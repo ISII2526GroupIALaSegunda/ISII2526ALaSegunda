@@ -25,4 +25,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
     public DbSet<Product> Products { get; set; }
 
+    public DbSet<Complaint> Complaints { get; set; }
+
 }
