@@ -22,6 +22,5 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Complaint> Complaints { get; set; }
 
     public DbSet<ApplicationUser> ApplicationUsers{ get; set;}
-
-    public DbSet<ReportCustomer> ReportCustomer { get; set; }
+    public DbSet<ComplaintType> ComplaintTypes { get; set; }
 }
