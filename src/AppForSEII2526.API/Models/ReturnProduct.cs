@@ -11,7 +11,7 @@
         public ReturnPurchaseOrder ReturnPurchaseOrder { get; set; }
 
         public PurchaseProduct PurchaseProduct { get; set; }
-        public object ProductId { get; internal set; }
-        public object PurchaseOrderId { get; internal set; }
+        public int ProductId { get; set; }
+        public int PurchaseOrderId { get; set; }
     }
 }

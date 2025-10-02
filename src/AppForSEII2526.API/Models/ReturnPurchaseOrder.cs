@@ -20,18 +20,13 @@
         [Precision(5, 2)]
         public decimal TotalPrice { get; set; }
 
-        public PaymentMethod PaymentMethod { get; set; }
+        public PaymentMethod? PaymentMethod { get; set; }
 
         public IList<ReturnProduct> ReturnProducts { get; set; }
 
         public ApplicationUser Customer { get; set; }
     }
 
-    public class PaymentMethod
-    {
-        string Paypal;
-        string CreditCard;
-    }
 
    
 }
