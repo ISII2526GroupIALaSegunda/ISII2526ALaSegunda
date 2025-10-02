@@ -5,6 +5,8 @@
     {
        
         public int PurchaseOrderId { get; set; }
+
+        public int ProductId { get; set; }
    
         [Precision(10, 2)]
         public decimal Price { get; set; }
