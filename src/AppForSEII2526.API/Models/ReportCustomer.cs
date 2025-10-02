@@ -4,7 +4,7 @@
     public class ReportCustomer
     {
         public int BanReportId { get; set; }
-
+        public ReportState State { get; set; }
 
         public int CustomerId { get; set; }
 
