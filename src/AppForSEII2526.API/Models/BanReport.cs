@@ -17,5 +17,8 @@
 
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime StartDate { get; set; }
+
+
+        public List<ReportCustomer> Customer { get; set; }
     }
 }
