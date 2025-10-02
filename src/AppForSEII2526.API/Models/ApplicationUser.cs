@@ -7,14 +7,21 @@ namespace AppForSEII2526.API.Models;
 [Index(nameof(Name), IsUnique = true)]
 
 public class ApplicationUser : IdentityUser {
+    [PersonalData]
+    [StringLength(50)]
+    public string? Name { get; set; }
+
+    [PersonalData]
+    [StringLength(50)]
+    public string? Surname { get; set; }
+
+    [PersonalData]
+    [StringLength(200)]
+    public string? Address { get; set; }
 
     public DateTime AccountCreationDate { get; set; }
+    public IList<PurchaseOrder>? PurchaseOrders { get; set; }
 
-    public string Address { get; set; }
 
-    public string Name { get; set; }
 
-    public string Surname { get; set; }
-
-    public IList<ReturnPurchaseOrder> ReturnPurchaseOrders { get; set; }
 }

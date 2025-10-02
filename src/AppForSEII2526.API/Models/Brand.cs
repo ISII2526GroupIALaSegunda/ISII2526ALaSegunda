@@ -6,10 +6,10 @@
         public int Id { get; set; }
 
         public string Location { get; set; }
-
+        [Required, StringLength(80)]
         public string Name { get; set; }
-        
 
-        public IList<Product> Products { get; set; }
+        public string? Location { get; set; }
+        public List<Product> Products { get; set; } = new();
     }
 }
