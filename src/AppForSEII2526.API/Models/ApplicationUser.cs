@@ -17,7 +17,7 @@ public class ApplicationUser : IdentityUser {
     public string? Address { get; set; }
 
     public DateTime? AccountCreationDate { get; set; }
-    public IList <PurchaseOrder> PurchaseOrders { get; set; }
+    public IList<PurchaseOrder>? PurchaseOrders { get; set; }
 
 
 

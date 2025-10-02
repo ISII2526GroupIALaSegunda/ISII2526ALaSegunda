@@ -3,13 +3,13 @@
   <Class Name="AppForSEII2526.API.Models.PurchaseOrder">
     <Position X="10" Y="4.75" Width="3" />
     <TypeIdentifier>
-      <HashCode>QAEDAAAAACAgAAAIIQAAAAAAAAAAQAEBAAIABAAAAAA=</HashCode>
+      <HashCode>QAEDAAAAACAgAAAIIAAAAAAAAAAAQAEBAAIABAAAAAA=</HashCode>
       <FileName>Models\PurchaseOrder.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="PaymentMethod" />
       <Property Name="State" />
       <Property Name="Customer" />
+      <Property Name="PaymentMethod" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Property Name="PurchaseProducts" />
@@ -78,11 +78,11 @@
   <Class Name="AppForSEII2526.API.Models.Product">
     <Position X="1" Y="4.75" Width="3" />
     <TypeIdentifier>
-      <HashCode>UAAAAAAAAQAgAAAAAAAAAAQAgAAAAAgAAAAAABAAAAI=</HashCode>
+      <HashCode>UAAAAAAAAQAgAAAAAAAAAAQAgAAAAAAAAAAAABABAAI=</HashCode>
       <FileName>Models\Product.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="Branch" />
+      <Property Name="Brand" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Property Name="PurchaseProducts" />
