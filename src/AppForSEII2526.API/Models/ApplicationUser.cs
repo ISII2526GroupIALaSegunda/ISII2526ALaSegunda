@@ -16,7 +16,7 @@ public class ApplicationUser : IdentityUser {
     [StringLength(200)]
     public string? Address { get; set; }
 
-    public DateTime? AccountCreationDate { get; set; }
+    public DateTime AccountCreationDate { get; set; }
     public IList<PurchaseOrder>? PurchaseOrders { get; set; }
 
 
