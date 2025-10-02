@@ -20,6 +20,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         base.OnModelCreating(modelBuilder);
 
     }
+    public DbSet<BanReport> BanReports { get; set; }
+
 
     public DbSet<Brand> Brands { get; set; }
 
