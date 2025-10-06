@@ -34,11 +34,14 @@
       <HashCode>AAIAAAAAAAAAAAAAAAAAAARAAAAAAAAAAAAAAAAAAgA=</HashCode>
       <FileName>Models\DeliveryDriver.cs</FileName>
     </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Assignments" />
+    </ShowAsCollectionAssociation>
   </Class>
   <Class Name="AppForSEII2526.API.Models.PurchaseOrder">
     <Position X="11.5" Y="4" Width="3" />
     <TypeIdentifier>
-      <HashCode>QAEDAAAAACAgAAAIIAAAEAAAAAAAQAEBAAIABAAAAAA=</HashCode>
+      <HashCode>QAEDAAAAACAgAAAIIAAAEAAAAAAAQAEBAAIAJAAAAAA=</HashCode>
       <FileName>Models\PurchaseOrder.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
