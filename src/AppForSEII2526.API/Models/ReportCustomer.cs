@@ -9,7 +9,7 @@
         public int CustomerId { get; set; }
 
         [StringLength(100, ErrorMessage = "Message should not be longer than 100 characters")]
-        public string Message { get; set; }
+        public string? Message { get; set; }
 
         public BanReport BanReport { get; set; }
         public ApplicationUser User { get; set; }

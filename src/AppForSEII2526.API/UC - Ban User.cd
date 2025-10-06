@@ -17,19 +17,25 @@
       <FileName>Models\ReportCustomer.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="BanReport" />
       <Property Name="State" />
+      <Property Name="BanReport" />
       <Property Name="User" />
     </ShowAsAssociation>
   </Class>
   <Class Name="AppForSEII2526.API.Models.ApplicationUser">
     <Position X="4.25" Y="4" Width="3.25" />
+    <AssociationLine Name="ReportCustomer" Type="AppForSEII2526.API.Models.ReportCustomer">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.307" Y="0.66" />
+      </MemberNameLabel>
+    </AssociationLine>
     <TypeIdentifier>
       <HashCode>AAAQAAAAAAAAAAAAAAAAAAQQBAAAAIgCAAAAAAAAAAA=</HashCode>
       <FileName>Models\ApplicationUser.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
       <Property Name="Complaints" />
+      <Property Name="ReportCustomer" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="AppForSEII2526.API.Models.Complaint">
