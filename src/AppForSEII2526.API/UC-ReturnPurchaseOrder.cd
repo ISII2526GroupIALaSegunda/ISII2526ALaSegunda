@@ -41,7 +41,7 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>EAACAAAAAQAAAAAAAAAAAAAAAAAAACAAAAgAgAAAAAA=</HashCode>
+      <HashCode>EAACAAAAAQAAAAAABAAAAAAAAAAAACAAAAgAgAAAAAA=</HashCode>
       <FileName>Models\PurchaseProduct.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -52,7 +52,7 @@
   <Class Name="AppForSEII2526.API.Models.ReturnProduct">
     <Position X="5" Y="1" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAACAAACAAAAAAIAAAAAAAAAAAAAAQAAAAAAgAAAAAA=</HashCode>
+      <HashCode>EAACAAACAAAAAAIAAAAAAAAAAAAAASAAAAAAgAAAAAA=</HashCode>
       <FileName>Models\ReturnProduct.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -85,11 +85,11 @@
   <Class Name="AppForSEII2526.API.Models.ApplicationUser">
     <Position X="11.75" Y="1" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQgBAAAAAgCAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAQAAAAAAAAAABAAAAAAAQQBAAAAIgCAAAAAAAAAAA=</HashCode>
       <FileName>Models\ApplicationUser.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
-      <Property Name="ReturnPurchaseOrders" />
+      <Property Name="ReturnOrders" />
     </ShowAsCollectionAssociation>
   </Class>
   <Font Name="Segoe UI" Size="9" />
