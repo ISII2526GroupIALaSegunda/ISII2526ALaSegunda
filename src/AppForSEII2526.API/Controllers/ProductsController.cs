@@ -12,6 +12,7 @@ namespace AppForSEII2526.API.Controllers
 
         public ProductsController(ApplicationDbContext context, ILogger<ProductsController> logger)
         {
+            //Context for accesing to the database
             _context = context;
             _logger = logger;
         }
@@ -29,5 +30,21 @@ namespace AppForSEII2526.API.Controllers
         //    decimal result = op1 / op2;
         //    return Ok(result);
         //}
+
+
+        //GET method
+        [HttpGet]
+        [Route("[action]")]
+        //What I'm going to return
+        [ProducesResponseType(typeof(IList<Product>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult> GetProductsForPurchasing()
+        {
+            IList<Product> products = await _context.Products
+                .ToListAsync();
+            return Ok(products);
+        }
     }
+
+   
+
 }
