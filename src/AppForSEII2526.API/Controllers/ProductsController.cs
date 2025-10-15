@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AppForSEII2526.API.DTOs.ProductDTOs;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AppForSEII2526.API.Controllers
@@ -36,13 +37,29 @@ namespace AppForSEII2526.API.Controllers
         [HttpGet]
         [Route("[action]")]
         //What I'm going to return
-        [ProducesResponseType(typeof(IList<Product>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult> GetProductsForPurchasing()
+        [ProducesResponseType(typeof(IList<ProductForPurchaseDTO>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult> GetProductsForPurchasing(string? colour)
         {
-            IList<Product> products = await _context.Products
+            IList<ProductForPurchaseDTO> productsDTOS = await _context.Products
+                .Where(product => product.Name.Contains(colour)
+                    || (colour == null))
+                .OrderBy(m => m.Colour)
+                .Select(m => new ProductForPurchaseDTO(m.ProductId, m.Name, m.Colour, m.Brand.Name))
                 .ToListAsync();
-            return Ok(products);
+            return Ok(productsDTOS);
         }
+
+        ////GET method
+        //[HttpGet]
+        //[Route("[action]")]
+        ////What I'm going to return
+        //[ProducesResponseType(typeof(IList<Product>), (int)HttpStatusCode.OK)]
+        //public async Task<ActionResult> GetProductsForPurchasingAll()
+        //{
+        //    IList<Product> products = await _context.Products
+        //        .ToListAsync();
+        //    return Ok(products);
+        //}
     }
 
    
