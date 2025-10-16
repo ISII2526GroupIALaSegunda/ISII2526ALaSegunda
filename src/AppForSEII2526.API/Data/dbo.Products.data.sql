@@ -5,6 +5,6 @@ SET IDENTITY_INSERT [dbo].[Brands] OFF
 
 
 SET IDENTITY_INSERT [dbo].[Products] ON
-INSERT INTO [dbo].[Products] ([ProductId], [Name], [Description], [Colour], [Price], [Stock], [IsReturnable], [BrandId]) VALUES (1, N'Jacket', NULL, NULL, CAST(20.00 AS Decimal(10, 2)), 4, 1, 1)
-INSERT INTO [dbo].[Products] ([ProductId], [Name], [Description], [Colour], [Price], [Stock], [IsReturnable], [BrandId]) VALUES (2, N'Shirt', NULL, NULL, CAST(10.00 AS Decimal(10, 2)), 2, 0, 2)
+INSERT INTO [dbo].[Products] ([ProductId], [Name], [Description], [Colour], [Price], [Stock], [IsReturnable], [BrandId]) VALUES (1, N'Jacket', NULL, N'Red', CAST(20.00 AS Decimal(10, 2)), 4, 1, 1)
+INSERT INTO [dbo].[Products] ([ProductId], [Name], [Description], [Colour], [Price], [Stock], [IsReturnable], [BrandId]) VALUES (2, N'Shirt', NULL, N'Blue', CAST(10.00 AS Decimal(10, 2)), 2, 0, 2)
 SET IDENTITY_INSERT [dbo].[Products] OFF
