@@ -43,7 +43,7 @@ namespace AppForSEII2526.API.Controllers
             IList<ProductForPurchaseDTO> productsDTOS = await _context.Products
                 .Where(product =>
                     ((colour == null) || (product.Colour != null && product.Colour.Contains(colour))) &&
-                    ((name == null) || (product.Name != null && product.Name.Contains(name)))
+                    ((name == null) || ( product.Name.Contains(name)))
                 )
                 .OrderBy(m => m.Colour)
                 .Select(m => new ProductForPurchaseDTO(m.ProductId, m.Name, m.Colour, m.Brand.Name))
