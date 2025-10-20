@@ -36,11 +36,11 @@ namespace AppForSEII2526.API.Controllers
         [HttpGet]
         [Route("[action]")]
         [ProducesResponseType(typeof(IList<PurchaseOrderForDeliveryDTO>), (int)System.Net.HttpStatusCode.OK)]
-        public async Task<ActionResult> GetAll(decimal? totalprice)
+        public async Task<ActionResult> GetAll(string? city)
         {
             IList<PurchaseOrderForDeliveryDTO> purchaseOrdersDTOS = await _context.PurchaseOrders
-                .Where(po=>(po.TotalPrice.Equals(totalprice)) || totalprice==null)
-                .Select(po=> new PurchaseOrderForDeliveryDTO(po.Id,po.Date,po.TotalPrice))
+                .Where(po=>(po.City.Equals(city)) || city==null)
+                .Select(po=> new PurchaseOrderForDeliveryDTO(po.Id,po.Date,po.TotalPrice,po.City,po.Street,po.PostalCode))
                 .ToListAsync();
             return Ok(purchaseOrdersDTOS);
         }
