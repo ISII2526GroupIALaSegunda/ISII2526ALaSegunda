@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AppForSEII2526.API.DTOs.PurchaseOrderDTOs;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AppForSEII2526.API.Controllers
@@ -31,5 +32,17 @@ namespace AppForSEII2526.API.Controllers
         //    decimal result = op1 / op2;
         //    return Ok(result);
         //}
+
+        [HttpGet]
+        [Route("[action]")]
+        [ProducesResponseType(typeof(IList<PurchaseOrderForDeliveryDTO>), (int)System.Net.HttpStatusCode.OK)]
+        public async Task<ActionResult> GetAll(decimal? totalprice)
+        {
+            IList<PurchaseOrderForDeliveryDTO> purchaseOrdersDTOS = await _context.PurchaseOrders
+                .Where(po=>(po.TotalPrice.Equals(totalprice)) || totalprice==null)
+                .Select(po=> new PurchaseOrderForDeliveryDTO(po.Id,po.Date,po.TotalPrice))
+                .ToListAsync();
+            return Ok(purchaseOrdersDTOS);
+        }
     }
 }
