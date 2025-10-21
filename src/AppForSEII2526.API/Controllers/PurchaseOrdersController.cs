@@ -36,12 +36,23 @@ namespace AppForSEII2526.API.Controllers
         [HttpGet]
         [Route("[action]")]
         [ProducesResponseType(typeof(IList<PurchaseOrderForDeliveryDTO>), (int)System.Net.HttpStatusCode.OK)]
-        public async Task<ActionResult> GetAll(string? city)
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult> GetPurchaseOrdersToDelivery(string? postalcode, decimal? totalprice)
         {
+
             IList<PurchaseOrderForDeliveryDTO> purchaseOrdersDTOS = await _context.PurchaseOrders
-                .Where(po=>(po.City.Equals(city)) || city==null)
-                .Select(po=> new PurchaseOrderForDeliveryDTO(po.Id,po.Date,po.TotalPrice,po.City,po.Street,po.PostalCode))
+                .Where(po => (po.State == PurchaseState.Request) &&
+                             (po.TotalPrice >= totalprice || totalprice == null) &&
+                             (po.PostalCode.Equals(postalcode) || postalcode == null))
+                .Select(po => new PurchaseOrderForDeliveryDTO(po.Id, po.Date, po.TotalPrice, po.City, po.Street, po.PostalCode))
                 .ToListAsync();
+            if (purchaseOrdersDTOS.Count == 0)
+            {
+                string error = "No purchase orders in state 'Request' found with requested data";
+                _logger.LogError(DateTime.Now + " Error: " + error);
+                return BadRequest(error);
+            }
+
             return Ok(purchaseOrdersDTOS);
         }
     }
