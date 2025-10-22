@@ -42,6 +42,8 @@ namespace AppForSEII2526.API.Controllers
         {
             IList<ProductForPurchaseDTO> productsDTOS = await _context.Products
                 .Where(product =>
+                //Alternative flow 0 step 1
+                    product.Stock > 0 &&
                     ((colour == null) || (product.Colour != null && product.Colour.Contains(colour))) &&
                     (product.Name.Contains(name))
                 )
