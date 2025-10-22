@@ -45,8 +45,7 @@ namespace AppForSEII2526.API.Controllers
                 .Where(product =>
                 //Alternative flow 0 step 1
                     ((colour == null) || (product.Colour != null && product.Colour.Contains(colour))) &&
-                    ((name == null) || (product.Name != null && product.Name.Contains(name))) &&
-                    product.Stock > 0
+                    ((product.Name != null && product.Name.Contains(name)))
                 )
                
                 .OrderBy(m => m.Colour)
@@ -62,12 +61,6 @@ namespace AppForSEII2526.API.Controllers
 
                 ))
                 .ToListAsync();
-
-            if (productsDTOS.Count == 0)
-            {
-                _logger.LogInformation("No products left to purchase for the given filters.");
-                return NotFound("There are no products left to purchase.");
-            }
 
             return Ok(productsDTOS);
         }
