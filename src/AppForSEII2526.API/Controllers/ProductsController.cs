@@ -47,7 +47,6 @@ namespace AppForSEII2526.API.Controllers
                     ((colour == null) || (product.Colour != null && product.Colour.Contains(colour))) &&
                     ((name == null) || (product.Name != null && product.Name.Contains(name))) &&
                     product.Stock > 0
-
                 )
 
                 .OrderBy(m => m.Colour)
