@@ -40,14 +40,35 @@ namespace AppForSEII2526.API.Controllers
         [ProducesResponseType(typeof(IList<ProductForPurchaseDTO>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult> GetProductsForPurchasing(string? colour, string? name)
         {
+    
             IList<ProductForPurchaseDTO> productsDTOS = await _context.Products
                 .Where(product =>
+                //Alternative flow 0 step 1
                     ((colour == null) || (product.Colour != null && product.Colour.Contains(colour))) &&
-                    ((name == null) || ( product.Name.Contains(name)))
+                    ((name == null) || (product.Name != null && product.Name.Contains(name))) &&
+                    product.Stock > 0
                 )
+               
                 .OrderBy(m => m.Colour)
-                .Select(m => new ProductForPurchaseDTO(m.ProductId, m.Name, m.Colour, m.Brand.Name))
+                .Select(m => new ProductForPurchaseDTO(
+                    m.ProductId,
+                    m.Name,
+                    m.Colour,
+                    m.Brand.Name,
+                    m.Stock,
+                    m.PurchaseProducts
+                        .Select(pp => pp.PurchaseOrder.City)
+                        .FirstOrDefault()
+
+                ))
                 .ToListAsync();
+
+            if (productsDTOS.Count == 0)
+            {
+                _logger.LogInformation("No products left to purchase for the given filters.");
+                return NotFound("There are no products left to purchase.");
+            }
+
             return Ok(productsDTOS);
         }
 
