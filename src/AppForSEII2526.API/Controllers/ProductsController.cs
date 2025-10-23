@@ -40,15 +40,16 @@ namespace AppForSEII2526.API.Controllers
         [ProducesResponseType(typeof(IList<ProductForPurchaseDTO>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult> GetProductsForPurchasing(string? colour, string? name)
         {
-    
+
             IList<ProductForPurchaseDTO> productsDTOS = await _context.Products
                 .Where(product =>
                 //Alternative flow 0 step 1
                     ((colour == null) || (product.Colour != null && product.Colour.Contains(colour))) &&
                     ((name == null) || (product.Name != null && product.Name.Contains(name))) &&
                     product.Stock > 0
+                    product.Stock > 0
                 )
-               
+
                 .OrderBy(m => m.Colour)
                 .Select(m => new ProductForPurchaseDTO(
                     m.ProductId,
