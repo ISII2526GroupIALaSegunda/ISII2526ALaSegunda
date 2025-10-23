@@ -34,7 +34,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         builder.Entity<ReturnProduct>()
             .HasOne(rp => rp.PurchaseProduct)
             .WithOne(pp => pp.ReturnProduct)
-            .HasForeignKey<ReturnProduct>(rp => new { rp.ProductId, rp.PurchaseOrderId })
+            .HasForeignKey<ReturnProduct>(rp => new { rp.PurchaseOrderId, rp.ProductId })
             .OnDelete(DeleteBehavior.NoAction);
 
 

@@ -53,15 +53,16 @@ namespace AppForSEII2526.API.Controllers
                 .Include(purchaseProduct => purchaseProduct.Product)
                 .Include(purchaseProduct => purchaseProduct.ReturnProduct)
                 .Include(purchaseProduct => purchaseProduct.Product.Brand)
+                .Include(p => p.PurchaseOrder).ThenInclude(po => po.Customer)
 
                 .Where(purchaseProduct=>(purchaseProduct.Product.IsReturnable)
                 
                 &&(purchaseProduct.PurchaseOrder.Customer.UserName == userName)
 
-                &&(purchaseProduct.ReturnProduct != null))
+                &&(purchaseProduct.ReturnProduct == null))
 
                 .Select(purchaseProduct=>new PurchaseProductsForReturningDTO(purchaseProduct.ProductId, purchaseProduct.Product.Name,
-                purchaseProduct.ReturnProduct.Quantity, purchaseProduct.Product.Brand.Name, purchaseProduct.Product.Brand.Location, purchaseProduct.Product.IsReturnable))
+                purchaseProduct.Quantity, purchaseProduct.Product.Brand.Name, purchaseProduct.Product.Brand.Location, purchaseProduct.Product.IsReturnable))
                 .ToListAsync();
             return Ok(purchaseProductsDTOS);
         }

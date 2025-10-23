@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppForSEII2526.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251022212953_CreateIdentitySchema")]
+    [Migration("20251023004952_CreateIdentitySchema")]
     partial class CreateIdentitySchema
     {
         /// <inheritdoc />
@@ -507,7 +507,7 @@ namespace AppForSEII2526.API.Migrations
 
                     b.HasIndex("ReturnPurchaseOrderId");
 
-                    b.HasIndex("ProductId", "PurchaseOrderId")
+                    b.HasIndex("PurchaseOrderId", "ProductId")
                         .IsUnique();
 
                     b.ToTable("ReturnProducts");
@@ -872,7 +872,7 @@ namespace AppForSEII2526.API.Migrations
 
                     b.HasOne("AppForSEII2526.API.Models.PurchaseProduct", "PurchaseProduct")
                         .WithOne("ReturnProduct")
-                        .HasForeignKey("AppForSEII2526.API.Models.ReturnProduct", "ProductId", "PurchaseOrderId")
+                        .HasForeignKey("AppForSEII2526.API.Models.ReturnProduct", "PurchaseOrderId", "ProductId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
