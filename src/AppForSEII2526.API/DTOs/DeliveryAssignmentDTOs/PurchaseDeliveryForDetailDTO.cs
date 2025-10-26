@@ -2,9 +2,8 @@
 {
     public class PurchaseDeliveryForDetailDTO
     {
-        public PurchaseDeliveryForDetailDTO(int id, DateTime date, string street, string city, string postalCode, decimal totalPrice, PriorityType priority )
+        public PurchaseDeliveryForDetailDTO(DateTime date, string street, string city, string postalCode, decimal totalPrice, PriorityType priority )
         {
-            Id = id;
             Date = date;
             Street = street;
             City = city;
@@ -12,7 +11,6 @@
             TotalPrice = totalPrice;
             Priority = priority;
         }
-        public int Id { get; set; }
         public DateTime Date { get; set; }
         public PriorityType Priority { get; set; }
         [Required, StringLength(60)]
