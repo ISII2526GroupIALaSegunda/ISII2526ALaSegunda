@@ -37,7 +37,7 @@ namespace AppForSEII2526.API.Controllers
                     da.PersonalMessage,
                     da.ExtraReward,
                     da.PurchaseDeliveries
-                        .Select(pd => new PurchaseDeliveryForDetailDTO(
+                        .Select(pd => new PurchaseDeliveryDTO(
                             pd.Date,
                             pd.PurchaseOrder.Street,
                             pd.PurchaseOrder.City,

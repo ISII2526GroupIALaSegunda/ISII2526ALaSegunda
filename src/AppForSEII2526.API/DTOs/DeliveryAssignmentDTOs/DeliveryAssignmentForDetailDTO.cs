@@ -1,8 +1,9 @@
-﻿namespace AppForSEII2526.API.DTOs.DeliveryAssignmentDTOs
+﻿
+namespace AppForSEII2526.API.DTOs.DeliveryAssignmentDTOs
 {
     public class DeliveryAssignmentForDetailDTO
     {
-        public DeliveryAssignmentForDetailDTO(int id, string deliveryDriverName, DateTime deliveryAssignmentDone, string personalMessage, decimal extraReward, IList<PurchaseDeliveryForDetailDTO> purchaseDeliveries)
+        public DeliveryAssignmentForDetailDTO(int id, string deliveryDriverName, DateTime deliveryAssignmentDone, string personalMessage, decimal extraReward, IList<PurchaseDeliveryDTO> purchaseDeliveries)
         {
             Id = id;
             DeliveryDriverName = deliveryDriverName;
@@ -21,7 +22,17 @@
         [StringLength(20, ErrorMessage = "Personal Message can be neither longer than 200 characters")]
         public string PersonalMessage { get; set; }
 
-        public IList<PurchaseDeliveryForDetailDTO> PurchaseDeliveries { get; set; }
+        public IList<PurchaseDeliveryDTO> PurchaseDeliveries { get; set; }
 
+        public override bool Equals(object? obj)
+        {
+            return obj is DeliveryAssignmentForDetailDTO dTO &&
+                   Id == dTO.Id &&
+                   DeliveryDriverName == dTO.DeliveryDriverName &&
+                   DeliveryAssignmentDone == dTO.DeliveryAssignmentDone &&
+                   ExtraReward == dTO.ExtraReward &&
+                   PersonalMessage == dTO.PersonalMessage &&
+                   PurchaseDeliveries.SequenceEqual(dTO.PurchaseDeliveries);
+        }
     }
 }

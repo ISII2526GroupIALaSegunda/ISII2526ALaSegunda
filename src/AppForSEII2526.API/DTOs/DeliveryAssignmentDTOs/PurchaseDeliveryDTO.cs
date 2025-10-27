@@ -1,8 +1,8 @@
 ﻿namespace AppForSEII2526.API.DTOs.DeliveryAssignmentDTOs
 {
-    public class PurchaseDeliveryForDetailDTO
+    public class PurchaseDeliveryDTO
     {
-        public PurchaseDeliveryForDetailDTO(DateTime date, string street, string city, string postalCode, decimal totalPrice, PriorityType priority )
+        public PurchaseDeliveryDTO(DateTime date, string street, string city, string postalCode, decimal totalPrice, PriorityType priority )
         {
             Date = date;
             Street = street;
@@ -25,5 +25,15 @@
         [Range(typeof(decimal), "0.00", "9999999999.99")]
         public decimal TotalPrice { get; set; }
 
+        public override bool Equals(object? obj)
+        {
+            return obj is PurchaseDeliveryDTO dTO &&
+                   Date == dTO.Date &&
+                   Priority == dTO.Priority &&
+                   City == dTO.City &&
+                   Street == dTO.Street &&
+                   PostalCode == dTO.PostalCode &&
+                   TotalPrice == dTO.TotalPrice;
+        }
     }
 }
