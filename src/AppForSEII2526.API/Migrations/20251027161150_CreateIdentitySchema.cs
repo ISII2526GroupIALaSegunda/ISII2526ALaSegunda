@@ -477,8 +477,8 @@ namespace AppForSEII2526.API.Migrations
                 {
                     table.PrimaryKey("PK_ReturnProducts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ReturnProducts_PurchaseProducts_ProductId_PurchaseOrderId",
-                        columns: x => new { x.ProductId, x.PurchaseOrderId },
+                        name: "FK_ReturnProducts_PurchaseProducts_PurchaseOrderId_ProductId",
+                        columns: x => new { x.PurchaseOrderId, x.ProductId },
                         principalTable: "PurchaseProducts",
                         principalColumns: new[] { "PurchaseOrderId", "ProductId" });
                     table.ForeignKey(
@@ -610,9 +610,9 @@ namespace AppForSEII2526.API.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ReturnProducts_ProductId_PurchaseOrderId",
+                name: "IX_ReturnProducts_PurchaseOrderId_ProductId",
                 table: "ReturnProducts",
-                columns: new[] { "ProductId", "PurchaseOrderId" },
+                columns: new[] { "PurchaseOrderId", "ProductId" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
