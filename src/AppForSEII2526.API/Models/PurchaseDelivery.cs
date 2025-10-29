@@ -3,6 +3,9 @@
     [PrimaryKey(nameof(DeliveryAssignmentId),nameof(PurchaseOrderId))]
     public class PurchaseDelivery
     {
+        public PurchaseDelivery()
+        {
+        }
         public PurchaseDelivery(DateTime date, PriorityType priority, DeliveryAssignment deliveryAssignment)
         {
             Date = date;

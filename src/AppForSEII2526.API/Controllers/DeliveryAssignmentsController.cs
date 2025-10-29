@@ -106,7 +106,7 @@ namespace AppForSEII2526.API.Controllers
             var deliveryAssignmentDetail = new DeliveryAssignmentForDetailDTO(deliveryAssignment.Id ,deliveryAssignment.DeliveryMan.Name!,
                 deliveryAssignment.DeliveryAssignmentDone, deliveryAssignment.PersonalMessage, deliveryAssignment.ExtraReward, deliveryAssignmentForCreate.PurchaseDeliveries);
 
-            return CreatedAtAction("GetRental", new { id = deliveryAssignment.Id }, deliveryAssignmentDetail);
+            return CreatedAtAction("GetDeliveryAssignment", new { id = deliveryAssignment.Id }, deliveryAssignmentDetail);
 
         }
     }
