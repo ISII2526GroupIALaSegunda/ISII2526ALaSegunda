@@ -1,13 +1,13 @@
 ﻿namespace AppForSEII2526.API.DTOs.DeliveryAssignmentDTOs
 {
     public class DeliveryAssignmentForCreateDTO {
-        public DeliveryAssignmentForCreateDTO(int deliveryDriverId, DateTime deliveryAssignmentDone, string personalMessage, decimal extraReward, IList<PurchaseOrderForAssignmentDTO> purchaseOrders)
+        public DeliveryAssignmentForCreateDTO(int deliveryDriverId, DateTime deliveryAssignmentDone, string personalMessage, decimal extraReward, IList<PurchaseDeliveryDTO> purchaseDeliveries)
         {
             DeliveryDriverId = deliveryDriverId;
             DeliveryAssignmentDone = deliveryAssignmentDone;
             PersonalMessage = personalMessage;
             ExtraReward = extraReward;
-            PurchaseOrders = purchaseOrders;
+            PurchaseDeliveries = purchaseDeliveries;
         }
 
         public int DeliveryDriverId { get; set; }
@@ -21,9 +21,9 @@
         [Range(0, 100, ErrorMessage = "Extra reward must be between 0 and 100€")]
         public decimal ExtraReward { get; set; }
 
-        [Required(ErrorMessage = "At least one purchase order must be selected")]
-        [MinLength(1, ErrorMessage = "At least one purchase order must be selected")]
-        public IList<PurchaseOrderForAssignmentDTO> PurchaseOrders { get; set; }
+        [Required(ErrorMessage = "At least one purchase delivery must be selected")]
+        [MinLength(1, ErrorMessage = "At least one purchase delivery must be selected")]
+        public IList<PurchaseDeliveryDTO> PurchaseDeliveries { get; set; }
 
         public override bool Equals(object? obj)
         {
@@ -32,7 +32,7 @@
                    DeliveryAssignmentDone == dTO.DeliveryAssignmentDone &&
                    PersonalMessage == dTO.PersonalMessage &&
                    ExtraReward == dTO.ExtraReward &&
-                   PurchaseOrders.SequenceEqual(dTO.PurchaseOrders);
+                   PurchaseDeliveries.SequenceEqual(dTO.PurchaseDeliveries);
         }
     }
 }

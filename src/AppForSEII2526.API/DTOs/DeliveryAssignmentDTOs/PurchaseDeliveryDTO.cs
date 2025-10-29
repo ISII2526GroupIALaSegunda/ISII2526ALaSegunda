@@ -2,7 +2,7 @@
 {
     public class PurchaseDeliveryDTO
     {
-        public PurchaseDeliveryDTO(DateTime date, string street, string city, string postalCode, decimal totalPrice, PriorityType priority )
+        public PurchaseDeliveryDTO(DateTime date, string street, string city, string postalCode, decimal totalPrice, PriorityType priority, int purchaseOrderId)
         {
             Date = date;
             Street = street;
@@ -10,6 +10,7 @@
             PostalCode = postalCode;
             TotalPrice = totalPrice;
             Priority = priority;
+            PurchaseOrderId = purchaseOrderId;
         }
         public DateTime Date { get; set; }
         public PriorityType Priority { get; set; }
@@ -25,6 +26,8 @@
         [Range(typeof(decimal), "0.00", "9999999999.99")]
         public decimal TotalPrice { get; set; }
 
+        public int PurchaseOrderId { get; set; }
+
         public override bool Equals(object? obj)
         {
             return obj is PurchaseDeliveryDTO dTO &&
@@ -33,7 +36,8 @@
                    City == dTO.City &&
                    Street == dTO.Street &&
                    PostalCode == dTO.PostalCode &&
-                   TotalPrice == dTO.TotalPrice;
+                   TotalPrice == dTO.TotalPrice &&
+                   PurchaseOrderId == dTO.PurchaseOrderId;
         }
     }
 }
