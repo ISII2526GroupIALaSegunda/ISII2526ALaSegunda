@@ -1,0 +1,50 @@
+﻿namespace AppForSEII2526.API.DTOs.PurchaseOrderDTOs
+{
+    public class PurchaseForCreateDTO
+    {
+        public PurchaseForCreateDTO(string street, string city, string postalCode, string nameCustomer, string surnameCustomer, IList<PurchaseItemDTO> items, int paymentMethodId)
+        {
+            Street = street;
+            City = city;
+            PostalCode = postalCode;
+            NameCustomer = nameCustomer;
+            SurnameCustomer = surnameCustomer;
+            Items = items;
+            PaymentMethodId = paymentMethodId;
+        }
+
+        [Required, StringLength(120, MinimumLength = 3)]
+        public string Street { get; set; }
+
+        [Required, StringLength(60, MinimumLength = 2)]
+        public string City { get; set; }
+
+        [Required, StringLength(20, MinimumLength = 3)]
+        public string PostalCode { get; set; }
+
+        [Required, StringLength(50, MinimumLength = 3)]
+        public string NameCustomer { get; set; }
+
+        [Required, StringLength(50, MinimumLength = 3)]
+        public string SurnameCustomer { get; set; }
+
+        [Required]
+        public IList<PurchaseItemDTO> Items { get; set; }
+
+        [Required]
+        public int PaymentMethodId { get; set; }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is PurchaseForCreateDTO dTO &&
+                   Street == dTO.Street &&
+                   City == dTO.City &&
+                   PostalCode == dTO.PostalCode &&
+                   NameCustomer == dTO.NameCustomer &&
+                   SurnameCustomer == dTO.SurnameCustomer &&
+                   EqualityComparer<IList<PurchaseItemDTO>>.Default.Equals(Items, dTO.Items) &&
+                   PaymentMethodId == dTO.PaymentMethodId;
+        }
+    }
+
+}
