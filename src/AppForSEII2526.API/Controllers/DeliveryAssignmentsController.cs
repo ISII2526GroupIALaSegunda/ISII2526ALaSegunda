@@ -61,7 +61,15 @@ namespace AppForSEII2526.API.Controllers
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
         [ProducesResponseType(typeof(DeliveryAssignmentForDetailDTO), (int)HttpStatusCode.Created)]
         public async Task<ActionResult> CreateDeliveryAssignment(DeliveryAssignmentForCreateDTO deliveryAssignmentForCreate){
+            if (deliveryAssignmentForCreate.DeliveryAssignmentDone <= DateTime.Now)
+                ModelState.AddModelError("DeliveryAssignmentDone", "Error! Delivery deadline must be later than now");
+
+            if (deliveryAssignmentForCreate.PurchaseDeliveries.Count == 0)
+                ModelState.AddModelError("PurchaseDeliveries", "Error! You must include at least one purchase order to be delivered");
+
             var deliveryDriver = await _context.DeliveryDrivers.FirstOrDefaultAsync(dd => dd.id == deliveryAssignmentForCreate.DeliveryDriverId);
+            if (deliveryDriver == null)
+                ModelState.AddModelError("DeliveryDriver", "Error! Delivery driver does not exist");
 
             var purchaseOrdersIds = deliveryAssignmentForCreate.PurchaseDeliveries.Select(pd => pd.PurchaseOrderId).ToList<int>();
 
@@ -92,6 +100,11 @@ namespace AppForSEII2526.API.Controllers
                     deliveryAssignment.PurchaseDeliveries.Add(new PurchaseDelivery(item.Date, item.Priority, deliveryAssignment));
                 }
             }
+
+            if (deliveryDriver == null)
+                ModelState.AddModelError("DeliveryDriver", "Error! Delivery driver does not exist");
+
+            _context.Add(deliveryAssignment);
 
             try
             {
