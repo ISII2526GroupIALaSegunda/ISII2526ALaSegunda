@@ -4,6 +4,21 @@
     [Index(nameof(Name), IsUnique = true)]
     public class Product
     {
+        public Product()
+        {
+        }
+
+        public Product(int productId, string name, string? colour, decimal price, int stock, bool isReturnable, Brand brand)
+        {
+            ProductId = productId;
+            Name = name;
+            Colour = colour;
+            Price = price;
+            Stock = stock;
+            IsReturnable = isReturnable;
+            Brand = brand;
+        }
+
         [Key]
         public int ProductId { get; set; }
 
