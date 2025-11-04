@@ -1,6 +1,7 @@
 ﻿using AppForSEII2526.API.DTOs.ApplicationUserDTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace AppForSEII2526.API.Controllers
 {
@@ -38,11 +39,13 @@ namespace AppForSEII2526.API.Controllers
         public async Task<IActionResult> GetUsersForBanning(string? surname, string? ComplaintType) {
             IList<ApplicationUserForBanningDTO> applicationUsers = await _context.Users
                     .Where(a =>
-                    ((surname == null) || (a.Surname.Contains(surname))) &&
+
+                    ((surname == null) || (a.Surname.Contains(surname)))
+                    &&
                     a.Complaints.Any(
-                        c => !c.Processed && (ComplaintType == null || c.Type.Name.Contains(ComplaintType)) 
+                        c => !c.Processed && (ComplaintType == null || c.Type.Name.Contains(ComplaintType))
                      )
-                )
+                        )   
 
                 .OrderBy(a=>a.UserName
                 
@@ -61,9 +64,17 @@ namespace AppForSEII2526.API.Controllers
                         g.Count()))
                     .ToList()))
                 .ToListAsync();
+
+
+            if (applicationUsers == null) {
+                _logger.LogError($"Error: User not found");
+                return NotFound();
+            }
             
             return Ok(applicationUsers);
         }
+       
+
     }
 }
    
