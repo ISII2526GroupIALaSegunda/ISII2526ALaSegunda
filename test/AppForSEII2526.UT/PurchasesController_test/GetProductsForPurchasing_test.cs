@@ -1,10 +1,11 @@
-﻿using AppForSEII2526.UT; // tu base SQLite en memoria (equivalente a AppForMovies4SqliteUT)
+﻿using AppForSEII2526.UT; 
 using AppForSEII2526.API.Controllers;
 using AppForSEII2526.API.DTOs.ProductDTOs;
 using AppForSEII2526.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Microsoft.AspNetCore.Http;
 
 namespace AppForSEII2526.UT.ProductsController_test
 {
@@ -32,8 +33,6 @@ namespace AppForSEII2526.UT.ProductsController_test
 
         public static IEnumerable<object[]> TestCasesFor_GetProductsForPurchasing_OK()
         {
-            // ¡OJO! El endpoint ordena por Colour (OrderBy Colour).
-            // Colores: "Blue" < "Red" alfabéticamente, por eso "Shirt" va antes que "Jacket".
             var productDTOs = new List<ProductForPurchaseDTO>() {
                 new ProductForPurchaseDTO(2, "Shirt",  "Blue", "Uniqlo", 10, null),
                 new ProductForPurchaseDTO(1, "Jacket", "Red",  "Zara",    4, null),
@@ -41,7 +40,7 @@ namespace AppForSEII2526.UT.ProductsController_test
 
             var all = new List<ProductForPurchaseDTO>() { productDTOs[0], productDTOs[1] }; // los dos (sin "Hat")
             var onlyRed = new List<ProductForPurchaseDTO>() { productDTOs[1] };            // solo "Jacket"
-            var onlyByName = new List<ProductForPurchaseDTO>() { productDTOs[0] };          // solo "Shirt" (name contains "irt")
+            var onlyByName = new List<ProductForPurchaseDTO>() { productDTOs[0] };          // solo "Shirt" (name contiene "irt")
 
             var tests = new List<object[]>
             {
@@ -66,6 +65,59 @@ namespace AppForSEII2526.UT.ProductsController_test
             var actual = Assert.IsType<List<ProductForPurchaseDTO>>(okResult.Value);
 
             Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        [Trait("LevelTesting", "Unit Testing")]
+        public async Task GetProductsForPurchasing_notfound_when_no_instock_matches()
+        {
+            var controller = new ProductsController(_context, new Mock<ILogger<ProductsController>>().Object);
+
+            // name="Hat" matches a product with Stock=0 → should be filtered out and return NotFound
+            var result = await controller.GetProductsForPurchasing(null, "Hat");
+
+            var notFound = Assert.IsType<NotFoundObjectResult>(result);
+            var message = Assert.IsType<string>(notFound.Value);
+            Assert.Equal("There are no products left to purchase.", message);
+        }
+
+        [Fact]
+        [Trait("LevelTesting", "Unit Testing")]
+        public async Task GetProductsForPurchasing_filter_by_both_colour_and_name()
+        {
+            var controller = new ProductsController(_context, new Mock<ILogger<ProductsController>>().Object);
+
+            var result = await controller.GetProductsForPurchasing("Blue", "irt");
+
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var actual = Assert.IsType<List<ProductForPurchaseDTO>>(okResult.Value);
+
+            var expected = new List<ProductForPurchaseDTO>
+            {
+                new ProductForPurchaseDTO(2, "Shirt", "Blue", "Uniqlo", 10, null)
+            };
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        [Trait("LevelTesting", "Unit Testing")]
+        public void GetProductsForPurchasing_Attributes_test()
+        {
+            var method = typeof(ProductsController).GetMethod(nameof(ProductsController.GetProductsForPurchasing));
+            Assert.NotNull(method);
+
+            var httpGetAttr = method!.GetCustomAttributes(typeof(HttpGetAttribute), false).FirstOrDefault();
+            Assert.NotNull(httpGetAttr);
+
+            var routeAttr = method.GetCustomAttributes(typeof(RouteAttribute), false).Cast<RouteAttribute>().FirstOrDefault();
+            Assert.NotNull(routeAttr);
+            Assert.Equal("[action]", routeAttr!.Template);
+
+            var produces = method.GetCustomAttributes(typeof(ProducesResponseTypeAttribute), false)
+                                  .Cast<ProducesResponseTypeAttribute>()
+                                  .ToList();
+            Assert.Contains(produces, a => a.StatusCode == StatusCodes.Status200OK && a.Type == typeof(IList<ProductForPurchaseDTO>));
         }
     }
 }
