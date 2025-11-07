@@ -53,6 +53,7 @@ namespace AppForSEII2526.API.Controllers
                             pp.Price,
                             pp.Quantity
                         )).ToList()
+
                 ))
                 .FirstOrDefaultAsync();
 
@@ -140,7 +141,8 @@ namespace AppForSEII2526.API.Controllers
                 State = PurchaseState.Request,
                 Customer = paymentMethod.User,
                 PaymentMethodId = paymentMethod.Id,
-                TotalPrice = 0m
+                TotalPrice = 0m,
+                Rating=purchaseForCreate.Rating
             };
 
             _context.PurchaseOrders.Add(order);
@@ -198,7 +200,8 @@ namespace AppForSEII2526.API.Controllers
                             pp.Product.Colour,
                             pp.Price,
                             pp.Quantity
-                        )).ToList()
+                        )).ToList(),
+                    po.Rating
                 ))
                 .FirstAsync();
 

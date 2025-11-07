@@ -1,8 +1,9 @@
-﻿namespace AppForSEII2526.API.DTOs.PurchaseOrderDTOs
+﻿
+namespace AppForSEII2526.API.DTOs.PurchaseOrderDTOs
 {
     public class PurchaseForCreateDTO
     {
-        public PurchaseForCreateDTO(string street, string city, string postalCode, string nameCustomer, string surnameCustomer, IList<PurchaseItemDTO> items, int paymentMethodId)
+        public PurchaseForCreateDTO(string street, string city, string postalCode, string nameCustomer, string surnameCustomer, IList<PurchaseItemDTO> items, int paymentMethodId, int? rating)
         {
             Street = street;
             City = city;
@@ -34,6 +35,9 @@
         [Required]
         public int PaymentMethodId { get; set; }
 
+        [Range(0, 5)]
+        public int? Rating { get; set; }
+
         public override bool Equals(object? obj)
         {
             return obj is PurchaseForCreateDTO dTO &&
@@ -43,7 +47,8 @@
                    NameCustomer == dTO.NameCustomer &&
                    SurnameCustomer == dTO.SurnameCustomer &&
                    EqualityComparer<IList<PurchaseItemDTO>>.Default.Equals(Items, dTO.Items) &&
-                   PaymentMethodId == dTO.PaymentMethodId;
+                   PaymentMethodId == dTO.PaymentMethodId &&
+                   Rating == dTO.Rating;
         }
     }
 
