@@ -17,6 +17,11 @@
             Items = items;
         }
 
+        public PurchaseForDetailDTO(int id, decimal totalPrice, DateTime date, string street, string city, string postalCode, string nameSurname, string state, string paymentMethod, string customerUserName, IList<PurchaseItemDTO> items, int? rating) : this(id, totalPrice, date, street, city, postalCode, nameSurname, state, paymentMethod, customerUserName, items)
+        {
+            Rating = rating;
+        }
+
         public int Id { get; set; }
         [Precision(10, 2)]
         public decimal TotalPrice { get; set; }
@@ -32,6 +37,9 @@
         public string CustomerUserName { get; set; } = default!;
         public IList<PurchaseItemDTO> Items { get; set; } = new List<PurchaseItemDTO>();
 
+        [Range(0, 5)]
+        public int? Rating { get; set; }
+
         public override bool Equals(object? obj)
         {
             return obj is PurchaseForDetailDTO dTO &&
@@ -45,7 +53,8 @@
                    State == dTO.State &&
                    PaymentMethod == dTO.PaymentMethod &&
                    CustomerUserName == dTO.CustomerUserName &&
-                   EqualityComparer<IList<PurchaseItemDTO>>.Default.Equals(Items, dTO.Items);
+                   EqualityComparer<IList<PurchaseItemDTO>>.Default.Equals(Items, dTO.Items) &&
+                   Rating == dTO.Rating; 
         }
     }
 }
