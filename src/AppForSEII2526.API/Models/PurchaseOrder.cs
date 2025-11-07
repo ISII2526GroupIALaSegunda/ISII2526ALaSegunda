@@ -25,7 +25,7 @@
         public int? Rating { get; set; }
 
         [Precision(10, 2)]
-        [Range(typeof(decimal), "0.00", "9999999999.99")]
+        [Range(typeof(decimal), "0,00", "9999999999,99")]
         public decimal TotalPrice { get; set; }
 
         public List<PurchaseProduct> PurchaseProducts { get; set; }
