@@ -36,5 +36,16 @@ namespace AppForSEII2526.API.DTOs.ProductDTOs
 
         // City from related PurchaseOrder (may be null if never purchased)
         public string? City { get; set; }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is ProductForPurchaseDTO dTO &&
+                   ProductId == dTO.ProductId &&
+                   Name == dTO.Name &&
+                   Colour == dTO.Colour &&
+                   Brand == dTO.Brand &&
+                   Stock == dTO.Stock &&
+                   City == dTO.City;
+        }
     }
 }
