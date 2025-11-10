@@ -13,16 +13,16 @@ using Xunit;
 namespace AppForSEII2526.UT.PurchasesController_test
 {
     public class CreatePurchase_test : AppForSEII2526SqliteUT
-    {    
+    {
         private const string _street = "Calle Inventada 1";
         private const string _city = "Albacete";
         private const string _postalCode = "02001";
         private const string _nameCustomer = "Pepe";
         private const string _surname = "Pérez";
 
-        private int _pmId;         
-        private int _prodJacketId;  
-        private int _prodShirtId;   
+        private int _pmId;
+        private int _prodJacketId;
+        private int _prodShirtId;
 
         public CreatePurchase_test()
         {
@@ -57,7 +57,7 @@ namespace AppForSEII2526.UT.PurchasesController_test
             // 1) Carrito vacío
             var emptyCart = new Func<int, PurchaseForCreateDTO>(pmId => new PurchaseForCreateDTO(
                 _street, _city, _postalCode, _nameCustomer, _surname,
-                new List<PurchaseItemDTO>(), pmId
+                new List<PurchaseItemDTO>(), pmId, null
             ));
 
             // 2) Cantidad inválida (<1)
@@ -66,7 +66,7 @@ namespace AppForSEII2526.UT.PurchasesController_test
                 new List<PurchaseItemDTO> {
                     new PurchaseItemDTO(productId, "Jacket", "Zara", "Red", 0m, 0) // Quantity = 0
                 },
-                pmId
+                pmId, null
             ));
 
             // 3) Producto inexistente
@@ -75,7 +75,7 @@ namespace AppForSEII2526.UT.PurchasesController_test
                 new List<PurchaseItemDTO> {
                     new PurchaseItemDTO(9999, "Ghost", "Zara", "Red", 0m, 1)
                 },
-                pmId
+                pmId, null
             ));
 
             // 4) PaymentMethod inexistente
@@ -84,7 +84,7 @@ namespace AppForSEII2526.UT.PurchasesController_test
                 new List<PurchaseItemDTO> {
                     new PurchaseItemDTO(1, "Jacket", "Zara", "Red", 0m, 1)
                 },
-                9999 
+                9999, null
             ));
 
             return new List<object[]>
@@ -117,11 +117,11 @@ namespace AppForSEII2526.UT.PurchasesController_test
         [Trait("LevelTesting", "Unit Testing")]
         public async Task CreatePurchase_Success_test()
         {
-    
+
             var logger = new Mock<ILogger<PurchasesController>>().Object;
             var controller = new PurchasesController(_context, logger);
 
-    
+
             var dto = new PurchaseForCreateDTO(
                 _street, _city, _postalCode, _nameCustomer, _surname,
                 new List<PurchaseItemDTO>
@@ -129,7 +129,7 @@ namespace AppForSEII2526.UT.PurchasesController_test
                     new PurchaseItemDTO(_prodJacketId, "Jacket", "Zara", "Red", 0m, 2),
                     new PurchaseItemDTO(_prodShirtId,  "Shirt",  "Zara", "Blue",0m, 1)
                 },
-                _pmId
+                _pmId, null
             );
 
             var result = await controller.CreatePurchase(dto);
@@ -137,7 +137,7 @@ namespace AppForSEII2526.UT.PurchasesController_test
             Assert.Equal(nameof(PurchasesController.GetPurchase), created.ActionName);
             var detail = Assert.IsType<PurchaseForDetailDTO>(created.Value);
 
-      
+
             Assert.Equal(_street, detail.Street);
             Assert.Equal(_city, detail.City);
             Assert.Equal(_postalCode, detail.PostalCode);
@@ -164,7 +164,7 @@ namespace AppForSEII2526.UT.PurchasesController_test
 
             var i2 = detail.Items.Single(i => i.ProductId == _prodShirtId);
             Assert.Equal("Shirt", i2.Name);
-            Assert.Equal("Zara", i2.Brand);   
+            Assert.Equal("Zara", i2.Brand);
             Assert.Equal("Blue", i2.Colour);
             Assert.Equal(10.0m, i2.UnitPrice);
             Assert.Equal(1, i2.Quantity);
