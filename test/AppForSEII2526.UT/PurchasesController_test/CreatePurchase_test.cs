@@ -14,16 +14,16 @@ using Microsoft.AspNetCore.Http;
 namespace AppForSEII2526.UT.PurchasesController_test
 {
     public class CreatePurchase_test : AppForSEII2526SqliteUT
-    {    
+    {
         private const string _street = "Calle Inventada 1";
         private const string _city = "Albacete";
         private const string _postalCode = "02001";
         private const string _nameCustomer = "Pepe";
         private const string _surname = "Pérez";
 
-        private int _pmId;         
-        private int _prodJacketId;  
-        private int _prodShirtId;   
+        private int _pmId;
+        private int _prodJacketId;
+        private int _prodShirtId;
 
         public CreatePurchase_test()
         {
@@ -118,11 +118,11 @@ namespace AppForSEII2526.UT.PurchasesController_test
         [Trait("LevelTesting", "Unit Testing")]
         public async Task CreatePurchase_Success_test()
         {
-    
+
             var logger = new Mock<ILogger<PurchasesController>>().Object;
             var controller = new PurchasesController(_context, logger);
 
-    
+
             var dto = new PurchaseForCreateDTO(
                 _street, _city, _postalCode, _nameCustomer, _surname,
                 new List<PurchaseItemDTO>
@@ -138,7 +138,7 @@ namespace AppForSEII2526.UT.PurchasesController_test
             Assert.Equal(nameof(PurchasesController.GetPurchase), created.ActionName);
             var detail = Assert.IsType<PurchaseForDetailDTO>(created.Value);
 
-      
+
             Assert.Equal(_street, detail.Street);
             Assert.Equal(_city, detail.City);
             Assert.Equal(_postalCode, detail.PostalCode);
@@ -165,7 +165,7 @@ namespace AppForSEII2526.UT.PurchasesController_test
 
             var i2 = detail.Items.Single(i => i.ProductId == _prodShirtId);
             Assert.Equal("Shirt", i2.Name);
-            Assert.Equal("Zara", i2.Brand);   
+            Assert.Equal("Zara", i2.Brand);
             Assert.Equal("Blue", i2.Colour);
             Assert.Equal(10.0m, i2.UnitPrice);
             Assert.Equal(1, i2.Quantity);
