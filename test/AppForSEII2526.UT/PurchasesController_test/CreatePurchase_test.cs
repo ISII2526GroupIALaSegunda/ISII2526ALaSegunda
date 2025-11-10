@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
+using Microsoft.AspNetCore.Http;
 
 namespace AppForSEII2526.UT.PurchasesController_test
 {
@@ -84,7 +85,7 @@ namespace AppForSEII2526.UT.PurchasesController_test
                 new List<PurchaseItemDTO> {
                     new PurchaseItemDTO(1, "Jacket", "Zara", "Red", 0m, 1)
                 },
-                9999, null
+                9999, null 
             ));
 
             return new List<object[]>
@@ -170,6 +171,35 @@ namespace AppForSEII2526.UT.PurchasesController_test
             Assert.Equal(1, i2.Quantity);
 
             Assert.True(Math.Abs((DateTime.Now - detail.Date).TotalMinutes) < 2);
+        }
+
+        [Fact]
+        [Trait("LevelTesting", "Unit Testing")]
+        public void CreatePurchase_Attributes_test()
+        {
+            var method = typeof(PurchasesController).GetMethod(nameof(PurchasesController.CreatePurchase));
+            Assert.NotNull(method);
+
+            // HttpPost
+            var httpPostAttr = method!.GetCustomAttributes(typeof(HttpPostAttribute), false).FirstOrDefault();
+            Assert.NotNull(httpPostAttr);
+
+            // Route("[action]")
+            var routeAttr = method.GetCustomAttributes(typeof(RouteAttribute), false).Cast<RouteAttribute>().FirstOrDefault();
+            Assert.NotNull(routeAttr);
+            Assert.Equal("[action]", routeAttr!.Template);
+
+            // Parameter should have [FromBody]
+            var param = method.GetParameters().FirstOrDefault();
+            Assert.NotNull(param);
+            var fromBodyAttr = param!.GetCustomAttributes(typeof(FromBodyAttribute), false).FirstOrDefault();
+            Assert.NotNull(fromBodyAttr);
+
+            // ProducesResponseType attributes
+            var produces = method.GetCustomAttributes(typeof(ProducesResponseTypeAttribute), false).Cast<ProducesResponseTypeAttribute>().ToList();
+            Assert.Contains(produces, a => a.StatusCode == StatusCodes.Status201Created && a.Type == typeof(PurchaseForDetailDTO));
+            Assert.Contains(produces, a => a.StatusCode == StatusCodes.Status400BadRequest && a.Type == typeof(ValidationProblemDetails));
+            Assert.Contains(produces, a => a.StatusCode == StatusCodes.Status409Conflict && a.Type == typeof(string));
         }
     }
 }
