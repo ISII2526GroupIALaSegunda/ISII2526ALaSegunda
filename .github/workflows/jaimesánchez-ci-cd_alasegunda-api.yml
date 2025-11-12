@@ -9,7 +9,7 @@ on:
       - JaimeSánchez-Ci-CD
 #      - development
 #    paths:
-#      - 'src/AppForMovies.API**'
+#      - 'src/AppForSEII2526.API**'
   workflow_dispatch:
 
 jobs:
@@ -81,3 +81,4 @@ jobs:
           slot-name: 'Production'
           package: .
           
+
