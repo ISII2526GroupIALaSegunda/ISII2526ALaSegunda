@@ -17,7 +17,7 @@ namespace AppForSEII2526.UT.BanReportsController_test
     {
         public GetBanReport_test()
         {
-            // Simulación de los inserts que me pasaste
+           
 
             var user1 = new ApplicationUser
             {
@@ -85,12 +85,13 @@ namespace AppForSEII2526.UT.BanReportsController_test
                 State = ReportState.InProgress,
                 Message = "Your account has been banned.",
                 BanReport = banReport,
-                User = user1
+                User = user1,
+                ApplicationCustomer = user1
             };
 
             banReport.ReportCustomers.Add(reportCustomer);
 
-            // Persistir en contexto
+           
             _context.Users.AddRange(user1, user2);
             _context.ComplaintTypes.AddRange(type1, type3);
             _context.Complaints.AddRange(complaints);
