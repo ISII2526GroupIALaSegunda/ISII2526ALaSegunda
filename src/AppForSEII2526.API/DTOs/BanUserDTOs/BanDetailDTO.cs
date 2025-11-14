@@ -9,15 +9,7 @@ namespace AppForSEII2526.API.DTOs.BanUserDTOs
     {
         private object value;
 
-        public BanDetailDTO(int iD, string reason, string detailedDescription, DateTime startDate, DateTime endDate, object value)
-        {
-            Id = iD;
-            Reason = reason;
-            DetailedDescription = detailedDescription;
-            StartDate = startDate;
-            EndDate = endDate;
-            this.value = value;
-        }
+       
 
         public BanDetailDTO(int id,
             string reason,
