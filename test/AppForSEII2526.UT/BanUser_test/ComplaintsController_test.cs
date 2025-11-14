@@ -25,7 +25,8 @@ namespace AppForSEII2526.UT.BanUser_test
                 Surname = "García",
                 AccountCreationDate = new DateTime(2025, 12, 12),
                 UserName = "juan",
-                Email = "juan@test.es"
+                Email = "juan@test.es",
+                Address = "Calle Falsa 123"
             };
 
             var user2 = new ApplicationUser
@@ -35,7 +36,8 @@ namespace AppForSEII2526.UT.BanUser_test
                 Surname = "Sanchez",
                 AccountCreationDate = new DateTime(2025, 11, 4),
                 UserName = "jaime",
-                Email = "jaime@test.es"
+                Email = "jaime@test.es",
+                Address = "Calle Falsa 124"
             };
             var type1 = new ComplaintType { ID = 1, Name = "Producto" };
             var type2 = new ComplaintType { ID = 2, Name = "Servicio" };
