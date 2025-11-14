@@ -40,20 +40,33 @@ namespace AppForSEII2526.UT.BanReportsController_test
                 EmailConfirmed = true
             };
 
-            var complaintTypes = new List<ComplaintType>
-            {
-                new ComplaintType { ID = 1, Name = "Paco" },
-                new ComplaintType { ID = 2, Name = "Juan" },
-                new ComplaintType { ID = 3, Name = "Antonio" },
-                new ComplaintType { ID = 4, Name = "Mría" },
-                new ComplaintType { ID = 5, Name = "Ana" }
-            };
+            var type1 = new ComplaintType { ID = 1, Name = "Paco" };
+            var type3 = new ComplaintType { ID = 3, Name = "Antonio" };
+
 
             var complaints = new List<Complaint>
-            {
-                new Complaint { ID = 7, ComplaintDate = new DateTime(2025, 12, 2), Description = "Problema con el producto", Processed = false},
-                new Complaint { ID = 8, ComplaintDate = new DateTime(2025, 11, 4), Description = "askgflsdafhg", Processed = false}
-            };
+    {
+        new Complaint
+        {
+            ID = 7,
+            ComplaintDate = new DateTime(2025, 12, 2),
+            Description = "Problema con el producto",
+            Processed = false,
+            User = user1,
+            Type = type1
+        },
+        new Complaint
+        {
+            ID = 8,
+            ComplaintDate = new DateTime(2025, 11, 4),
+            Description = "askgflsdafhg",
+            Processed = false,
+            User = user2,
+            Type = type3
+        }
+    };
+
+
 
             var banReport = new BanReport
             {
@@ -79,11 +92,12 @@ namespace AppForSEII2526.UT.BanReportsController_test
 
             // Persistir en contexto
             _context.Users.AddRange(user1, user2);
-            _context.ComplaintTypes.AddRange(complaintTypes);
+            _context.ComplaintTypes.AddRange(type1, type3);
             _context.Complaints.AddRange(complaints);
             _context.BanReports.Add(banReport);
             _context.ReportCustomers.Add(reportCustomer);
             _context.SaveChanges();
+
         }
 
         public static IEnumerable<object[]> TestCasesFor_GetBanReport()
