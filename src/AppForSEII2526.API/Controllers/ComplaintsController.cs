@@ -37,17 +37,25 @@ namespace AppForSEII2526.API.Controllers
                 query = query.Where(c => c.Type.Name == filter.ComplaintType);
             }
 
-            var grouped = await query
-               .GroupBy(c => c.User)
-               .Select(g => new UserComplaintsDTO
-               {
-                   Name = g.Key.Name,
-                   Surname = g.Key.Surname,
-                   AccountCreationDate = g.Key.AccountCreationDate,
-                   ComplaintCount = g.Count(),
-                   ComplaintTypes = g.Select(c => c.Type.Name).Distinct().ToList()
-               })
-               .ToListAsync();
+            // Traemos las quejas pendientes con Include
+            var complaints = await query
+                .Include(c => c.User)
+                .Include(c => c.Type)
+                .ToListAsync();   
+
+            // Agrupamos en memoria
+            var grouped = complaints
+                .GroupBy(c => c.User)
+                .Select(g => new UserComplaintsDTO
+                {
+                    Name = g.Key.Name,
+                    Surname = g.Key.Surname,
+                    AccountCreationDate = g.Key.AccountCreationDate,
+                    ComplaintCount = g.Count(),
+                    ComplaintTypes = g.Select(c => c.Type.Name).Distinct().ToList()
+                })
+                .ToList();
+
 
             if (!grouped.Any())
             {
