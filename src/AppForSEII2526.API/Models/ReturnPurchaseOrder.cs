@@ -12,7 +12,7 @@
 
         public DateTime Date { get; set; }
 
-        public double MoneyToReturn { get; set; }
+        public decimal MoneyToReturn { get; set; }
 
        [Precision(5,2)]
         public decimal NewTotalPrice { get; set; }
