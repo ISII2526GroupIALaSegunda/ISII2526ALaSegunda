@@ -109,7 +109,7 @@ namespace AppForSEII2526.UT.BanReportsController_test
                 "User repeatedly violated rules",
                 new DateTime(2025, 11, 14),
                 new DateTime(2025, 12, 14),
-                ReportState.InProgress.ToString(),
+                "In proggress",
                 new List<ReportCustomerForDetailDTO>
                 {
                     new ReportCustomerForDetailDTO(1, "Juan", "García", "Your account has been banned.")
