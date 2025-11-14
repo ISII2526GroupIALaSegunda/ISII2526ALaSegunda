@@ -24,7 +24,7 @@ public class ApplicationUser : IdentityUser {
     public IList<PurchaseOrder>? PurchaseOrders { get; set; }
     
     public List<Complaint> Complaints { get; set; }
-
+    [NotMapped]
     public List<ReportCustomer> ReportCustomer { get; set; }
 
     public List<ReturnPurchaseOrder> ReturnOrders { get; set; }

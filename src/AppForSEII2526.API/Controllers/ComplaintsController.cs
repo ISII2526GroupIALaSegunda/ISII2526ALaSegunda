@@ -1,0 +1,71 @@
+﻿using AppForSEII2526.API.DTOs;
+using AppForSEII2526.API.DTOs.BanUserDTOs;
+using AppForSEII2526.API.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+
+namespace AppForSEII2526.API.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+
+    public class ComplaintsController : ControllerBase
+    {
+        private readonly ApplicationDbContext _context;
+
+        public ComplaintsController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        [HttpGet("pending")]
+        public async Task<ActionResult<ComplaintsResponseDTO>> GetPendingComplaints([FromQuery] ComplaintFilterDTO filter)
+        {
+            var query = _context.Complaints
+               .Include(c => c.User)
+               .Include(c => c.Type)
+               .Where(c => !c.Processed);
+
+            if (!string.IsNullOrEmpty(filter.Surname))
+            {
+                query = query.Where(c => c.User.Surname.Contains(filter.Surname));
+            }
+
+            if (!string.IsNullOrEmpty(filter.ComplaintType))
+            {
+                query = query.Where(c => c.Type.Name == filter.ComplaintType);
+            }
+
+            var grouped = await query
+               .GroupBy(c => c.User)
+               .Select(g => new UserComplaintsDTO
+               {
+                   Name = g.Key.Name,
+                   Surname = g.Key.Surname,
+                   AccountCreationDate = g.Key.AccountCreationDate,
+                   ComplaintCount = g.Count(),
+                   ComplaintTypes = g.Select(c => c.Type.Name).Distinct().ToList()
+               })
+               .ToListAsync();
+
+            if (!grouped.Any())
+            {
+                // Alternative flow 2
+                return new ComplaintsResponseDTO
+                {
+                    HasComplaints = false,
+                    Message = "No users with complaints to be addressed."
+                };
+            }
+
+            return new ComplaintsResponseDTO
+            {
+                HasComplaints = true,
+                Users = grouped
+            };
+
+
+        }
+    }
+}
