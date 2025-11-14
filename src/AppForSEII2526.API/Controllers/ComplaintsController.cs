@@ -13,11 +13,15 @@ namespace AppForSEII2526.API.Controllers
     public class ComplaintsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<ComplaintsController> _logger;
 
-        public ComplaintsController(ApplicationDbContext context)
+
+        public ComplaintsController(ApplicationDbContext context, ILogger<ComplaintsController> logger)
         {
             _context = context;
+            _logger = logger;
         }
+
 
         [HttpGet("pending")]
         public async Task<ActionResult<ComplaintsResponseDTO>> GetPendingComplaints([FromQuery] ComplaintFilterDTO filter)
@@ -60,11 +64,14 @@ namespace AppForSEII2526.API.Controllers
             if (!grouped.Any())
             {
                 // Alternative flow 2
+                _logger.LogError("No users with complaints to be addressed");
+
                 return new ComplaintsResponseDTO
                 {
                     HasComplaints = false,
                     Message = "No users with complaints to be addressed."
                 };
+
             }
 
             return new ComplaintsResponseDTO

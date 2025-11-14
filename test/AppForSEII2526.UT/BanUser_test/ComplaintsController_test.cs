@@ -101,7 +101,7 @@ namespace AppForSEII2526.UT.BanUser_test
 
             // Arrange
             var mockLogger = new Mock<ILogger<ComplaintsController>>();
-            var controller = new ComplaintsController(_context);
+            var controller = new ComplaintsController(_context, mockLogger.Object);
 
 
             // Act
