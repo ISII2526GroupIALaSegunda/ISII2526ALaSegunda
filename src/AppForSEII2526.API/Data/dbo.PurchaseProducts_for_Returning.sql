@@ -6,7 +6,7 @@ VALUES
 (N'2', N'User2', N'Usersen', N'Eln Street', '2003-12-26 00:00:00', N'TheUser2', N'User2', N'User2@gmail.com', N'User2gmail', 0, N'Password2', N'Security2', N'Concurrency2', N'222222222', 0, 0, '2025-10-15 00:00:00', 0, 3);
 
 SET IDENTITY_INSERT [dbo].[PaymentMethods] ON
-INSERT INTO [dbo].[PaymentMethods] ([Id], [UserId], [Discriminator], [TelephoneNumber], [CreditCardNumber], [ExpirationDate], [Email]) VALUES (2, N'1', N'1', N'111111111', N'000000000', N'2026-10-31 00:00:00', N'User1@gmail.com')
+INSERT INTO [dbo].[PaymentMethods] ([Id], [UserId], [Discriminator], [TelephoneNumber], [CreditCardNumber], [ExpirationDate], [Email]) VALUES (2, N'1', N'CreditCard', N'111111111', N'000000000', N'2026-10-31 00:00:00', N'User1@gmail.com')
 SET IDENTITY_INSERT [dbo].[PaymentMethods] OFF
 
 SET IDENTITY_INSERT [dbo].[PurchaseOrders] ON
