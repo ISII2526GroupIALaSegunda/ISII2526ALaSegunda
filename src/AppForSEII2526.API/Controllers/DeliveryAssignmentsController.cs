@@ -5,11 +5,11 @@ namespace AppForSEII2526.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DeliveryAssignmentsController : Controller
+    public class DeliveryAssignmentsController : ControllerBase
     {
         private ApplicationDbContext _context;
-        private ILogger<PurchaseOrdersController> _logger;
-        public DeliveryAssignmentsController(ApplicationDbContext context, ILogger<PurchaseOrdersController> logger)
+        private ILogger<DeliveryAssignmentsController> _logger;
+        public DeliveryAssignmentsController(ApplicationDbContext context, ILogger<DeliveryAssignmentsController> logger)
         {
             _context = context;
             _logger = logger;
