@@ -13,8 +13,7 @@ namespace AppForSEII2526.API.Controllers
         private readonly ApplicationDbContext _context;
         private readonly ILogger<BanController> _logger;
 
-        public BanController(ApplicationDbContext context, ILogger<BanController> logger)
-        {
+        public BanController(ApplicationDbContext context, ILogger<BanController> logger) {
             _context = context;
             _logger = logger;
 
@@ -24,6 +23,7 @@ namespace AppForSEII2526.API.Controllers
         [Route("[action]")]
         [ProducesResponseType(typeof(BanDetailDTO), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult> GetBanReport(int id) {
         public async Task<ActionResult> GetBanReport(int id)
         {
             if (_context.BanReports == null)
@@ -33,7 +33,7 @@ namespace AppForSEII2526.API.Controllers
             }
 
             var banReport = await _context.BanReports
-                .Where(r => r.ID == id)
+                .Where(r => r.ID == id) 
                 .Include(r => r.ReportCustomers)
                     .ThenInclude(rc => rc.ApplicationCustomer)
                 .Select(r => new BanDetailDTO(

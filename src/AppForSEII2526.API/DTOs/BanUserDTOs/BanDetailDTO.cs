@@ -1,4 +1,6 @@
-﻿using Mono.TextTemplating;
+﻿
+
+using Mono.TextTemplating;
 using System.Drawing;
 
 namespace AppForSEII2526.API.DTOs.BanUserDTOs
@@ -7,7 +9,7 @@ namespace AppForSEII2526.API.DTOs.BanUserDTOs
     {
         private object value;
 
-
+       
 
         public BanDetailDTO(int id,
             string reason,
@@ -15,8 +17,7 @@ namespace AppForSEII2526.API.DTOs.BanUserDTOs
             DateTime startDate,
             DateTime endDate,
             string state,
-            IList<ReportCustomerForDetailDTO> reportedUsers)
-        {
+            IList<ReportCustomerForDetailDTO> reportedUsers){
 
             Id = id;
             Reason = reason;

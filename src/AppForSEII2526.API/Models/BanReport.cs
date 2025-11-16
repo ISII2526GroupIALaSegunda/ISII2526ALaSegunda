@@ -20,5 +20,8 @@
 
 
         public List<ReportCustomer> ReportCustomers { get; set; }
+
+      
+
     }
 }

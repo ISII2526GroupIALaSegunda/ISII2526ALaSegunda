@@ -13,7 +13,7 @@
 
         public BanReport BanReport { get; set; }
         public ApplicationUser User { get; set; }
-        public ApplicationUser ApplicationCustomer { get; set; }
+        public ApplicationUser ApplicationCustomer { get;  set; }
     }
 
     public enum ReportState
