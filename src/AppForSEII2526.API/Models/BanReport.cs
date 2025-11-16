@@ -19,6 +19,9 @@
         public DateTime StartDate { get; set; }
 
 
-        public List<ReportCustomer> Customer { get; set; }
+        public List<ReportCustomer> ReportCustomers { get; set; }
+
+      
+
     }
 }
