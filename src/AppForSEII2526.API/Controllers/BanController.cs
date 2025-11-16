@@ -23,7 +23,9 @@ namespace AppForSEII2526.API.Controllers
         [Route("[action]")]
         [ProducesResponseType(typeof(BanDetailDTO), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public async Task<ActionResult> GetBanReport(int id) {
+       
+        public async Task<ActionResult> GetBanReport(int id)
+        {
             if (_context.BanReports == null)
             {
                 _logger.LogError("Error: BanReports table does not exist");
