@@ -71,7 +71,8 @@ namespace AppForSEII2526.API.Controllers
             {
                 string error = "Error!, You must start personale message with Please,";
                 ModelState.AddModelError("PersonalMessage", error);
-                return BadRequest(error);
+                _logger.LogError(DateTime.Now + " Error: " + error);
+                return Conflict("Error" + error);
             }
 
             var deliveryDriver = await _context.DeliveryDrivers.FirstOrDefaultAsync(dd => dd.id == deliveryAssignmentForCreate.DeliveryDriverId);
