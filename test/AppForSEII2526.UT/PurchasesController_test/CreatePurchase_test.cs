@@ -15,7 +15,7 @@ namespace AppForSEII2526.UT.PurchasesController_test
 {
     public class CreatePurchase_test : AppForSEII2526SqliteUT
     {
-        private const string _street = "Calle Inventada 1";
+        private const string _street = "Calle Inventada, 1";
         private const string _city = "Albacete";
         private const string _postalCode = "02001";
         private const string _nameCustomer = "Pepe";
