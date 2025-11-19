@@ -130,6 +130,18 @@ namespace AppForSEII2526.API.Controllers
                 return BadRequest(new ValidationProblemDetails(ModelState));
             }
 
+            // Street separated by comma
+           
+
+            if (string.IsNullOrWhiteSpace(purchaseForCreate.Street) || ! purchaseForCreate.Street.Contains(','))
+           
+            {
+                ModelState.AddModelError("PaymentMethodId", "Error!, You must include a comma to separate the street from the number of the house");
+                return BadRequest(new ValidationProblemDetails(ModelState));
+            }
+
+
+
             // Cabecera del pedido
             var order = new PurchaseOrder
             {
