@@ -100,7 +100,7 @@ namespace AppForSEII2526.UT.DeliveryAssignmentController_test
             var validDeliveryAssignment = new DeliveryAssignmentForCreateDTO(
                 deliveryDriverId: 1,
                 deliveryAssignmentDone: DateTime.UtcNow.AddDays(7),
-                personalMessage: "Fast delivery",
+                personalMessage: "Please, Fast delivery",
                 extraReward: 15.00m,
                 purchaseDeliveries: new List<PurchaseDeliveryDTO>
                 {
@@ -121,7 +121,7 @@ namespace AppForSEII2526.UT.DeliveryAssignmentController_test
             Assert.Equal("GetDeliveryAssignment", createdResult.ActionName);
             Assert.Equal("Juan", deliveryAssignmentDetail.DeliveryDriverName);
             Assert.Equal(15.00m, deliveryAssignmentDetail.ExtraReward);
-            Assert.Equal("Fast delivery", deliveryAssignmentDetail.PersonalMessage);
+            Assert.Equal("Please, Fast delivery", deliveryAssignmentDetail.PersonalMessage);
 
             // Verificar que la asignación está en la BD
             var deliveryAssignmentInDb = _context.DeliveryAssignments
@@ -139,7 +139,7 @@ namespace AppForSEII2526.UT.DeliveryAssignmentController_test
                 // UC2_AF0: DeliveryDriver no existe
                 new object[]
                 {
-                    new DeliveryAssignmentForCreateDTO(999, DateTime.UtcNow.AddDays(7), "Fast", 15.00m,
+                    new DeliveryAssignmentForCreateDTO(999, DateTime.UtcNow.AddDays(7), "Please, Fast", 15.00m,
                         new List<PurchaseDeliveryDTO> { new PurchaseDeliveryDTO(DateTime.UtcNow.AddDays(1), "Av España", "Albacete", "02002", 5.00m, PriorityType.Medium, 4) }),
                     "error occurred",
                     typeof(ConflictObjectResult)
@@ -148,15 +148,23 @@ namespace AppForSEII2526.UT.DeliveryAssignmentController_test
                 // UC2_AF1: PurchaseOrder no existe
                 new object[]
                 {
-                    new DeliveryAssignmentForCreateDTO(1, DateTime.UtcNow.AddDays(7), "Fast", 15.00m,
+                    new DeliveryAssignmentForCreateDTO(1, DateTime.UtcNow.AddDays(7), "Please, Fast", 15.00m,
                         new List<PurchaseDeliveryDTO> { new PurchaseDeliveryDTO(DateTime.UtcNow.AddDays(1), "Av España", "Albacete", "02002", 5.00m, PriorityType.Medium, 999) }),
                     "PurchaseDelivery",
+                    typeof(ConflictObjectResult)
+                },
+                // UC2_AF2: PersonalMessage do not starts with "Please,"
+                new object[]
+                {
+                    new DeliveryAssignmentForCreateDTO(1, DateTime.UtcNow.AddDays(7), "Fast", 15.00m,
+                        new List<PurchaseDeliveryDTO> { new PurchaseDeliveryDTO(DateTime.UtcNow.AddDays(1), "Av España", "Albacete", "02002", 5.00m, PriorityType.Medium, 4) }),
+                    "You must start",
                     typeof(ConflictObjectResult)
                 }
             };
         }
 
-        [Theory(DisplayName = "UC2_AF0_AF1 – CreateDeliveryAssignment Errors")]
+        [Theory(DisplayName = "UC2_AF0_AF1_AF2 – CreateDeliveryAssignment Errors")]
         [Trait("UseCase", "UC2_AF0_AF1")]
         [Trait("LevelTesting", "Unit Testing")]
         [Trait("Database", "WithoutFixture")]

@@ -67,6 +67,14 @@ namespace AppForSEII2526.API.Controllers
             if (deliveryAssignmentForCreate.PurchaseDeliveries.Count == 0)
                 ModelState.AddModelError("PurchaseDeliveries", "Error! You must include at least one purchase order to be delivered");
 
+            if (!(deliveryAssignmentForCreate.PersonalMessage.StartsWith("Please,")))
+            {
+                string error = "Error!, You must start personale message with Please,";
+                ModelState.AddModelError("PersonalMessage", error);
+                _logger.LogError(DateTime.Now + " Error: " + error);
+                return Conflict("Error" + error);
+            }
+
             var deliveryDriver = await _context.DeliveryDrivers.FirstOrDefaultAsync(dd => dd.id == deliveryAssignmentForCreate.DeliveryDriverId);
             if (deliveryDriver == null)
                 ModelState.AddModelError("DeliveryDriver", "Error! Delivery driver does not exist");
