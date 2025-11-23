@@ -14,7 +14,6 @@ using Xunit;
 namespace AppForSEII2526.UT.BanUser_test
 {
     public class ComplaintsController_test : AppForMovies4SqliteUT
-
     {
         public ComplaintsController_test()
         {
@@ -39,6 +38,7 @@ namespace AppForSEII2526.UT.BanUser_test
                 Email = "jaime@test.es",
                 Address = "Calle Falsa 124"
             };
+
             var type1 = new ComplaintType { ID = 1, Name = "Producto" };
             var type2 = new ComplaintType { ID = 2, Name = "Servicio" };
 
@@ -53,13 +53,10 @@ namespace AppForSEII2526.UT.BanUser_test
             _context.ComplaintTypes.AddRange(type1, type2);
             _context.Complaints.AddRange(complaints);
             _context.SaveChanges();
-
-            
         }
 
         public static IEnumerable<object[]> TestCasesFor_GetPendingComplaints()
         {
-
             var expectedAll = new List<UserComplaintsDTO>
             {
                 new UserComplaintsDTO { Name = "Juan", Surname = "García", AccountCreationDate = new DateTime(2025, 12, 12), ComplaintCount = 1, ComplaintTypes = new List<string>{ "Producto" } },
@@ -80,12 +77,11 @@ namespace AppForSEII2526.UT.BanUser_test
 
             return new List<object[]>
             {
-                new object[] { null,     null,    expectedAll },       // UC_BF
-                new object[] { "García", null,    expectedBySurname }, // UC_AF1 filter surname
-                new object[] { null,     "Servicio", expectedByType }, // UC_AF1 filter type
-                new object[] { "NoExiste", null, expectedNone }        // UC_AF2 no complaints
+                new object[] { null, null, expectedAll },
+                new object[] { "García", null, expectedBySurname },
+                new object[] { null, "Servicio", expectedByType },
+                new object[] { "NoExiste", null, expectedNone }
             };
-
         }
 
         [Theory(DisplayName = "UC_BF_AF1_AF2 – GetPendingComplaints")]
@@ -98,14 +94,13 @@ namespace AppForSEII2526.UT.BanUser_test
             string? complaintType,
             IList<UserComplaintsDTO> expected)
         {
-
             // Arrange
             var mockLogger = new Mock<ILogger<ComplaintsController>>();
             var controller = new ComplaintsController(_context, mockLogger.Object);
 
-
             // Act
-            var result = await controller.GetPendingComplaints(new ComplaintFilterDTO { Surname = surname, ComplaintType = complaintType });
+            var result = await controller.GetPendingComplaints(
+                new ComplaintFilterDTO { Surname = surname, ComplaintType = complaintType });
 
             // Assert
             var actionResult = Assert.IsType<ActionResult<ComplaintsResponseDTO>>(result);
@@ -113,28 +108,27 @@ namespace AppForSEII2526.UT.BanUser_test
 
             if (!expected.Any())
             {
-                // AF2: No complaints found
+                // AF2: no complaints
                 Assert.False(dto.HasComplaints);
                 Assert.Equal("No users with complaints to be addressed.", dto.Message);
 
-                // Verificar que el logger registró un error
+                // New: INFO instead of ERROR
                 mockLogger.Verify(
                     x => x.Log(
-                        LogLevel.Error,
+                        LogLevel.Information,
                         It.IsAny<EventId>(),
-                        It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("No users with complaints to be addressed")),
+                        It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("No users with complaints")),
                         It.IsAny<Exception>(),
                         It.IsAny<Func<It.IsAnyType, Exception, string>>()),
                     Times.Once);
             }
-
             else
             {
-                // BF/AF1: Complaints found
+                // BF / AF1
                 Assert.True(dto.HasComplaints);
 
-                var expectedOrdered = expected.OrderBy(u => u.Surname).ToList();
-                var actualOrdered = dto.Users.OrderBy(u => u.Surname).ToList();
+                var expectedOrdered = expected.OrderBy(u => u.Surname).ThenBy(u => u.Name).ToList();
+                var actualOrdered = dto.Users.OrderBy(u => u.Surname).ThenBy(u => u.Name).ToList();
 
                 Assert.Equal(expectedOrdered.Count, actualOrdered.Count);
 
@@ -147,10 +141,6 @@ namespace AppForSEII2526.UT.BanUser_test
                     Assert.Equal(expectedOrdered[i].ComplaintTypes, actualOrdered[i].ComplaintTypes);
                 }
             }
-
-
         }
-
-
     }
 }
