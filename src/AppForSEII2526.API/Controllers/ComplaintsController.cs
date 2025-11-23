@@ -4,17 +4,14 @@ using AppForSEII2526.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace AppForSEII2526.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-
     public class ComplaintsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<ComplaintsController> _logger;
-
 
         public ComplaintsController(ApplicationDbContext context, ILogger<ComplaintsController> logger)
         {
@@ -22,33 +19,32 @@ namespace AppForSEII2526.API.Controllers
             _logger = logger;
         }
 
-
         [HttpGet("pending")]
         public async Task<ActionResult<ComplaintsResponseDTO>> GetPendingComplaints([FromQuery] ComplaintFilterDTO filter)
         {
+            // Base query: only unprocessed complaints
             var query = _context.Complaints
-               .Include(c => c.User)
-               .Include(c => c.Type)
-               .Where(c => !c.Processed);
+                .Include(c => c.User)
+                .Include(c => c.Type)
+                .Where(c => !c.Processed);
 
-            if (!string.IsNullOrEmpty(filter.Surname))
+            // Optional surname filter
+            if (!string.IsNullOrWhiteSpace(filter.Surname))
             {
                 query = query.Where(c => c.User.Surname.Contains(filter.Surname));
             }
 
-            if (!string.IsNullOrEmpty(filter.ComplaintType))
+            // Optional complaint type filter
+            if (!string.IsNullOrWhiteSpace(filter.ComplaintType))
             {
                 query = query.Where(c => c.Type.Name == filter.ComplaintType);
             }
 
-            // Traemos las quejas pendientes con Include
-            var complaints = await query
-                .Include(c => c.User)
-                .Include(c => c.Type)
-                .ToListAsync();   
+            // Fetch complaints from DB
+            var complaints = await query.ToListAsync();
 
-            // Agrupamos en memoria
-            var grouped = complaints
+            // Group complaints by user
+            var groupedUsers = complaints
                 .GroupBy(c => c.User)
                 .Select(g => new UserComplaintsDTO
                 {
@@ -56,31 +52,34 @@ namespace AppForSEII2526.API.Controllers
                     Surname = g.Key.Surname,
                     AccountCreationDate = g.Key.AccountCreationDate,
                     ComplaintCount = g.Count(),
-                    ComplaintTypes = g.Select(c => c.Type.Name).Distinct().ToList()
+                    ComplaintTypes = g
+                        .Select(c => c.Type.Name)
+                        .Distinct()
+                        .OrderBy(name => name)   // safer and deterministic
+                        .ToList()
                 })
+                .OrderBy(u => u.Surname)
+                .ThenBy(u => u.Name)
                 .ToList();
 
-
-            if (!grouped.Any())
+            // Alternative Flow 2 - No pending complaints found
+            if (!groupedUsers.Any())
             {
-                // Alternative flow 2
-                _logger.LogError("No users with complaints to be addressed");
+                _logger.LogInformation("No users with complaints to be addressed.");
 
                 return new ComplaintsResponseDTO
                 {
                     HasComplaints = false,
                     Message = "No users with complaints to be addressed."
                 };
-
             }
 
+            // Success response
             return new ComplaintsResponseDTO
             {
                 HasComplaints = true,
-                Users = grouped
+                Users = groupedUsers
             };
-
-
         }
     }
 }
