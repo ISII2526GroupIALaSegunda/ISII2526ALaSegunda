@@ -1,0 +1,78 @@
+﻿@page "/purchasedelivery/selectpurchaseordersfordelivery"
+
+@using AppForSEII2526.Web.API
+@inject AppForSEII2526APIClient apiclient
+@inject ILogger<SelectPurchaseOrdersForDelivery> logger
+
+<h3>Select Purchase Orders For Delivery</h3>
+<div class="container-fluid">
+    <div class="row" hidden="@hideErrors">
+        <p>Errors: @errors</p>
+    </div>
+    <div class="row">
+        <div class="col-8">
+            <div class="row">
+                <div class="col">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">Postalcode</span>
+                        <input type="text" id="inputPostalcode" @bind=postalcode class="form-control" placeholder="Postalcode" aria-label="Postalcode" aria-describedby="basic-addon1">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">Total Price</span>
+                        <input type="text" id="inputTotalPrice" @bind=totalprice class="form-control" placeholder="Total Price" aria-label="Total Price" aria-describedby="basic-addon1">
+                    </div>
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-primary" @onclick=@SearchPurchaseOrders id="searchPurchaseOrders">Search purchase orders</button>
+                </div>
+            </div>
+            <div class="row">
+                @if (purchaseOrders == null)
+                {
+                    <p>Loading purchase orders....</p>
+                }
+                else
+                {
+                    <p>number of purchase orders @purchaseOrders.Count</p>
+
+                }
+            </div>
+        </div>
+        <div class="col-2">
+            <p>here i will show the purchase orders to schedule</p>
+        </div>
+
+    </div>
+
+</div>
+@code {
+    private ICollection<PurchaseOrderForDeliveryDTO> purchaseOrders;
+    private bool hideErrors { get { return errors.Length == 0; } }
+    private string errors = "";
+    private string? postalcode { get; set; }
+    private double? totalprice { get; set; }
+
+    public async void SearchPurchaseOrders()
+    {
+        try
+        {
+            purchaseOrders = await apiclient.GetPurchaseOrdersToDeliveryAsync(postalcode, totalprice);
+
+        }
+        catch (ApiException ex)
+        {
+            logger.LogError($"{DateTime.Now} Error: {ex}");
+            errors = "Error while connecting to the system";
+        }
+        StateHasChanged();
+    }
+
+    protected override Task OnInitializedAsync()
+    {
+        SearchPurchaseOrders();
+
+        return base.OnInitializedAsync();
+    }
+}
