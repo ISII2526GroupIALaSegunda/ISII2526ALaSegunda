@@ -63,9 +63,15 @@
         }
         catch (ApiException ex)
         {
-            logger.LogError($"{DateTime.Now} Error: {ex}");
-            errors = "Error while connecting to the system";
-            // Review to return 0 when bad request raise (when there are nor results in the get)
+            if (ex.StatusCode == 400)
+            {
+                purchaseOrders = [];
+            }
+            else
+            {
+                logger.LogError($"{DateTime.Now} Error: {ex}");
+                errors = "Error while connecting to the system";
+            }
         }
         StateHasChanged();
     }
