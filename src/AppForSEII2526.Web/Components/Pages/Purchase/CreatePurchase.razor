@@ -1,0 +1,89 @@
+@page "/purchases/createpurchase"
+@attribute [Authorize]
+@using AppForSEII2526.Web.API
+@inject AppForSEII2526APIClient api
+@inject PurchaseStateContainer purchaseState
+@inject NavigationManager nav
+
+<h3>Create Purchase</h3>
+
+@if (purchaseState.Purchase.Items.Count == 0)
+{
+    <div class="alert alert-info">Your cart is empty.</div>
+}
+else
+{
+    <EditForm Model="purchaseState.Purchase" OnValidSubmit="Confirm">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="row g-3">
+            <div class="col-md-4">
+                <InputText class="form-control" @bind-Value="purchaseState.Purchase.Street" placeholder="Street, Number" />
+            </div>
+            <div class="col-md-3">
+                <InputText class="form-control" @bind-Value="purchaseState.Purchase.City" placeholder="City" />
+            </div>
+            <div class="col-md-3">
+                <InputText class="form-control" @bind-Value="purchaseState.Purchase.PostalCode" placeholder="Postal Code" />
+            </div>
+            <div class="col-md-3">
+                <InputText class="form-control" @bind-Value="purchaseState.Purchase.NameCustomer" placeholder="Name" />
+            </div>
+            <div class="col-md-3">
+                <InputText class="form-control" @bind-Value="purchaseState.Purchase.SurnameCustomer" placeholder="Surname" />
+            </div>
+            <div class="col-md-3">
+                <InputNumber class="form-control" @bind-Value="purchaseState.Purchase.PaymentMethodId" />
+            </div>
+            <div class="col-md-3">
+                <InputNumber class="form-control" @bind-Value="purchaseState.Purchase.Rating" />
+            </div>
+        </div>
+        <button class="btn btn-success mt-3" type="submit">Confirm purchase</button>
+    </EditForm>
+}
+
+@if (!string.IsNullOrWhiteSpace(errors))
+{
+    <div class="alert alert-warning mt-3">@errors</div>
+}
+
+@if (result != null)
+{
+    <div class="card mt-3">
+        <div class="card-header">Purchase created</div>
+        <div class="card-body">
+            <div>Id: @result.Id</div>
+            <div>Total: @result.TotalPrice</div>
+            <div>Date: @result.Date</div>
+            <div>Address: @result.Street, @result.City (@result.PostalCode)</div>
+            <div>Customer: @result.NameSurname</div>
+            <div>Payment: @result.PaymentMethod</div>
+        </div>
+    </div>
+}
+
+@code {
+    private string? errors;
+    private PurchaseForDetailDTO? result;
+
+    private async Task Confirm()
+    {
+        errors = null;
+        result = null;
+        try
+        {
+            var created = await api.CreatePurchaseAsync(purchaseState.Purchase);
+            result = created;
+            purchaseState.ClearCart();
+        }
+        catch (AppForSEII2526.Web.API.ApiException ex)
+        {
+            errors = ex.Message;
+        }
+        catch (System.Exception ex)
+        {
+            errors = ex.Message;
+        }
+    }
+}
