@@ -10,7 +10,7 @@ namespace AppForSEII2526.UIT.UC_Ban
     public class SelectUsersForBanning_PO : PageObject
     {
         By banUser = By.Id("BanUser");
-        //other input actions
+        //other input actions, many other actions
         public SelectUsersForBanning_PO(IWebDriver driver, ITestOutputHelper output) : base(driver, output)
         {
         }
