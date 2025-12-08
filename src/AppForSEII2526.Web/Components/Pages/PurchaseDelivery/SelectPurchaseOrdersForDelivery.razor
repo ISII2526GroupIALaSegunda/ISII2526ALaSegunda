@@ -36,7 +36,36 @@
                 }
                 else
                 {
-                    <p>number of purchase orders @purchaseOrders.Count</p>
+                    <div class="mh-100 table-responsive">
+                        <table class="table table-condensed table-hover" id="TableOfPurchaseOrders">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Date</th>
+                                    <th>Total Price</th>
+                                    <th>City</th>
+                                    <th>Street</th>
+                                    <th>Postal Code</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var purchaseOrder in purchaseOrders)
+                                {
+                                    <tr id="PurchaseOrderData_@purchaseOrder.Id">
+                                        <td>@purchaseOrder.Id</td>
+                                        <td>@purchaseOrder.Date</td>
+                                        <td>@purchaseOrder.TotalPrice</td>
+                                        <td>@purchaseOrder.City</td>
+                                        <td>@purchaseOrder.Street</td>
+                                        <td>@purchaseOrder.PostalCode</td>
+                                        <td>
+                                            <button class="btn btn-outline-secondary" id="movieToRent_@purchaseOrder.Id" @onclick="@(() => AddPurchaseOrder(purchaseOrder))">Add</button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
 
                 }
             </div>
