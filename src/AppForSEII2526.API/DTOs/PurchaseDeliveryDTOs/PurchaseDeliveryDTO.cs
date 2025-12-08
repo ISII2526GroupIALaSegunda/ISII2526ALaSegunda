@@ -1,4 +1,4 @@
-﻿namespace AppForSEII2526.API.DTOs.DeliveryAssignmentDTOs
+﻿namespace AppForSEII2526.API.DTOs.PurchaseDeliveryDTOs
 {
     public class PurchaseDeliveryDTO
     {
