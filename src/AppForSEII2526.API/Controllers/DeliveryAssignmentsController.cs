@@ -61,30 +61,33 @@ namespace AppForSEII2526.API.Controllers
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
         [ProducesResponseType(typeof(DeliveryAssignmentForDetailDTO), (int)HttpStatusCode.Created)]
-        public async Task<ActionResult> CreateDeliveryAssignment(DeliveryAssignmentForCreateDTO deliveryAssignmentForCreate){
+        public async Task<ActionResult> CreateDeliveryAssignment(DeliveryAssignmentForCreateDTO deliveryAssignmentForCreate)
+        {
+            //any validation defined in DeliveryAssignmentForCreateDTO is checked before running the method so they don't have to be checked again
             if (deliveryAssignmentForCreate.DeliveryAssignmentDone <= DateTime.Now)
                 ModelState.AddModelError("DeliveryAssignmentDone", "Error! Delivery deadline must be later than now");
 
             if (deliveryAssignmentForCreate.PurchaseDeliveries.Count == 0)
                 ModelState.AddModelError("PurchaseDeliveries", "Error! You must include at least one purchase order to be delivered");
 
-            if (!(deliveryAssignmentForCreate.PersonalMessage.StartsWith("Please,")))
-            {
-                string error = "Error!, You must start personale message with Please,";
-                ModelState.AddModelError("PersonalMessage", error);
-                _logger.LogError(DateTime.Now + " Error: " + error);
-                return Conflict("Error" + error);
-            }
+            if (!deliveryAssignmentForCreate.PersonalMessage.StartsWith("Please,"))
+                ModelState.AddModelError("PersonalMessage", "Error! You must start personal message with Please,");
 
+            //we must check that the delivery driver exists
             var deliveryDriver = await _context.DeliveryDrivers.FirstOrDefaultAsync(dd => dd.id == deliveryAssignmentForCreate.DeliveryDriverId);
             if (deliveryDriver == null)
                 ModelState.AddModelError("DeliveryDriver", "Error! Delivery driver does not exist");
 
+            //we must check that all the purchase orders to be delivered exist in the database
             var purchaseOrdersIds = deliveryAssignmentForCreate.PurchaseDeliveries.Select(pd => pd.PurchaseOrderId).ToList<int>();
 
             var purchaseOrders = _context.PurchaseOrders.Include(po => po.DriverAssigned)
                 .ThenInclude(pd => pd.DeliveryAssignment)
+
+                //we must check that all the purchase orders exist in the database
                 .Where(po => purchaseOrdersIds.Contains(po.Id))
+
+                //we use an anonymous type
                 .Select(po => new
                 {
                     po.Id,
@@ -92,17 +95,26 @@ namespace AppForSEII2526.API.Controllers
                     po.Street,
                     po.PostalCode,
                     po.TotalPrice,
+                    po.State
                 })
                 .ToList();
 
-            DeliveryAssignment deliveryAssignment = new DeliveryAssignment(deliveryAssignmentForCreate.PersonalMessage, deliveryAssignmentForCreate.ExtraReward, deliveryDriver, deliveryAssignmentForCreate.DeliveryAssignmentDone, new List<PurchaseDelivery>());
+            //we must provide delivery assignment with the info to be saved in the database
+            DeliveryAssignment deliveryAssignment = new DeliveryAssignment(
+                deliveryAssignmentForCreate.PersonalMessage,
+                deliveryAssignmentForCreate.ExtraReward,
+                deliveryDriver,
+                deliveryAssignmentForCreate.DeliveryAssignmentDone,
+                new List<PurchaseDelivery>()
+            );
 
             foreach (var item in deliveryAssignmentForCreate.PurchaseDeliveries)
             {
                 var purchaseOrder = purchaseOrders.FirstOrDefault(po => po.Id == item.PurchaseOrderId);
-                if (purchaseOrder != null)
+                //we must check that the purchase order exists
+                if (purchaseOrder == null)
                 {
-                    ModelState.AddModelError("PurchaseOrders", $"PurchaseOrder with id {item.PurchaseOrderId} does not exist.");
+                    ModelState.AddModelError("PurchaseDeliveries", $"Error! PurchaseDelivery with id {item.PurchaseOrderId} does not exist");
                 }
                 else
                 {
@@ -110,26 +122,35 @@ namespace AppForSEII2526.API.Controllers
                 }
             }
 
-            if (deliveryDriver == null)
-                ModelState.AddModelError("DeliveryDriver", "Error! Delivery driver does not exist");
+            //if there is any problem because of the delivery driver or because any purchase order does not exist
+            if (ModelState.ErrorCount > 0)
+            {
+                return BadRequest(new ValidationProblemDetails(ModelState));
+            }
 
             _context.Add(deliveryAssignment);
 
             try
             {
+                //we store in the database both delivery assignment and its purchase deliveries
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
-                _logger.LogError(DateTime.Now + " Error: " + ex.Message);
+                _logger.LogError(DateTime.Now + ": " + ex.Message);
                 return Conflict("Error" + ex.Message);
             }
 
-            var deliveryAssignmentDetail = new DeliveryAssignmentForDetailDTO(deliveryAssignment.Id ,deliveryAssignment.DeliveryMan.Name!,
-                deliveryAssignment.DeliveryAssignmentDone, deliveryAssignment.PersonalMessage, deliveryAssignment.ExtraReward, deliveryAssignmentForCreate.PurchaseDeliveries);
+            var deliveryAssignmentDetail = new DeliveryAssignmentForDetailDTO(
+                deliveryAssignment.Id,
+                deliveryAssignment.DeliveryMan.Name!,
+                deliveryAssignment.DeliveryAssignmentDone,
+                deliveryAssignment.PersonalMessage,
+                deliveryAssignment.ExtraReward,
+                deliveryAssignmentForCreate.PurchaseDeliveries
+            );
 
             return CreatedAtAction("GetDeliveryAssignment", new { id = deliveryAssignment.Id }, deliveryAssignmentDetail);
-
         }
     }
 }

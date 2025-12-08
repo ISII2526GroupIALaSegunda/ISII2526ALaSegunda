@@ -91,89 +91,52 @@ namespace AppForSEII2526.UT.DeliveryAssignmentController_test
             _context.SaveChanges();
         }
 
-        [Fact(DisplayName = "UC2_BF – CreateDeliveryAssignment Success")]
-        [Trait("UseCase", "UC2_BF")]
-        [Trait("LevelTesting", "Unit Testing")]
-        [Trait("Database", "WithoutFixture")]
-        public async Task UC2_BF_CreateDeliveryAssignment_Success_Test()
+        public static IEnumerable<object[]> TestCasesFor_CreateDeliveryAssignment()
         {
-            // Arrange
-            var validDeliveryAssignment = new DeliveryAssignmentForCreateDTO(
-                deliveryDriverId: 1,
-                deliveryAssignmentDone: DateTime.UtcNow.AddDays(7),
-                personalMessage: "Please, Fast delivery",
-                extraReward: 15.00m,
-                purchaseDeliveries: new List<PurchaseDeliveryDTO>
-                {
-                    new PurchaseDeliveryDTO(DateTime.UtcNow.AddDays(1), "Av España", "Albacete", "02002", 5.00m, PriorityType.Medium, 4),
-                    new PurchaseDeliveryDTO(DateTime.UtcNow.AddDays(2), "Gran Vía", "Madrid", "28013", 50.00m, PriorityType.High, 5)
-                }
+            // UC2_AF0: DeliveryDriver no existe
+            DeliveryAssignmentForCreateDTO deliveryAssignmentDriverNotFound = new DeliveryAssignmentForCreateDTO(
+                999,
+                DateTime.UtcNow.AddDays(7),
+                "Please, Fast",
+                15.00m,
+                new List<PurchaseDeliveryDTO> { new PurchaseDeliveryDTO(DateTime.UtcNow.AddDays(1), "Av España", "Albacete", "02002", 5.00m, PriorityType.Medium, 4) }
             );
 
-            var mockLogger = new Mock<ILogger<DeliveryAssignmentsController>>();
-            var controller = new DeliveryAssignmentsController(_context, mockLogger.Object);
+            // UC2_AF1: PurchaseOrder no existe
+            DeliveryAssignmentForCreateDTO deliveryAssignmentPurchaseOrderNotFound = new DeliveryAssignmentForCreateDTO(
+                1,
+                DateTime.UtcNow.AddDays(7),
+                "Please, Fast",
+                15.00m,
+                new List<PurchaseDeliveryDTO> { new PurchaseDeliveryDTO(DateTime.UtcNow.AddDays(1), "Av España", "Albacete", "02002", 5.00m, PriorityType.Medium, 999) }
+            );
 
-            // Act
-            var result = await controller.CreateDeliveryAssignment(validDeliveryAssignment);
+            // UC2_AF2: PersonalMessage do not starts with "Please,"
+            DeliveryAssignmentForCreateDTO deliveryAssignmentInvalidMessage = new DeliveryAssignmentForCreateDTO(
+                1,
+                DateTime.UtcNow.AddDays(7),
+                "Fast",
+                15.00m,
+                new List<PurchaseDeliveryDTO> { new PurchaseDeliveryDTO(DateTime.UtcNow.AddDays(1), "Av España", "Albacete", "02002", 5.00m, PriorityType.Medium, 4) }
+            );
 
-            // Assert
-            var createdResult = Assert.IsType<CreatedAtActionResult>(result);
-            var deliveryAssignmentDetail = Assert.IsType<DeliveryAssignmentForDetailDTO>(createdResult.Value);
-            Assert.Equal("GetDeliveryAssignment", createdResult.ActionName);
-            Assert.Equal("Juan", deliveryAssignmentDetail.DeliveryDriverName);
-            Assert.Equal(15.00m, deliveryAssignmentDetail.ExtraReward);
-            Assert.Equal("Please, Fast delivery", deliveryAssignmentDetail.PersonalMessage);
-
-            // Verificar que la asignación está en la BD
-            var deliveryAssignmentInDb = _context.DeliveryAssignments
-                .Include(da => da.PurchaseDeliveries)
-                .FirstOrDefault(da => da.Id == deliveryAssignmentDetail.Id);
-
-            Assert.NotNull(deliveryAssignmentInDb);
-            Assert.Equal("Juan", deliveryAssignmentInDb.DeliveryMan.Name);
-        }
-
-        public static IEnumerable<object[]> TestCasesFor_CreateDeliveryAssignment_Error()
-        {
-            return new List<object[]>
+            var allTests = new List<object[]>
             {
-                // UC2_AF0: DeliveryDriver no existe
-                new object[]
-                {
-                    new DeliveryAssignmentForCreateDTO(999, DateTime.UtcNow.AddDays(7), "Please, Fast", 15.00m,
-                        new List<PurchaseDeliveryDTO> { new PurchaseDeliveryDTO(DateTime.UtcNow.AddDays(1), "Av España", "Albacete", "02002", 5.00m, PriorityType.Medium, 4) }),
-                    "error occurred",
-                    typeof(ConflictObjectResult)
-                },
-
-                // UC2_AF1: PurchaseOrder no existe
-                new object[]
-                {
-                    new DeliveryAssignmentForCreateDTO(1, DateTime.UtcNow.AddDays(7), "Please, Fast", 15.00m,
-                        new List<PurchaseDeliveryDTO> { new PurchaseDeliveryDTO(DateTime.UtcNow.AddDays(1), "Av España", "Albacete", "02002", 5.00m, PriorityType.Medium, 999) }),
-                    "PurchaseDelivery",
-                    typeof(ConflictObjectResult)
-                },
-                // UC2_AF2: PersonalMessage do not starts with "Please,"
-                new object[]
-                {
-                    new DeliveryAssignmentForCreateDTO(1, DateTime.UtcNow.AddDays(7), "Fast", 15.00m,
-                        new List<PurchaseDeliveryDTO> { new PurchaseDeliveryDTO(DateTime.UtcNow.AddDays(1), "Av España", "Albacete", "02002", 5.00m, PriorityType.Medium, 4) }),
-                    "You must start",
-                    typeof(ConflictObjectResult)
-                }
+                new object[] { deliveryAssignmentDriverNotFound, "error occurred" },
+                new object[] { deliveryAssignmentPurchaseOrderNotFound, "PurchaseDelivery" },
+                new object[] { deliveryAssignmentInvalidMessage, "You must start" }
             };
+
+            return allTests;
         }
 
         [Theory(DisplayName = "UC2_AF0_AF1_AF2 – CreateDeliveryAssignment Errors")]
-        [Trait("UseCase", "UC2_AF0_AF1")]
+        [Trait("UseCase", "UC2_AF0_AF1_AF2")]
         [Trait("LevelTesting", "Unit Testing")]
-        [Trait("Database", "WithoutFixture")]
-        [MemberData(nameof(TestCasesFor_CreateDeliveryAssignment_Error))]
-        public async Task UC2_AF0_AF1_CreateDeliveryAssignment_Error_Test(
+        [MemberData(nameof(TestCasesFor_CreateDeliveryAssignment))]
+        public async Task UC2_AF0_AF1_AF2_CreateDeliveryAssignment_Error_Test(
             DeliveryAssignmentForCreateDTO deliveryAssignmentForCreate,
-            string expectedError,
-            Type expectedResultType)
+            string errorExpected)
         {
             // Arrange
             var mockLogger = new Mock<ILogger<DeliveryAssignmentsController>>();
@@ -183,23 +146,63 @@ namespace AppForSEII2526.UT.DeliveryAssignmentController_test
             var result = await controller.CreateDeliveryAssignment(deliveryAssignmentForCreate);
 
             // Assert
-            Assert.IsType(expectedResultType, result);
+            var conflictResult = Assert.IsType<ConflictObjectResult>(result);
+            var errorActual = Assert.IsType<string>(conflictResult.Value);
+            Assert.Contains(errorExpected, errorActual, StringComparison.OrdinalIgnoreCase);
+        }
 
-            if (result is ConflictObjectResult conflictResult)
-            {
-                var errorMessage = Assert.IsType<string>(conflictResult.Value);
-                Assert.Contains(expectedError, errorMessage, StringComparison.OrdinalIgnoreCase);
+        [Fact(DisplayName = "UC2_BF – CreateDeliveryAssignment Success")]
+        [Trait("UseCase", "UC2_BF")]
+        [Trait("LevelTesting", "Unit Testing")]
+        public async Task UC2_BF_CreateDeliveryAssignment_Success_Test()
+        {
+            // Arrange
+            var mockLogger = new Mock<ILogger<DeliveryAssignmentsController>>();
+            var controller = new DeliveryAssignmentsController(_context, mockLogger.Object);
 
-                // Verificar que el logger registró el error
-                mockLogger.Verify(
-                    x => x.Log(
-                        LogLevel.Error,
-                        It.IsAny<EventId>(),
-                        It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("Error")),
-                        It.IsAny<Exception>(),
-                        It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-                    Times.Once);
-            }
+            DateTime deliveryDate = DateTime.UtcNow.AddDays(7);
+            DateTime delivery1Date = DateTime.UtcNow.AddDays(1);
+            DateTime delivery2Date = DateTime.UtcNow.AddDays(2);
+
+            DeliveryAssignmentForCreateDTO deliveryAssignmentForCreate = new DeliveryAssignmentForCreateDTO(
+                1,
+                deliveryDate,
+                "Please, Fast delivery",
+                15.00m,
+                new List<PurchaseDeliveryDTO>()
+            );
+
+            deliveryAssignmentForCreate.PurchaseDeliveries.Add(
+                new PurchaseDeliveryDTO(delivery1Date, "Av España", "Albacete", "02002", 5.00m, PriorityType.Medium, 4)
+            );
+            deliveryAssignmentForCreate.PurchaseDeliveries.Add(
+                new PurchaseDeliveryDTO(delivery2Date, "Gran Vía", "Madrid", "28013", 50.00m, PriorityType.High, 5)
+            );
+
+            // El id es 1 porque es la primera asignación en la base de datos
+            DeliveryAssignmentForDetailDTO expectedDeliveryAssignmentDetail = new DeliveryAssignmentForDetailDTO(
+                1,
+                "Juan",
+                deliveryDate,
+                "Please, Fast delivery",
+                15.00m,
+                new List<PurchaseDeliveryDTO>()
+            );
+
+            expectedDeliveryAssignmentDetail.PurchaseDeliveries.Add(
+                new PurchaseDeliveryDTO(delivery1Date, "Av España", "Albacete", "02002", 5.00m, PriorityType.Medium, 4)
+            );
+            expectedDeliveryAssignmentDetail.PurchaseDeliveries.Add(
+                new PurchaseDeliveryDTO(delivery2Date, "Gran Vía", "Madrid", "28013", 50.00m, PriorityType.High, 5)
+            );
+
+            // Act
+            var result = await controller.CreateDeliveryAssignment(deliveryAssignmentForCreate);
+
+            // Assert
+            var createdResult = Assert.IsType<CreatedAtActionResult>(result);
+            var actualDeliveryAssignmentDetail = Assert.IsType<DeliveryAssignmentForDetailDTO>(createdResult.Value);
+            Assert.Equal(expectedDeliveryAssignmentDetail, actualDeliveryAssignmentDetail);
         }
     }
 }
