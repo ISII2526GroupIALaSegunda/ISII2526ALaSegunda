@@ -96,7 +96,7 @@
     private void RemovePurchaseDelivery(PurchaseDeliveryDTO purchaseDelivery)
     {
         deleveryAssignmentState.RemovePurchaseDeliveryToDelivery(purchaseDelivery);
-        if (purchaseDelivery.RentalItems.Count == 0) hiddenPurchaseDeliveryList = true;
+        if (deliveryAssignment.PurchaseDeliveries.Count == 0) hiddenPurchaseDeliveryList = true;
     }
 
     public async void SearchPurchaseOrders()
