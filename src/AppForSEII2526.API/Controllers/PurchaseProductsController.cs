@@ -36,7 +36,7 @@ namespace AppForSEII2526.API.Controllers
 
         [HttpGet]
         [Route("[action]")]
-        [ProducesResponseType(typeof(IList<PurchaseProductsDTO>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IList<PurchaseProductsForReturningDTO>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ModelError), (int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult> GetPurchaseProductsForReturning(string? productName, int quantity, string userName
             ){ 
@@ -48,7 +48,7 @@ namespace AppForSEII2526.API.Controllers
             //    return BadRequest(new ValidationProblemDetails(ModelState));
             //}
 
-            IList<PurchaseProductsDTO> purchaseProductsDTOS = await _context.PurchaseProducts
+            IList<PurchaseProductsForReturningDTO> purchaseProductsDTOS = await _context.PurchaseProducts
                 
                 .Include(purchaseProduct => purchaseProduct.Product)
                 .Include(purchaseProduct => purchaseProduct.ReturnProduct)
@@ -61,7 +61,7 @@ namespace AppForSEII2526.API.Controllers
 
                 &&(purchaseProduct.ReturnProduct == null))
 
-                .Select(purchaseProduct=>new PurchaseProductsDTO(purchaseProduct.ProductId, purchaseProduct.Product.Name,
+                .Select(purchaseProduct=>new PurchaseProductsForReturningDTO(purchaseProduct.ProductId, purchaseProduct.Product.Name,
                 purchaseProduct.Quantity, purchaseProduct.Product.Brand.Name, purchaseProduct.Product.Brand.Location, purchaseProduct.Product.IsReturnable))
                 .ToListAsync();
             return Ok(purchaseProductsDTOS);
