@@ -10,7 +10,7 @@ using Moq;
 using Xunit;
 
 
-namespace AppForSEII2526.UT.DeliveryAssignmentController_test
+namespace AppForSEII2526.UT.PurchasesController_test
 {
     public class GetPurchaseOrdersToDelivery_test : AppForMovies4SqliteUT
     {
