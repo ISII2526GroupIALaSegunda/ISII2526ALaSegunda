@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AppForMovies.UT;
 using AppForSEII2526.API.Controllers;
 using AppForSEII2526.API.DTOs.DeliveryAssignmentDTOs;
+using AppForSEII2526.API.DTOs.PurchaseDeliveryDTOs;
 using AppForSEII2526.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -85,30 +86,6 @@ namespace AppForSEII2526.UT.DeliveryAssignmentController_test
             _context.SaveChanges();
         }
 
-        [Fact(DisplayName = "UC3_BF – GetDeliveryAssignment Success")]
-        [Trait("UseCase", "UC3_BF")]
-        [Trait("LevelTesting", "Unit Testing")]
-        [Trait("Database", "WithoutFixture")]
-        public async Task UC3_BF_GetDeliveryAssignment_Success_Test()
-        {
-            // Arrange
-            var mockLogger = new Mock<ILogger<DeliveryAssignmentsController>>();
-            var controller = new DeliveryAssignmentsController(_context, mockLogger.Object);
-
-            // Act
-            var result = await controller.GetDeliveryAssignment(1);
-
-            // Assert
-            var okResult = Assert.IsType<OkObjectResult>(result);
-            var actual = Assert.IsType<DeliveryAssignmentForDetailDTO>(okResult.Value);
-
-            Assert.Equal(1, actual.Id);
-            Assert.Equal("Juan", actual.DeliveryDriverName);
-            Assert.Equal(10.00m, actual.ExtraReward);
-            Assert.Equal("Handle with care", actual.PersonalMessage);
-            Assert.Single(actual.PurchaseDeliveries);
-        }
-
         [Fact(DisplayName = "UC3_AF0 – GetDeliveryAssignment Not Found")]
         [Trait("UseCase", "UC3_AF0")]
         [Trait("LevelTesting", "Unit Testing")]
@@ -125,6 +102,46 @@ namespace AppForSEII2526.UT.DeliveryAssignmentController_test
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             Assert.Null(okResult.Value);
+        }
+
+        [Fact(DisplayName = "UC3_BF – GetDeliveryAssignment Success")]
+        [Trait("UseCase", "UC3_BF")]
+        [Trait("LevelTesting", "Unit Testing")]
+        [Trait("Database", "WithoutFixture")]
+        public async Task UC3_BF_GetDeliveryAssignment_Success_Test()
+        {
+            // Arrange
+            var mockLogger = new Mock<ILogger<DeliveryAssignmentsController>>();
+            var controller = new DeliveryAssignmentsController(_context, mockLogger.Object);
+
+            var expectedDeliveryAssignment = new DeliveryAssignmentForDetailDTO(
+                1,
+                "Juan",
+                new DateTime(2025, 11, 20),
+                "Handle with care",
+                10.00m,
+                new List<PurchaseDeliveryDTO>()
+            );
+
+            expectedDeliveryAssignment.PurchaseDeliveries.Add(
+                new PurchaseDeliveryDTO(
+                    new DateTime(2025, 11, 18),
+                    "Av España",
+                    "Albacete",
+                    "02002",
+                    25.00m,
+                    PriorityType.High,
+                    1
+                )
+            );
+
+            // Act
+            var result = await controller.GetDeliveryAssignment(1);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var actualDeliveryAssignment = Assert.IsType<DeliveryAssignmentForDetailDTO>(okResult.Value);
+            Assert.Equal(expectedDeliveryAssignment, actualDeliveryAssignment);
         }
     }
 }

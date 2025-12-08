@@ -1,0 +1,69 @@
+﻿@page "/banuser/selectusersforbanning"
+
+
+@using AppForSEII2526.Web.API
+@inject AppForSEII2526APIClient apiclient
+@inject ILogger<SelectUsersForBanning> logger
+
+
+<h3>SelectuUersForBanning</h3>
+<div class="container-fluid">
+    <div class="row" hidden="@hideErrors">
+        <p>here i will show the errors</p>
+    </div>
+    <div class="row">
+        <div class="col-8">
+            <div class="row">
+                <p>here i will show the filters</p>
+                <div class ="col">
+                    <button type="button" class="btn btn-primary" @onclick=@BanUser id="banUsers">Ban Users</button>
+                </div>
+
+            </div>
+            <div class="row">
+                <p>here i will show x</p>
+                @if (ban == null)
+                {
+                    <p>loading banned users...</p>
+                }
+                else
+                {
+                    < p > banned users loaded @ban.Count</ p >
+                }
+            </div>
+        </div>
+        <div class="col-2">
+            <p>here i will show y</p>
+        </div>
+
+    </div>
+
+</div>
+
+@code {
+    private ICollection<ApplicationUserForBanningDTO> ban;
+    private bool hideErrors { get { return errors.Length == 0; } }
+    private string errors = "";
+    private string username { get; set; }
+    private string complainttype { get; set; }
+
+
+    public async void BanUser()
+    {
+        try
+        {
+           
+         
+        }
+        catch (ApiException ex)
+        {
+            logger.LogError($"{DateTime.Now} Error: {ex}");
+            errors = "Error while connecting to the system";
+        }
+        StateHasChanged();
+    }
+
+    
+
+
+}
