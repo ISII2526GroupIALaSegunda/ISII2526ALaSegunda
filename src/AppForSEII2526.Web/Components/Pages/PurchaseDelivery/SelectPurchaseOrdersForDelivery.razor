@@ -3,6 +3,7 @@
 @using AppForSEII2526.Web.API
 @inject AppForSEII2526APIClient apiclient
 @inject ILogger<SelectPurchaseOrdersForDelivery> logger
+@inject DeleveryAssignmentStateContainer deleveryAssignmentState
 
 <h3>Select Purchase Orders For Delivery</h3>
 <div class="container-fluid">
@@ -53,6 +54,21 @@
     private string errors = "";
     private string? postalcode { get; set; }
     private double? totalprice { get; set; }
+
+    private DeliveryAssignmentForCreateDTO deliveryAssignment => deleveryAssignmentState.DeliveryAssgnment;
+
+    private bool hiddenPurchaseDeliveryList = true;
+
+    private void AddPurchaseOrder(PurchaseOrderForDeliveryDTO purchaseOrder)
+    {
+        deleveryAssignmentState.AddPurchaseOrderToDeliveryAssignment(purchaseOrder);
+    }
+
+    private void RemovePurchaseDelivery(PurchaseDeliveryDTO purchaseDelivery)
+    {
+        deleveryAssignmentState.RemovePurchaseDeliveryToDelivery(purchaseDelivery);
+        if (purchaseDelivery.RentalItems.Count == 0) hiddenPurchaseDeliveryList = true;
+    }
 
     public async void SearchPurchaseOrders()
     {
