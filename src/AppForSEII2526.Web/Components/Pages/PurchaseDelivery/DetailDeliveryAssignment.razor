@@ -1,13 +1,50 @@
-﻿<h3>DetailDeliveryAssignment</h3>
+﻿@page "/purchasedelivery/detaildeliveryassignment"
+
 @using AppForSEII2526.Web.API
+@using Microsoft.AspNetCore.Authorization
+@inject AppForSEII2526APIClient apiclient
+    
+<h3>DetailDeliveryAssignment</h3>
+@attribute [Authorize]
 
 @code {
     [Parameter]
     [SupplyParameterFromQuery]
-    public int RentalID { get; set; }
+    public int DeliveryAssignmentID { get; set; }
     private DeliveryAssignmentForDetailDTO deliveryAssignment;
     private string error = "";
 
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        //we check the user is logged in
+        string userName = "";
+        if (authenticationState is not null)
+        {
+            var authState = await authenticationState;
+            var user = authState?.User;
+
+            //we retrieve the id of the user logged in
+            if (user is not null)
+            {
+                if (user.Identity is not null && user.Identity.IsAuthenticated && user.IsInRole("User"))
+                {
+                    userName = user.Identity.Name;
+                }
+            }
+        }
+
+        try
+        {
+            deliveryAssignment = await apiclient.GetDeliveryAssignmentAsync(DeliveryAssignmentID);
+        }
+        catch (ApiException exception)
+        {
+            deliveryAssignment = null;
+        }
+        
+    }
 }
