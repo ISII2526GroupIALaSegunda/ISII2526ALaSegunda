@@ -7,8 +7,8 @@
 @inject DeleveryAssignmentStateContainer deleveryAssignmentState
 @inject NavigationManager navigation
 
-@attribute [Authorize]
-<h3>Select Purchase Orders For Delivery</h3>
+@* @attribute [Authorize]
+ *@<h3>Select Purchase Orders For Delivery</h3>
 <div class="container-fluid">
     <div class="row" hidden="@hideErrors">
         <p>Errors: @errors</p>
@@ -143,7 +143,7 @@
 
     private void AssignDelivery()
     {
-        navigation.NavigateTo("/rentals/assigndelivery");
+        navigation.NavigateTo("/purchasedelivery/createdeliveryassignment");
     }
 
 }
