@@ -6,7 +6,7 @@ namespace AppForSEII2526.Web
 {
     public class DeleveryAssignmentStateContainer
     {
-        public DeliveryAssignmentForCreateDTO DeliveryAssgnment { get; private set; } = new DeliveryAssignmentForCreateDTO { PurchaseDeliveries = new List<PurchaseDeliveryDTO>() };
+        public DeliveryAssignmentForDetailDTO DeliveryAssgnment { get; private set; } = new DeliveryAssignmentForDetailDTO { PurchaseDeliveries = new List<PurchaseDeliveryDTO>() };
         
         public decimal TotalPrice 
         { 
@@ -58,7 +58,7 @@ namespace AppForSEII2526.Web
         public void RentalProcessed()
         {
             //we have finished the rental process so we create a new object without data
-            DeliveryAssgnment = new DeliveryAssignmentForCreateDTO()
+            DeliveryAssgnment = new DeliveryAssignmentForDetailDTO()
             {
                 PurchaseDeliveries = new List<PurchaseDeliveryDTO>()
             };
