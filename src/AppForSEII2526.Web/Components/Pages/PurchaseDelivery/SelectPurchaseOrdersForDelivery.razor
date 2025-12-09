@@ -59,8 +59,8 @@
                                         <td>@purchaseOrder.Street</td>
                                         <td>@purchaseOrder.PostalCode</td>
                                         <td>
-@*                                             <button class="btn btn-outline-secondary" id="movieToRent_@purchaseOrder.Id" @onclick="@(() => AddPurchaseOrder(purchaseOrder))">Add</button>
- *@                                        </td>
+                                             <button class="btn btn-outline-secondary" id="movieToRent_@purchaseOrder.Id" @onclick="@(() => AddPurchaseOrder(purchaseOrder))">Add</button>
+                                        </td>
                                     </tr>
                                 }
                             </tbody>
@@ -84,20 +84,20 @@
     private string? postalcode { get; set; }
     private double? totalprice { get; set; }
 
-    // private DeliveryAssignmentForCreateDTO deliveryAssignment => deleveryAssignmentState.DeliveryAssgnment;
+    private DeliveryAssignmentForCreateDTO deliveryAssignment => deleveryAssignmentState.DeliveryAssgnment;
 
-    // private bool hiddenPurchaseDeliveryList = true;
+    private bool hiddenPurchaseDeliveryList = true;
 
-    // private void AddPurchaseOrder(PurchaseOrderForDeliveryDTO purchaseOrder)
-    // {
-    //     deleveryAssignmentState.AddPurchaseOrderToDeliveryAssignment(purchaseOrder);
-    // }
+    private void AddPurchaseOrder(PurchaseOrderForDeliveryDTO purchaseOrder)
+    {
+        deleveryAssignmentState.AddPurchaseOrderToDeliveryAssignment(purchaseOrder);
+    }
 
-    // private void RemovePurchaseDelivery(PurchaseDeliveryDTO purchaseDelivery)
-    // {
-    //     deleveryAssignmentState.RemovePurchaseDeliveryToDelivery(purchaseDelivery);
-    //     if (deliveryAssignment.PurchaseDeliveries.Count == 0) hiddenPurchaseDeliveryList = true;
-    // }
+    private void RemovePurchaseDelivery(PurchaseDeliveryDTO purchaseDelivery)
+    {
+        deleveryAssignmentState.RemovePurchaseDeliveryToDelivery(purchaseDelivery);
+        if (deliveryAssignment.PurchaseDeliveries.Count == 0) hiddenPurchaseDeliveryList = true;
+    }
 
     public async void SearchPurchaseOrders()
     {
