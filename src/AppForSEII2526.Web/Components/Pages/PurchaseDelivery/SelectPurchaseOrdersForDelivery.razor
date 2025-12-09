@@ -4,6 +4,7 @@
 @inject AppForSEII2526APIClient apiclient
 @inject ILogger<SelectPurchaseOrdersForDelivery> logger
 @inject DeleveryAssignmentStateContainer deleveryAssignmentState
+@inject NavigationManager navigation
 
 <h3>Select Purchase Orders For Delivery</h3>
 <div class="container-fluid">
@@ -70,12 +71,22 @@
                 }
             </div>
         </div>
-        <div class="col-2">
-            <p>here i will show the purchase orders to schedule</p>
+        <div class="col-2" hidden="@hiddenPurchaseDeliveryList">
+            <div class="row">
+                <h3>Shopping Cart</h3>
+            </div>
+            @foreach (PurchaseDeliveryDTO purchaseDelivery in deliveryAssignment.PurchaseDeliveries)
+            {
+                <div class="row">
+                    <button type="button" class="btn btn-light" id="purchaseDeliveryToDelete@purchaseDelivery.PurchaseOrderId" @onclick="@(() => RemovePurchaseDelivery(purchaseDelivery))">x @purchaseDelivery.PurchaseOrderId - @purchaseDelivery.TotalPrice€</button>
+                </div>
+            }
+            <div class="row">
+                <button type="button" class="btn btn-primary" id="assignDeliveryButton" @onclick=@AssignDelivery>Assign Delivery</button>
+            </div>
+
         </div>
-
     </div>
-
 </div>
 @code {
     private ICollection<PurchaseOrderForDeliveryDTO> purchaseOrders;
@@ -86,7 +97,7 @@
 
     private DeliveryAssignmentForCreateDTO deliveryAssignment => deleveryAssignmentState.DeliveryAssgnment;
 
-    private bool hiddenPurchaseDeliveryList = true;
+    private bool hiddenPurchaseDeliveryList { get { return deliveryAssignment.PurchaseDeliveries.Count == 0; } }
 
     private void AddPurchaseOrder(PurchaseOrderForDeliveryDTO purchaseOrder)
     {
@@ -96,7 +107,7 @@
     private void RemovePurchaseDelivery(PurchaseDeliveryDTO purchaseDelivery)
     {
         deleveryAssignmentState.RemovePurchaseDeliveryToDelivery(purchaseDelivery);
-        if (deliveryAssignment.PurchaseDeliveries.Count == 0) hiddenPurchaseDeliveryList = true;
+        // if (deliveryAssignment.PurchaseDeliveries.Count == 0) hiddenPurchaseDeliveryList = true;
     }
 
     public async void SearchPurchaseOrders()
@@ -127,4 +138,10 @@
 
         return base.OnInitializedAsync();
     }
+
+    private void AssignDelivery()
+    {
+        navigation.NavigateTo("/rentals/assigndelivery");
+    }
+
 }
