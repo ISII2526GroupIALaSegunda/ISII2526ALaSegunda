@@ -1,11 +1,13 @@
 ﻿@page "/purchasedelivery/selectpurchaseordersfordelivery"
 
+@using Microsoft.AspNetCore.Authorization
 @using AppForSEII2526.Web.API
 @inject AppForSEII2526APIClient apiclient
 @inject ILogger<SelectPurchaseOrdersForDelivery> logger
 @inject DeleveryAssignmentStateContainer deleveryAssignmentState
 @inject NavigationManager navigation
 
+@attribute [Authorize]
 <h3>Select Purchase Orders For Delivery</h3>
 <div class="container-fluid">
     <div class="row" hidden="@hideErrors">
