@@ -14,11 +14,12 @@ namespace AppForSEII2526.UIT.UC_PurchaseDelivery
         public SelectMoviesForRental_PO(IWebDriver driver, ITestOutputHelper output) : base(driver, output)
         {
         }
-        public void SearchPurchaseOrders(string postalcode)
+        public void SearchPurchaseOrders(string postalcode, string totalPrice)
         {
             //wait for the webelement to be clickable
             WaitForBeingClickable(inputPostalcode);
             _driver.FindElement(inputPostalcode).SendKeys(postalcode);
+            _driver.FindElement(inputTotalPrice).SendKeys(totalPrice);
             _driver.FindElement(buttonSearchPurchaseOrders).Click();
 
 
