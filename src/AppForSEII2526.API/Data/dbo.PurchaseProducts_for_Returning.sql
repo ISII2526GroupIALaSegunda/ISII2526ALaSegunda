@@ -23,6 +23,7 @@ SET IDENTITY_INSERT [dbo].[Brands] OFF
 SET IDENTITY_INSERT [dbo].[Products] ON
 INSERT INTO [dbo].[Products] ([ProductId], [Name], [Description], [Colour], [Price], [Stock], [IsReturnable], [BrandId]) VALUES (2, N'ProductCok', N'Second Product', N'Red', CAST(50.00 AS Decimal(10, 2)), 20, 1, 2)
 INSERT INTO [dbo].[Products] ([ProductId], [Name], [Description], [Colour], [Price], [Stock], [IsReturnable], [BrandId]) VALUES (3, N'Product3', N'Third Product', N'Blue', CAST(75.00 AS Decimal(10, 2)), 15, 1, 1)
+INSERT INTO [dbo].[Products] ([ProductId], [Name], [Description], [Colour], [Price], [Stock], [IsReturnable], [BrandId]) VALUES (4, N'Product4', N'Fourth Product', N'Yellow', CAST(100.00 AS Decimal(10, 2)), 10, 1, 1)
 SET IDENTITY_INSERT [dbo].[Products] OFF
 
 SET IDENTITY_INSERT [dbo].[Returns] ON
@@ -32,6 +33,7 @@ SET IDENTITY_INSERT [dbo].[Returns] OFF
 
 INSERT INTO [dbo].[PurchaseProducts] ([PurchaseOrderId], [ProductId], [Price], [Quantity]) VALUES (1, 2, CAST(200.00 AS Decimal(10, 2)), 10)
 INSERT INTO [dbo].[PurchaseProducts] ([PurchaseOrderId], [ProductId], [Price], [Quantity]) VALUES (3, 3, CAST(250.00 AS Decimal(10, 2)), 11)
+INSERT INTO [dbo].[PurchaseProducts] ([PurchaseOrderId], [ProductId], [Price], [Quantity]) VALUES (1, 4, CAST(300.00 AS Decimal(10, 2)), 12)
 
 SET IDENTITY_INSERT [dbo].[ReturnProducts] ON
 INSERT INTO [dbo].[ReturnProducts] ([Id], [Quantity], [Reason], [ReturnPurchaseOrderId], [ProductId], [PurchaseOrderId]) VALUES (25, 20, N'First Reason', 6, 1, 2)
