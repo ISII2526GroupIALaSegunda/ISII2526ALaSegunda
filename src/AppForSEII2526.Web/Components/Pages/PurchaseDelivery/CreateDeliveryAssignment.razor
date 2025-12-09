@@ -1,7 +1,12 @@
 ﻿@page "/purchasedelivery/createdeliveryassignment"
 
+@using AppForSEII2526.Web.API
+@inject AppForSEII2526APIClient apiclient
+@inject ILogger<SelectPurchaseOrdersForDelivery> logger
+@inject DeleveryAssignmentStateContainer deleveryAssignmentState
+
 <h3>CreateDeliveryAssignment</h3>
 
 @code {
-
+    private DeliveryAssignmentForCreateDTO deliveryAssignment = deleveryAssignmentState.DeliveryAssgnment;
 }
