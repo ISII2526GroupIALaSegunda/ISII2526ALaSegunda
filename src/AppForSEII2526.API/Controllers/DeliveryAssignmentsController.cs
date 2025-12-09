@@ -63,7 +63,6 @@ namespace AppForSEII2526.API.Controllers
         [ProducesResponseType(typeof(DeliveryAssignmentForDetailDTO), (int)HttpStatusCode.Created)]
         public async Task<ActionResult> CreateDeliveryAssignment(DeliveryAssignmentForCreateDTO deliveryAssignmentForCreate)
         {
-            //any validation defined in DeliveryAssignmentForCreateDTO is checked before running the method so they don't have to be checked again
             if (deliveryAssignmentForCreate.DeliveryAssignmentDone <= DateTime.Now)
                 ModelState.AddModelError("DeliveryAssignmentDone", "Error! Delivery deadline must be later than now");
 
@@ -73,12 +72,10 @@ namespace AppForSEII2526.API.Controllers
             if (!deliveryAssignmentForCreate.PersonalMessage.StartsWith("Please,"))
                 ModelState.AddModelError("PersonalMessage", "Error! You must start personal message with Please,");
 
-            //we must check that the delivery driver exists
             var deliveryDriver = await _context.DeliveryDrivers.FirstOrDefaultAsync(dd => dd.id == deliveryAssignmentForCreate.DeliveryDriverId);
             if (deliveryDriver == null)
                 ModelState.AddModelError("DeliveryDriver", "Error! Delivery driver does not exist");
 
-            //we must check that all the purchase orders to be delivered exist in the database
             var purchaseOrdersIds = deliveryAssignmentForCreate.PurchaseDeliveries.Select(pd => pd.PurchaseOrderId).ToList<int>();
 
             var purchaseOrders = _context.PurchaseOrders.Include(po => po.DriverAssigned)
@@ -99,7 +96,6 @@ namespace AppForSEII2526.API.Controllers
                 })
                 .ToList();
 
-            //we must provide delivery assignment with the info to be saved in the database
             DeliveryAssignment deliveryAssignment = new DeliveryAssignment(
                 deliveryAssignmentForCreate.PersonalMessage,
                 deliveryAssignmentForCreate.ExtraReward,
@@ -111,18 +107,19 @@ namespace AppForSEII2526.API.Controllers
             foreach (var item in deliveryAssignmentForCreate.PurchaseDeliveries)
             {
                 var purchaseOrder = purchaseOrders.FirstOrDefault(po => po.Id == item.PurchaseOrderId);
-                //we must check that the purchase order exists
                 if (purchaseOrder == null)
                 {
                     ModelState.AddModelError("PurchaseDeliveries", $"Error! PurchaseDelivery with id {item.PurchaseOrderId} does not exist");
                 }
                 else
                 {
-                    deliveryAssignment.PurchaseDeliveries.Add(new PurchaseDelivery(item.Date, item.Priority, deliveryAssignment));
+                    deliveryAssignment.PurchaseDeliveries.Add(new PurchaseDelivery(item.Date, item.Priority, deliveryAssignment)
+                    {
+                        PurchaseOrderId = item.PurchaseOrderId
+                    });
                 }
             }
 
-            //if there is any problem because of the delivery driver or because any purchase order does not exist
             if (ModelState.ErrorCount > 0)
             {
                 return BadRequest(new ValidationProblemDetails(ModelState));
@@ -132,7 +129,6 @@ namespace AppForSEII2526.API.Controllers
 
             try
             {
-                //we store in the database both delivery assignment and its purchase deliveries
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)
