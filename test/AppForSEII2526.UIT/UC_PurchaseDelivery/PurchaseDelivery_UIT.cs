@@ -12,6 +12,13 @@ namespace AppForSEII2526.UIT.UC_PurchaseDelivery
     {
         public UC_PurchaseDeliveries_UIT(ITestOutputHelper output) : base(output)
         {
+
         }
+
+        private void Precondition_perform_login()
+        {
+            Perform_login("alex@uclm.es", "Password1234%");
+        }
+
     }
 }
