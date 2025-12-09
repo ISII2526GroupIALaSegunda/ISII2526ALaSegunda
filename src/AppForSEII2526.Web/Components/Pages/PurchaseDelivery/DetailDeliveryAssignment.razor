@@ -5,15 +5,36 @@
 @inject AppForSEII2526APIClient apiclient
     
 <h3>DetailDeliveryAssignment</h3>
-@attribute [Authorize]
-
+@* @attribute [Authorize]
+ *@
 @if (deliveryAssignment == null)
 {
     <p>@error</p>
 }
 else
 {
-
+    <table class="table table-borderless table-sm">
+        <tr>
+            <th>ID</th>
+            <td id="ID">@deliveryAssignment.Id</td>
+        </tr>
+        <tr>
+            <th>Delivery Driver Name</th>
+            <td id="DeliveyDriverName">@deliveryAssignment.DeliveryDriverName</td>
+        </tr>
+        <tr>
+            <th>Personal Message</th>
+            <td id="PersonalMessage">@deliveryAssignment.PersonalMessage</td>
+        </tr>
+        <tr>
+            <th>Delivery Assignment Done</th>
+            <td id="DeliveryAssignmentDonde">@deliveryAssignment.DeliveryAssignmentDone.ToString("dd/MM/yyyy hh:mm:ss")</td>
+        </tr>
+        <tr>
+            <th>Extra Reward</th>
+            <td id="ExtraReward">@deliveryAssignment.ExtraReward</td>
+        </tr>
+    </table>
 
 }
 
