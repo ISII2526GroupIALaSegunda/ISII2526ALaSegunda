@@ -11,6 +11,8 @@ namespace AppForSEII2526.UIT.UC_PurchaseDelivery
         By inputPostalcode = By.Id("inputPostalcode");
         By inputTotalPrice = By.Id("inputTotalPrice");
         By buttonSearchPurchaseOrders = By.Id("searchPurchaseOrders");
+        By tableOfPurchaseOrdersBy = By.Id("TableOfPurchaseOrders");
+
         public SelectMoviesForRental_PO(IWebDriver driver, ITestOutputHelper output) : base(driver, output)
         {
         }
@@ -23,6 +25,12 @@ namespace AppForSEII2526.UIT.UC_PurchaseDelivery
             _driver.FindElement(buttonSearchPurchaseOrders).Click();
 
 
+        }
+
+        public bool CheckListOfPurchaseOrders(List<string[]> expectedPurchaseOrders)
+        {
+
+            return CheckBodyTable(expectedPurchaseOrders, tableOfPurchaseOrdersBy);
         }
     }
 }
