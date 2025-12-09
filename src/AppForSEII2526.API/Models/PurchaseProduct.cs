@@ -3,7 +3,22 @@
     [PrimaryKey(nameof(PurchaseOrderId),nameof(ProductId))]
     public class PurchaseProduct
     {
-       
+        public PurchaseProduct()
+        {
+        }
+
+        public PurchaseProduct(int purchaseOrderId, int productId, decimal price, 
+        int quantity, Product product, PurchaseOrder purchaseOrder, ReturnProduct returnProduct)
+        {
+            PurchaseOrderId = purchaseOrderId;
+            ProductId = productId;
+            Price = price;
+            Quantity = quantity;
+            Product = product;
+            PurchaseOrder = purchaseOrder;
+            ReturnProduct = returnProduct;
+        }
+
         public int PurchaseOrderId { get; set; }
 
         public int ProductId { get; set; }
