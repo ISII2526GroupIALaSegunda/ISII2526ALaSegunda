@@ -7,6 +7,16 @@
 <h3>DetailDeliveryAssignment</h3>
 @attribute [Authorize]
 
+@if (deliveryAssignment == null)
+{
+    <p>@error</p>
+}
+else
+{
+
+
+}
+
 @code {
     [Parameter]
     [SupplyParameterFromQuery]
@@ -44,6 +54,7 @@
         catch (ApiException exception)
         {
             deliveryAssignment = null;
+            error = $"Error {exception.StatusCode}: {exception.Message}";
         }
         
     }
