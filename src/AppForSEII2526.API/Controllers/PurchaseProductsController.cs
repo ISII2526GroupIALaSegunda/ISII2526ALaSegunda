@@ -59,7 +59,11 @@ namespace AppForSEII2526.API.Controllers
                 
                 &&(purchaseProduct.PurchaseOrder.Customer.UserName == userName)
 
-                &&(purchaseProduct.ReturnProduct == null))
+                &&(purchaseProduct.ReturnProduct == null)
+                
+                &&(purchaseProduct.Product.Name.Contains(productName) || productName == null)
+
+                &&(quantity == 0 || purchaseProduct.Quantity == quantity))
 
                 .Select(purchaseProduct=>new PurchaseProductsForReturningDTO(purchaseProduct.ProductId, purchaseProduct.Product.Name,
                 purchaseProduct.Quantity, purchaseProduct.Product.Brand.Name, purchaseProduct.Product.Brand.Location, purchaseProduct.Product.IsReturnable))
