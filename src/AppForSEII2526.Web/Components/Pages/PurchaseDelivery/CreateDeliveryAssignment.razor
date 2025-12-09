@@ -1,5 +1,6 @@
 ﻿@page "/purchasedelivery/createdeliveryassignment"
 
+@using AppForSEII2526.Web.Components.Shared
 @using AppForSEII2526.Web.API
 @inject AppForSEII2526APIClient apiclient
 @inject ILogger<SelectPurchaseOrdersForDelivery> logger
@@ -22,11 +23,32 @@
     </div>
 </EditForm>
 
+@if (DialogIsOpen)
+{
+    <Dialog Caption="Purchase DEliveries"
+        Message="Do you want to proceed to assign the selected deliveries?"
+        OnClose="@OnDialogClose"
+        Type=Dialog.Category.SaveNot>
+    </Dialog>
+}
+
 @code {
+    private bool DialogIsOpen;
     private DeliveryAssignmentForCreateDTO deliveryAssignment => deleveryAssignmentState.DeliveryAssgnment;
 
     private void OpenDialog()
     {
+        DialogIsOpen = true;
+    }
 
+    private async Task OnDialogClose(bool isOk)
+    {
+
+        DialogIsOpen = false;
+        if (isOk)
+        {
+            // Process the data introduced by the user if they are valid
+
+        }
     }
 }
