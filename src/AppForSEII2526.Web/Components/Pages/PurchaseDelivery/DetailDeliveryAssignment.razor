@@ -36,6 +36,37 @@ else
         </tr>
     </table>
 
+    <table class="table" id="Assigned Deliveries">
+        <thead>
+            <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Street</th>
+                <th scope="col">City</th>
+                <th scope="col">Postal Code</th>
+                <th scope="col">Total Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (PurchaseDeliveryDTO item in deliveryAssignment.PurchaseDeliveries)
+            {
+                <tr id="AssignedDelivery_@item.Date">
+                    <td>@item.Date.DateTime.ToShortDateString()</td>
+                    <td>@item.Street</td>
+                    <td>@item.City</td>
+                    <td>@item.PostalCode</td>
+                    <td>@item.TotalPrice €</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            @*colspan is used to state that TWO columns are collapsed*@
+        <th scope="row" colspan="2" class="text-end">Extra Reward</th>
+        <td id="ExtraReward">@deliveryAssignment.ExtraReward €</td>
+        </tfoot>
+
+    </table>
+
+
 }
 
 @code {
