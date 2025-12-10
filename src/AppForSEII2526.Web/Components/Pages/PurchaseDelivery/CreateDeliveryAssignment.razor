@@ -18,6 +18,9 @@
         <DataAnnotationsValidator />
         <ValidationSummary class="row alert alert-danger" />
     </div>
+    <div class="row alert alert-danger" role="alert" hidden="@hideErrors">
+        <p id="ErrorsShown">Errors: @messageError</p>
+    </div>
     <div class="row g-3">
         <div class="col-md-6">
             @* Delivery Driver Id (MAndatory) *@
@@ -112,6 +115,8 @@
 }
 
 @code {
+    private string messageError = "";
+    private bool hideErrors { get { return messageError.Length == 0; } }
     private bool DialogIsOpen;
     private DeliveryAssignmentForCreateDTO deliveryAssignment => deleveryAssignmentState.DeliveryAssgnment;
 
@@ -126,8 +131,32 @@
         DialogIsOpen = false;
         if (isOk)
         {
-            // Process the data introduced by the user if they are valid
+            if (deliveryAssignment.PurchaseDeliveries.Count > 0)
+            {
+                try
+                {                    
+                    var delivered = await apiclient.CreateDeliveryAssignmentAsync(deliveryAssignment);
+                    deleveryAssignmentState.RentalProcessed();
+                    navigation.NavigateTo($"/purchasedelivery/detaildeliveryassignment/?DeliveryAssignmentID={delivered.Id}");
+                }
+                catch (ApiException<ValidationProblemDetails> apiexceptionvalidation)
+                {
 
+                    if (apiexceptionvalidation.Result.Errors.Values != null)
+                    {
+                        messageError = "";
+                        foreach (var errors in apiexceptionvalidation.Result.Errors.Values)
+                            //https://learn.microsoft.com/en-us/dotnet/api/system.string.join?view=net-7.0
+                            messageError = string.Join("(*) ", messageError, string.Join(" (*) ", errors));
+                    }
+                }
+                catch (ApiException apiexception)
+                {
+                    messageError = "Error while processing your request, please try again later!";
+
+                }
+
+            }
         }
     }
 
