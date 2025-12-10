@@ -10,6 +10,7 @@ namespace AppForSEII2526.UIT.UC_PurchaseDelivery
 {
     public class UC_PurchaseDeliveries_UIT : UC_UIT
     {
+        private SelectPurchaseOrdersForDelivery_PO selectPurchaseOrdersForDelivery_PO;
         public UC_PurchaseDeliveries_UIT(ITestOutputHelper output) : base(output)
         {
 
@@ -20,5 +21,13 @@ namespace AppForSEII2526.UIT.UC_PurchaseDelivery
             Perform_login("alex@uclm.es", "Password1234%");
         }
 
+        private void InitialStepsForPurchaseDelivery()
+        {
+            Precondition_perform_login();
+            //we wait for the option of the menu to be visible
+            selectPurchaseOrdersForDelivery_PO.WaitForBeingVisible(By.Id("CreateDeliveryAssignment"));
+            //we click on the menu
+            _driver.FindElement(By.Id("CreateDeliveryAssignment")).Click();
+        }
     }
 }

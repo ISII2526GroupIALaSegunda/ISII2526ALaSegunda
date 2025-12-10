@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace AppForSEII2526.UIT.UC_PurchaseDelivery
 {
-    public class SelectMoviesForRental_PO : PageObject
+    public class SelectPurchaseOrdersForDelivery_PO : PageObject
     {
         By inputPostalcode = By.Id("inputPostalcode");
         By inputTotalPrice = By.Id("inputTotalPrice");
         By buttonSearchPurchaseOrders = By.Id("searchPurchaseOrders");
         By tableOfPurchaseOrdersBy = By.Id("TableOfPurchaseOrders");
 
-        public SelectMoviesForRental_PO(IWebDriver driver, ITestOutputHelper output) : base(driver, output)
+        public SelectPurchaseOrdersForDelivery_PO(IWebDriver driver, ITestOutputHelper output) : base(driver, output)
         {
         }
         public void SearchPurchaseOrders(string postalcode, string totalPrice)
