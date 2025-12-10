@@ -1,7 +1,21 @@
-﻿namespace AppForSEII2526.API.Models
+﻿
+namespace AppForSEII2526.API.Models
 {
     public class DeliveryAssignment
     {
+        public DeliveryAssignment()
+        {
+        }
+
+        public DeliveryAssignment(string personalMessage, decimal extraReward, DeliveryDriver? deliveryDriver, DateTime deliveryAssignmentDone, List<PurchaseDelivery> purchaseDeliveries)
+        {
+            PersonalMessage = personalMessage;
+            ExtraReward = extraReward;
+            DeliveryMan = deliveryDriver;
+            DeliveryAssignmentDone = deliveryAssignmentDone;
+            PurchaseDeliveries = purchaseDeliveries;
+        }
+
         public int Id { get; set; }
         public DateTime DeliveryAssignmentDone { get; set; }
         [Precision(5,2)]
