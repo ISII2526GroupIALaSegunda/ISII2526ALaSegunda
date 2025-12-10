@@ -21,7 +21,6 @@ namespace AppForSEII2526.API.DTOs.ReturnProductsDTOs
             Quantity = quantity;
         }
 
-        public int PurchaseProductId { get; set; }
         public string ProductName { get; set; }
         public string BrandName { get; set; }
         public string WarehouseLocation { get; set; }

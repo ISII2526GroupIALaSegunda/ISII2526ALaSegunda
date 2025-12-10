@@ -11,6 +11,7 @@
             string customerSurname,
             string customerAddress,
             string customerPhoneNumber,
+            string paymentMethod,
             List<ReturnedProductInfoDTO> returnedProducts
         )
         {
@@ -20,16 +21,15 @@
             CustomerSurname = customerSurname;
             CustomerAddress = customerAddress;
             CustomerPhoneNumber = customerPhoneNumber;
+            PaymentMethod = paymentMethod;
 
             ReturnedProducts = returnedProducts;
         }
 
-        public int Id { get; set; }
-        public DateTime Date { get; set; }
-        public int PaymentMethod { get; set; }
-        public string Reason { get; set; }
-        public int? Rating { get; set; }
-        public double MoneyToReturn { get; set; }
+        public string PaymentMethod { get; set; }
+        
+        
+        
 
         public string CustomerName { get; set; }
         public string CustomerSurname { get; set; }

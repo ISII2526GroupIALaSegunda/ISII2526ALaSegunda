@@ -59,6 +59,7 @@ namespace AppForSEII2526.API.Controllers
                     rpo.Customer.Surname,
                     rpo.Customer.Address,
                     rpo.Customer.PhoneNumber,
+                    rpo.PaymentMethod.GetType().Name,
 
                     // Products list
                     rpo.ReturnProducts.Select(rp => new ReturnedProductInfoDTO(
