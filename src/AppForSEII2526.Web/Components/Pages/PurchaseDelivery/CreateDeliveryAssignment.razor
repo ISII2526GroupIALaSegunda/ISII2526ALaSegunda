@@ -1,10 +1,14 @@
 ﻿@page "/purchasedelivery/createdeliveryassignment"
 
+@inject NavigationManager navigation
 @using AppForSEII2526.Web.Components.Shared
 @using AppForSEII2526.Web.API
+@using Microsoft.AspNetCore.Authorization
 @inject AppForSEII2526APIClient apiclient
 @inject ILogger<SelectPurchaseOrdersForDelivery> logger
 @inject DeleveryAssignmentStateContainer deleveryAssignmentState
+
+@attribute [Authorize]
 
 <h3>CreateDeliveryAssignment</h3>
 
@@ -12,7 +16,7 @@
 <EditForm Model="deliveryAssignment" OnValidSubmit="OpenDialog">
     <div class="row">
         <DataAnnotationsValidator />
-        <ValidationSummary />
+        <ValidationSummary class="row alert alert-danger" />
     </div>
     <div class="row g-3">
         <div class="col-md-6">
@@ -53,9 +57,15 @@
     <div class="row">
         <div class="col-md">
             <div class="form-floating">
-                @*this button will be used to ask the user if he want to proceed to rent the movies*@
                 <button class="btn btn-primary" type="submit" id="Submit">
                     Deliver your assignments
+                </button>
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="form-floating">
+                <button class="btn btn-outline-primary" type="submit" @onclick="ModifyPurchaseDeliveries" id="ModifyPurchaseDeliveries">
+                    Modify Purchase Deliveries
                 </button>
             </div>
         </div>
@@ -119,5 +129,10 @@
             // Process the data introduced by the user if they are valid
 
         }
+    }
+
+    private void ModifyPurchaseDeliveries()
+    {
+        navigation.NavigateTo("/purchasedelivery/selectpurchaseordersfordelivery");
     }
 }
