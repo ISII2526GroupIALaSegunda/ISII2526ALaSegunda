@@ -16,7 +16,7 @@ namespace AppForSEII2526.UIT.UC_PurchaseDelivery
         private const string purchaseOrderCity1 = "Ab";
         private const string purchaseOrderStreet1 = "Av españa";
         private const string purchaseOrderPostalCode1 = "02002";
-        private const string purchaseOrderDate1 = "13/10/2025";
+        private const string purchaseOrderDate1 = "13/10/2025 0:00:00 +02:00";
         private const string purchaseOrderTotalPrice1 = "5";
 
         public UC_PurchaseDeliveries_UIT(ITestOutputHelper output) : base(output)
@@ -26,7 +26,7 @@ namespace AppForSEII2526.UIT.UC_PurchaseDelivery
 
         private void Precondition_perform_login()
         {
-            Perform_login("alex@uclm.es", "Password1234%");
+            Perform_login("alejandro.gomez31@alu.uclm.es", "Alejandro@1234");
         }
 
         private void InitialStepsForPurchaseDelivery()
@@ -38,22 +38,38 @@ namespace AppForSEII2526.UIT.UC_PurchaseDelivery
             _driver.FindElement(By.Id("CreateDeliveryAssignment")).Click();
         }
 
-        [Fact(DisplayName = "UC1_AF1 – SelectPurchaseOrdersForDelivery Filtering")]
-        [Trait("UseCase", "UC1_AF1")]
+        [Fact(DisplayName = "UC1_BF_AF0 – SelectPurchaseOrdersForDelivery Filtering")]
+        [Trait("UseCase", "UC1_BF_AF0")]
         [Trait("LevelTesting", "Funcional Testing")]
-        public void UC1_AF1_SelectPurchaseOrdersForDelivery_Filtering_Test()
+        public void UC1_BF_AF0_SelectPurchaseOrdersForDelivery_Filtering_Test()
         {
             //Arrange
             InitialStepsForPurchaseDelivery();
-            var expectedPurchaseOrders = new List<string[]> { 
-                new string[] { purchaseOrderCity1, purchaseOrderStreet1, purchaseOrderPostalCode1, purchaseOrderDate1, purchaseOrderTotalPrice1 } 
+            var expectedPurchaseOrders = new List<string[]> {
+                new string[] { purchaseOrderId1.ToString(), purchaseOrderDate1, purchaseOrderTotalPrice1, purchaseOrderCity1, purchaseOrderStreet1, purchaseOrderPostalCode1 }
             };
 
             //Act
-            selectPurchaseOrdersForDelivery_PO.SearchPurchaseOrders(purchaseOrderPostalCode1, "");
+            selectPurchaseOrdersForDelivery_PO.SearchPurchaseOrders("purchaseOrderPostalCode1", "purchaseOrderTotalPrice1");
 
             //Assert
             Assert.True(selectPurchaseOrdersForDelivery_PO.CheckListOfPurchaseOrders(expectedPurchaseOrders));
+        }
+
+        [Fact(DisplayName = "UC1_AF1 – GetPurchaseOrdersToDelivery No Results")]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void UC1_AF1_Purchase_Order_Not_Available()
+        {
+            //Arrange
+            InitialStepsForPurchaseDelivery();
+            //Act
+            selectPurchaseOrdersForDelivery_PO.AddPurchaseOrderToDeliveryList(purchaseOrderId1.ToString());
+            selectPurchaseOrdersForDelivery_PO.RemovePurchaseOrderToDeliveryList(purchaseOrderId1.ToString());
+
+            //Assert
+
+            Assert.True(selectPurchaseOrdersForDelivery_PO.DeliverNotAvailable());
+
         }
     }
 }

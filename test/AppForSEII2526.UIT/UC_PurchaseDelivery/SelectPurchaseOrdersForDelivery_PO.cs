@@ -12,6 +12,7 @@ namespace AppForSEII2526.UIT.UC_PurchaseDelivery
         By inputTotalPrice = By.Id("inputTotalPrice");
         By buttonSearchPurchaseOrders = By.Id("searchPurchaseOrders");
         By tableOfPurchaseOrdersBy = By.Id("TableOfPurchaseOrders");
+        By assignDeliveryButton = By.Id("assignDeliveryButton");
 
         public SelectPurchaseOrdersForDelivery_PO(IWebDriver driver, ITestOutputHelper output) : base(driver, output)
         {
@@ -27,9 +28,25 @@ namespace AppForSEII2526.UIT.UC_PurchaseDelivery
 
         }
 
+        public void AddPurchaseOrderToDeliveryList(string purchaseOrderId)
+        {
+            WaitForBeingClickable(By.Id("movieToRent_" + purchaseOrderId));
+            _driver.FindElement(By.Id("movieToRent_" + purchaseOrderId)).Click();
+        }
+
+        public void RemovePurchaseOrderToDeliveryList(string purchaseOrderId)
+        {
+            WaitForBeingClickable(By.Id("purchaseDeliveryToDelete_" + purchaseOrderId));
+            _driver.FindElement(By.Id("purchaseDeliveryToDelete_" + purchaseOrderId)).Click();
+        }
+
+        public bool DeliverNotAvailable()
+        {
+            return _driver.FindElement(assignDeliveryButton).Displayed == false;
+        }
+
         public bool CheckListOfPurchaseOrders(List<string[]> expectedPurchaseOrders)
         {
-
             return CheckBodyTable(expectedPurchaseOrders, tableOfPurchaseOrdersBy);
         }
     }
