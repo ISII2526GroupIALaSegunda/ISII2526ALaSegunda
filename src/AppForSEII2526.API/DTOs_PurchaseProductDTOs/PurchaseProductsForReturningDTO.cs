@@ -1,4 +1,5 @@
-﻿namespace AppForSEII2526.API.DTOs_PurchaseProductDTOs
+﻿
+namespace AppForSEII2526.API.DTOs_PurchaseProductDTOs
 {
     public class PurchaseProductsForReturningDTO
     {
@@ -24,5 +25,23 @@
         public string Branchlocation { get; set; }
         
         public bool IsReturnable { get; set; }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is PurchaseProductsForReturningDTO dTO &&
+                   Id == dTO.Id &&
+                   Productname == dTO.Productname &&
+                   Quantity == dTO.Quantity &&
+                   Branchname == dTO.Branchname &&
+                   Branchlocation == dTO.Branchlocation &&
+                   IsReturnable == dTO.IsReturnable;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Productname, Quantity, Branchname, Branchlocation, IsReturnable);
+        }
     }
+
+
 }
