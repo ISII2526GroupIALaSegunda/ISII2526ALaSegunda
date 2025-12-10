@@ -1,4 +1,5 @@
-﻿namespace AppForSEII2526.API.DTOs.ReturnProductsDTOs
+﻿
+namespace AppForSEII2526.API.DTOs.ReturnProductsDTOs
 {
     public class ReturnSummaryDTO
     {
@@ -37,5 +38,21 @@
         public string CustomerPhoneNumber { get; set; }
 
         public List<ReturnedProductInfoDTO> ReturnedProducts { get; set; }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is ReturnSummaryDTO dTO &&
+                   PaymentMethod == dTO.PaymentMethod &&
+                   CustomerName == dTO.CustomerName &&
+                   CustomerSurname == dTO.CustomerSurname &&
+                   CustomerAddress == dTO.CustomerAddress &&
+                   CustomerPhoneNumber == dTO.CustomerPhoneNumber &&
+                   EqualityComparer<List<ReturnedProductInfoDTO>>.Default.Equals(ReturnedProducts, dTO.ReturnedProducts);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(PaymentMethod, CustomerName, CustomerSurname, CustomerAddress, CustomerPhoneNumber, ReturnedProducts);
+        }
     }
 }
