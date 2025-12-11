@@ -20,7 +20,11 @@ namespace AppForSEII2526.UIT.UC_PurchaseDelivery
         public void SearchPurchaseOrders(string postalcode, string totalPrice)
         {
             //wait for the webelement to be clickable
+            WaitForBeingVisible(inputPostalcode);
             WaitForBeingClickable(inputPostalcode);
+            WaitForBeingVisible(inputTotalPrice);
+            WaitForBeingClickable(inputTotalPrice);
+            WaitForBeingVisible(buttonSearchPurchaseOrders);
             _driver.FindElement(inputPostalcode).SendKeys(postalcode);
             _driver.FindElement(inputTotalPrice).SendKeys(totalPrice);
             _driver.FindElement(buttonSearchPurchaseOrders).Click();
@@ -30,12 +34,14 @@ namespace AppForSEII2526.UIT.UC_PurchaseDelivery
 
         public void AddPurchaseOrderToDeliveryList(string purchaseOrderId)
         {
+            WaitForBeingVisible(By.Id("movieToRent_" + purchaseOrderId));
             WaitForBeingClickable(By.Id("movieToRent_" + purchaseOrderId));
             _driver.FindElement(By.Id("movieToRent_" + purchaseOrderId)).Click();
         }
 
         public void RemovePurchaseOrderToDeliveryList(string purchaseOrderId)
         {
+            WaitForBeingVisible(By.Id("purchaseDeliveryToDelete_" + purchaseOrderId));
             WaitForBeingClickable(By.Id("purchaseDeliveryToDelete_" + purchaseOrderId));
             _driver.FindElement(By.Id("purchaseDeliveryToDelete_" + purchaseOrderId)).Click();
         }
@@ -47,6 +53,7 @@ namespace AppForSEII2526.UIT.UC_PurchaseDelivery
 
         public bool CheckListOfPurchaseOrders(List<string[]> expectedPurchaseOrders)
         {
+            WaitForBeingVisible(tableOfPurchaseOrdersBy);
             return CheckBodyTable(expectedPurchaseOrders, tableOfPurchaseOrdersBy);
         }
     }
