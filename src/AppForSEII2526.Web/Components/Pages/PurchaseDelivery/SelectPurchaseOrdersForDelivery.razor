@@ -80,7 +80,7 @@
             @foreach (PurchaseDeliveryDTO purchaseDelivery in deliveryAssignment.PurchaseDeliveries)
             {
                 <div class="row">
-                    <button type="button" class="btn btn-light" id="purchaseDeliveryToDelete@purchaseDelivery.PurchaseOrderId" @onclick="@(() => RemovePurchaseDelivery(purchaseDelivery))">x @purchaseDelivery.PurchaseOrderId - @purchaseDelivery.TotalPrice€</button>
+                    <button type="button" class="btn btn-light" id="purchaseDeliveryToDelete_@purchaseDelivery.PurchaseOrderId" @onclick="@(() => RemovePurchaseDelivery(purchaseDelivery))">x @purchaseDelivery.PurchaseOrderId - @purchaseDelivery.TotalPrice€</button>
                 </div>
             }
             <div class="row">

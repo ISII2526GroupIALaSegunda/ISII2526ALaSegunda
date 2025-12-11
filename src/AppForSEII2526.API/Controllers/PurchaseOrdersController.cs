@@ -44,7 +44,7 @@ namespace AppForSEII2526.API.Controllers
                 .Where(po => (po.State == PurchaseState.Request) &&
                              (po.TotalPrice >= totalprice || totalprice == null) &&
                              (po.PostalCode.Equals(postalcode) || postalcode == null) &&
-                             (po.DriverAssigned ==null))
+                             (po.DriverAssigned == null))
                 .Select(po => new PurchaseOrderForDeliveryDTO(po.Id, po.Date, po.TotalPrice, po.City, po.Street, po.PostalCode))
                 .ToListAsync();
             if (purchaseOrdersDTOS.Count == 0)
