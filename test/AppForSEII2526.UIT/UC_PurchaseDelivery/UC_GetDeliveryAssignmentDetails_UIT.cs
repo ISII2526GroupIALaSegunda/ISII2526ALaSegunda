@@ -59,5 +59,21 @@ namespace AppForSEII2526.UIT.UC_PurchaseDelivery
 
             Assert.True(getDetailsDeliveryAssignment_PO.CheckListOfPurchaseDeliveries(expectedPurchaseDeliveries));
         }
+
+        [Fact(DisplayName = "UC2_AF1 – GetDetailsDeliveryAssignment Not Found")]
+        [Trait("UseCase", "UC2_AF1")]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void UC2_AF1_GetDetailsDeliveryAssignment_NotFound_Test()
+        {
+            // Arrange
+            int deliveryAssignmentId = 77;
+            string expectedErrorMessage = "Error 204:";
+
+            // Act
+            NavigateToDeliveryAssignmentDetail(deliveryAssignmentId);
+
+            // Assert
+            Assert.True(getDetailsDeliveryAssignment_PO.CheckErrorMessage(expectedErrorMessage));
+        }
     }
 }

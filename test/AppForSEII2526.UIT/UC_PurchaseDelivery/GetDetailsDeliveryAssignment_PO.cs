@@ -28,8 +28,14 @@ namespace AppForSEII2526.UIT.UC_PurchaseDelivery
         }
 
         public bool CheckListOfPurchaseDeliveries(List<string[]> expectedPurchaseDeliveries)
-        {
+        {   WaitForBeingVisible(By.Id("AssignedDeliveries"));
             return CheckBodyTable(expectedPurchaseDeliveries, By.Id("AssignedDeliveries"));
+        }
+
+        public bool CheckErrorMessage(string expectedErrorMessage)
+        {   
+            WaitForBeingVisible(By.TagName("body"));
+            return _driver.PageSource.Contains(expectedErrorMessage);
         }
     }
 }
