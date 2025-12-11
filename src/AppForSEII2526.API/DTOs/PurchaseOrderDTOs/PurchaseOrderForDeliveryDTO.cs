@@ -27,5 +27,16 @@
 
         [Required, StringLength(20)]
         public string PostalCode { get; set; }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is PurchaseOrderForDeliveryDTO dTO &&
+                   Id == dTO.Id &&
+                   Date == dTO.Date &&
+                   TotalPrice == dTO.TotalPrice &&
+                   City == dTO.City &&
+                   Street == dTO.Street &&
+                   PostalCode == dTO.PostalCode;
+        }
     }
 }
