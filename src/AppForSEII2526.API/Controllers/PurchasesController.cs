@@ -52,8 +52,8 @@ namespace AppForSEII2526.API.Controllers
                             pp.Product.Colour,
                             pp.Price,
                             pp.Quantity
-                        )).ToList()
-
+                        )).ToList(),
+                    po.Rating
                 ))
                 .FirstOrDefaultAsync();
 
