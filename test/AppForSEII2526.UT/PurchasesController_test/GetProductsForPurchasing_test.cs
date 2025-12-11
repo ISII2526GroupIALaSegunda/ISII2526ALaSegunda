@@ -34,8 +34,8 @@ namespace AppForSEII2526.UT.ProductsController_test
         public static IEnumerable<object[]> TestCasesFor_GetProductsForPurchasing_OK()
         {
             var productDTOs = new List<ProductForPurchaseDTO>() {
-                new ProductForPurchaseDTO(2, "Shirt",  "Blue", "Uniqlo", 10, null),
-                new ProductForPurchaseDTO(1, "Jacket", "Red",  "Zara",    4, null),
+                new ProductForPurchaseDTO(2, "Shirt",  "Blue", "Uniqlo", 10, null, 10.0m),
+                new ProductForPurchaseDTO(1, "Jacket", "Red",  "Zara",    4, null, 20.0m),
             };
 
             var all = new List<ProductForPurchaseDTO>() { productDTOs[0], productDTOs[1] }; // los dos (sin "Hat")
@@ -94,7 +94,7 @@ namespace AppForSEII2526.UT.ProductsController_test
 
             var expected = new List<ProductForPurchaseDTO>
             {
-                new ProductForPurchaseDTO(2, "Shirt", "Blue", "Uniqlo", 10, null)
+                new ProductForPurchaseDTO(2, "Shirt", "Blue", "Uniqlo", 10, null, 10.0m)
             };
 
             Assert.Equal(expected, actual);
