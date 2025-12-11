@@ -5,8 +5,7 @@
 @inject AppForSEII2526APIClient apiclient
     
 <h3>DetailDeliveryAssignment</h3>
-@* @attribute [Authorize]
- *@
+@attribute [Authorize]
 @if (deliveryAssignment == null)
 {
     <p>@error</p>
@@ -32,7 +31,7 @@ else
         </tr>
         <tr>
             <th>Extra Reward</th>
-            <td id="ExtraReward">@deliveryAssignment.ExtraReward</td>
+            <td id="ExtraReward">@deliveryAssignment.ExtraReward €</td>
         </tr>
     </table>
 
