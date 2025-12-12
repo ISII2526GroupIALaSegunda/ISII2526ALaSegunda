@@ -33,6 +33,9 @@ namespace AppForSEII2526.Web
                     Brand = p.Brand,
                     Colour = p.Colour,
 
+                    // El cliente autogenerado define UnitPrice como double, por lo que debemos
+                    // hacer un casting explícito desde el decima' original de la API.
+
                     UnitPrice = unitPrice.HasValue
                         ? (double)unitPrice.Value
                         : (double)p.Price,
