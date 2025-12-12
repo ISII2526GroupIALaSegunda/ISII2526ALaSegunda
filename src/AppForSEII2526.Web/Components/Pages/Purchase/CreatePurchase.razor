@@ -13,17 +13,45 @@
 }
 else
 {
+    <div class="card mb-4">
+        <div class="card-header">Order Summary</div>
+        <div class="table-responsive">
+            <table class="table table-sm mb-0">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Brand</th>
+                        <th>Qty</th>
+                        <th>Price</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in purchaseState.Purchase.Items)
+                    {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td>@item.Brand</td>
+                            <td>@item.Quantity</td>
+                            <td>@item.UnitPrice €</td>
+                            <td>@(item.UnitPrice* item.Quantity) €</td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr class="fw-bold">
+                        <td colspan="4" class="text-end">Total:</td>
+                        <td>@purchaseState.TotalPriceClient €</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
     <div class="alert alert-secondary mb-3">
         Please fill in your delivery and payment details:
-        <ul class="mb-0">
-            <li>Street: Include street name and number (min 3 characters).</li>
-            <li>City: Enter your city (min 2 characters).</li>
-            <li>Postal Code: Enter a valid postal code (min 3 characters).</li>
-            <li>Name and Surname: Your full name (min 3 characters each).</li>
-            <li>Payment Method Id: Enter an existing payment method id.</li>
-            <li>Rating: Optional, between 0 and 5.</li>
-        </ul>
     </div>
+
     <EditForm Model="purchaseState.Purchase" OnValidSubmit="Confirm">
         <DataAnnotationsValidator />
         <ValidationSummary />
@@ -73,34 +101,18 @@ else
     <div class="alert alert-warning mt-3">@errors</div>
 }
 
-@if (result != null)
-{
-    <div class="card mt-3">
-        <div class="card-header">Purchase created</div>
-        <div class="card-body">
-            <div>Id: @result.Id</div>
-            <div>Total: @result.TotalPrice</div>
-            <div>Date: @result.Date</div>
-            <div>Address: @result.Street, @result.City (@result.PostalCode)</div>
-            <div>Customer: @result.NameSurname</div>
-            <div>Payment: @result.PaymentMethod</div>
-        </div>
-    </div>
-}
-
 @code {
     private string? errors;
-    private PurchaseForDetailDTO? result;
 
     private async Task Confirm()
     {
         errors = null;
-        result = null;
         try
         {
             var created = await api.CreatePurchaseAsync(purchaseState.Purchase);
-            result = created;
             purchaseState.ClearCart();
+            // Redirección al paso 7 (Details)
+            nav.NavigateTo($"/purchase/detailpurchase?PurchaseID={created.Id}");
         }
         catch (AppForSEII2526.Web.API.ApiException ex)
         {
