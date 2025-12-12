@@ -2,7 +2,7 @@
 {
     public class ReportCustomerForDetailDTO
     {
-        public ReportCustomerForDetailDTO(int customerId, string name, string surname, string? personalMessage)
+        public ReportCustomerForDetailDTO(string customerId, string name, string surname, string? personalMessage)
         {
             CustomerId = customerId;
             Name = name;
@@ -10,7 +10,7 @@
             PersonalMessage = personalMessage;
         }
 
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
 
         [Required, StringLength(60, ErrorMessage = "Name cannot be longer than 60 characters.")]
         public string Name { get; set; }
