@@ -4,6 +4,8 @@
 @inject AppForSEII2526APIClient api
 @inject PurchaseStateContainer purchaseState
 @inject NavigationManager nav
+@using Microsoft.AspNetCore.Authorization
+
 
 <h3>Create Purchase</h3>
 
@@ -33,15 +35,15 @@ else
                             <td>@item.Name</td>
                             <td>@item.Brand</td>
                             <td>@item.Quantity</td>
-                            <td>@item.UnitPrice €</td>
-                            <td>@(item.UnitPrice* item.Quantity) €</td>
+                            <td>@item.UnitPrice ï¿½</td>
+                            <td>@(item.UnitPrice* item.Quantity) ï¿½</td>
                         </tr>
                     }
                 </tbody>
                 <tfoot>
                     <tr class="fw-bold">
                         <td colspan="4" class="text-end">Total:</td>
-                        <td>@purchaseState.TotalPriceClient €</td>
+                        <td>@purchaseState.TotalPriceClient ï¿½</td>
                     </tr>
                 </tfoot>
             </table>
@@ -144,7 +146,7 @@ else
         {
             var created = await api.CreatePurchaseAsync(purchaseState.Purchase);
             purchaseState.ClearCart();
-            // Redirección al paso 7 (Details)
+            // Redirecciï¿½n al paso 7 (Details)
             nav.NavigateTo($"/purchase/detailpurchase?PurchaseID={created.Id}");
         }
         catch (AppForSEII2526.Web.API.ApiException ex)
