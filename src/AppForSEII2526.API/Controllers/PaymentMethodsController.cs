@@ -12,7 +12,7 @@ namespace AppForSEII2526.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    
     public class PaymentMethodsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
