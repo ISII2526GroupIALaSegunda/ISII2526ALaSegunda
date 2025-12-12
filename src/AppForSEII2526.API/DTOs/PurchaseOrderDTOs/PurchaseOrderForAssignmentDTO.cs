@@ -1,4 +1,4 @@
-﻿namespace AppForSEII2526.API.DTOs.DeliveryAssignmentDTOs
+﻿namespace AppForSEII2526.API.DTOs.PurchaseOrderDTOs
 {
     public class PurchaseOrderForAssignmentDTO{
         public PurchaseOrderForAssignmentDTO(int purchaseOrderId, PriorityType priority, int id)

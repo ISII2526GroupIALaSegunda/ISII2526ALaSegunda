@@ -1,4 +1,6 @@
 ﻿
+using AppForSEII2526.API.DTOs.PurchaseDeliveryDTOs;
+
 namespace AppForSEII2526.API.DTOs.DeliveryAssignmentDTOs
 {
     public class DeliveryAssignmentForDetailDTO
