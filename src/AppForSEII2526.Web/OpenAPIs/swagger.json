@@ -249,6 +249,45 @@
         }
       }
     },
+    "/api/PaymentMethods/GetMyPaymentMethods": {
+      "get": {
+        "tags": [
+          "PaymentMethods"
+        ],
+        "operationId": "GetMyPaymentMethods",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PaymentMethodDTO"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PaymentMethodDTO"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PaymentMethodDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Products/GetProductsForPurchasing": {
       "get": {
         "tags": [
@@ -1964,6 +2003,20 @@
             "type": "integer",
             "format": "int32",
             "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentMethodDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
