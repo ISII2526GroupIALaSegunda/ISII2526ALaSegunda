@@ -32,7 +32,12 @@ namespace AppForSEII2526.Web
                     Name = p.Name,
                     Brand = p.Brand,
                     Colour = p.Colour,
-                    UnitPrice = unitPrice.HasValue ? (double)unitPrice.Value : 0.0,
+
+                    UnitPrice = unitPrice.HasValue
+                        ? (double)unitPrice.Value
+                        : (double)p.Price,
+                  
+
                     Quantity = 1
                 });
             }

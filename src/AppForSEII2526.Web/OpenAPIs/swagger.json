@@ -2035,6 +2035,10 @@
           "city": {
             "type": "string",
             "nullable": true
+          },
+          "price": {
+            "type": "number",
+            "format": "double"
           }
         },
         "additionalProperties": false
@@ -2147,8 +2151,8 @@
             "type": "string"
           },
           "totalPrice": {
-            "maximum": 9999999999.99,
-            "minimum": 0.00,
+            "maximum": 999999999999,
+            "minimum": 0,
             "type": "number",
             "format": "double"
           },
@@ -2336,8 +2340,8 @@
             "format": "date-time"
           },
           "totalPrice": {
-            "maximum": 999999999999,
-            "minimum": 0,
+            "maximum": 9999999999.99,
+            "minimum": 0.00,
             "type": "number",
             "format": "double"
           },
