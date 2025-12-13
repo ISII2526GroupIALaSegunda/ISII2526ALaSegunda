@@ -46,14 +46,14 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
         builder.Entity<ReportCustomer>(entity =>
 
-        {  //Clave primaria compuesta
+        {  
             entity.HasKey(rc => new { rc.BanReportId, rc.CustomerId });
-            //Relaciones con Banreport
+            
             entity.HasOne(rc => rc.BanReport)
                 .WithMany(br => br.ReportCustomers)
                 .HasForeignKey(rc => rc.BanReportId)
                 .OnDelete(DeleteBehavior.NoAction);
-            //Relaciones con ApplicationUser(Usuario Reportado)
+            
 
             entity.HasOne(rc => rc.ApplicationCustomer)
                 .WithMany()

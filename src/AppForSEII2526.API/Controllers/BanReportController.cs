@@ -45,7 +45,7 @@ namespace AppForSEII2526.API.Controllers
             _context.BanReports.Add(banReport);
             await _context.SaveChangesAsync();
 
-            // ✅ Mapear a DTO para evitar ciclos
+           
             var result = new BanReportDTO
             {
                 Id = banReport.ID,
