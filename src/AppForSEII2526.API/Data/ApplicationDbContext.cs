@@ -42,7 +42,27 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .HasOne(po => po.PaymentMethod)
             .WithMany(pm => pm.PurchaseOrders)       
             .HasForeignKey(po => po.PaymentMethodId)
-            .OnDelete(DeleteBehavior.NoAction);      
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder.Entity<ReportCustomer>(entity =>
+
+        {  
+            entity.HasKey(rc => new { rc.BanReportId, rc.CustomerId });
+            
+            entity.HasOne(rc => rc.BanReport)
+                .WithMany(br => br.ReportCustomers)
+                .HasForeignKey(rc => rc.BanReportId)
+                .OnDelete(DeleteBehavior.NoAction);
+            
+
+            entity.HasOne(rc => rc.ApplicationCustomer)
+                .WithMany()
+                .HasForeignKey(rc => rc.CustomerId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+        }
+        );
+            
     }
 
 
