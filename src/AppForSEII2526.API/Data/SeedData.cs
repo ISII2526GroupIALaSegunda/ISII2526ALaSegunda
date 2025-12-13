@@ -31,7 +31,7 @@ public static class SeedData
                 EmailConfirmed = true,
                 Name = "Pepe",
                 Surname = "Perez",
-                Address = "Calle Inventada",
+                Address = "Calle Inventada, 1",
                 AccountCreationDate = new DateTime(2020, 12, 6),
                 PhoneNumber = "+34611343434",
                 PhoneNumberConfirmed = true

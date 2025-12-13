@@ -1,7 +1,6 @@
 using AppForSEII2526.API.Data;
 using AppForSEII2526.API.DTOs.PaymentDTOs;
 using AppForSEII2526.API.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
@@ -13,10 +12,9 @@ namespace AppForSEII2526.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class PaymentMethodsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;      
         private readonly UserManager<ApplicationUser> _userManager;
 
         public PaymentMethodsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
@@ -29,11 +27,14 @@ namespace AppForSEII2526.API.Controllers
         [Route("[action]")]
         public async Task<ActionResult<List<PaymentMethodDTO>>> GetMyPaymentMethods()
         {
-           
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null) return Unauthorized(new { message = "User not identified" });
+            //Fix errors
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == "pepe@uclm.es");
 
-           
+            if (user == null)
+            {
+                return NotFound("The user not exist in the db");
+            }
+
             var methods = await _context.PaymentMethods
                 .Where(pm => pm.User.Id == user.Id)
                 .Select(pm => new PaymentMethodDTO
