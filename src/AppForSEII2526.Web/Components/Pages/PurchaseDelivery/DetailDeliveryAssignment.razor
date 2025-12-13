@@ -1,0 +1,112 @@
+﻿@page "/purchasedelivery/detaildeliveryassignment"
+
+@using AppForSEII2526.Web.API
+@using Microsoft.AspNetCore.Authorization
+@inject AppForSEII2526APIClient apiclient
+    
+<h3>DetailDeliveryAssignment</h3>
+@attribute [Authorize]
+@if (deliveryAssignment == null)
+{
+    <p>@error</p>
+}
+else
+{
+    <table class="table table-borderless table-sm">
+        <tr>
+            <th>ID</th>
+            <td id="ID">@deliveryAssignment.Id</td>
+        </tr>
+        <tr>
+            <th>Delivery Driver Name</th>
+            <td id="DeliveyDriverName">@deliveryAssignment.DeliveryDriverName</td>
+        </tr>
+        <tr>
+            <th>Personal Message</th>
+            <td id="PersonalMessage">@deliveryAssignment.PersonalMessage</td>
+        </tr>
+        <tr>
+            <th>Delivery Assignment Done</th>
+            <td id="DeliveryAssignmentDone">@deliveryAssignment.DeliveryAssignmentDone.ToString("dd/MM/yyyy hh:mm:ss")</td>
+        </tr>
+        <tr>
+            <th>Extra Reward</th>
+            <td id="ExtraReward">@deliveryAssignment.ExtraReward €</td>
+        </tr>
+    </table>
+
+    <table class="table" id="AssignedDeliveries">
+        <thead>
+            <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Street</th>
+                <th scope="col">City</th>
+                <th scope="col">Postal Code</th>
+                <th scope="col">Total Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (PurchaseDeliveryDTO item in deliveryAssignment.PurchaseDeliveries)
+            {
+                <tr id="AssignedDelivery_@item.Date">
+                    <td>@item.Date.DateTime.ToShortDateString()</td>
+                    <td>@item.Street</td>
+                    <td>@item.City</td>
+                    <td>@item.PostalCode</td>
+                    <td>@item.TotalPrice €</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            @*colspan is used to state that TWO columns are collapsed*@
+        <th scope="row" colspan="2" class="text-end">Extra Reward</th>
+        <td id="ExtraReward">@deliveryAssignment.ExtraReward €</td>
+        </tfoot>
+
+    </table>
+
+
+}
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public int DeliveryAssignmentID { get; set; }
+    private DeliveryAssignmentForDetailDTO deliveryAssignment;
+    private string error = "";
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        //we check the user is logged in
+        string userName = "";
+        if (authenticationState is not null)
+        {
+            var authState = await authenticationState;
+            var user = authState?.User;
+
+            //we retrieve the id of the user logged in
+            if (user is not null)
+            {
+                if (user.Identity is not null && user.Identity.IsAuthenticated && user.IsInRole("User"))
+                {
+                    userName = user.Identity.Name;
+                }
+            }
+        }
+
+        try
+        {
+            deliveryAssignment = await apiclient.GetDeliveryAssignmentAsync(DeliveryAssignmentID);
+        }
+        catch (ApiException exception)
+        {
+            deliveryAssignment = null;
+            error = $"Error {exception.StatusCode}: {exception.Message}";
+        }
+        
+    }
+}

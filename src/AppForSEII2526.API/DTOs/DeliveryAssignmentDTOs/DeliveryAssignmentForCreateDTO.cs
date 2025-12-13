@@ -1,4 +1,6 @@
-﻿namespace AppForSEII2526.API.DTOs.DeliveryAssignmentDTOs
+﻿using AppForSEII2526.API.DTOs.PurchaseDeliveryDTOs;
+
+namespace AppForSEII2526.API.DTOs.DeliveryAssignmentDTOs
 {
     public class DeliveryAssignmentForCreateDTO {
         public DeliveryAssignmentForCreateDTO(int deliveryDriverId, DateTime deliveryAssignmentDone, string personalMessage, decimal extraReward, IList<PurchaseDeliveryDTO> purchaseDeliveries)

@@ -1,0 +1,149 @@
+﻿@page "/purchasedelivery/selectpurchaseordersfordelivery"
+
+@using Microsoft.AspNetCore.Authorization
+@using AppForSEII2526.Web.API
+@inject AppForSEII2526APIClient apiclient
+@inject ILogger<SelectPurchaseOrdersForDelivery> logger
+@inject DeleveryAssignmentStateContainer deleveryAssignmentState
+@inject NavigationManager navigation
+
+@attribute [Authorize]
+<h3>Select Purchase Orders For Delivery</h3>
+<div class="container-fluid">
+    <div class="row" hidden="@hideErrors">
+        <p>Errors: @errors</p>
+    </div>
+    <div class="row">
+        <div class="col-8">
+            <div class="row">
+                <div class="col">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">Postalcode</span>
+                        <input type="text" id="inputPostalcode" @bind=postalcode class="form-control" placeholder="Postalcode" aria-label="Postalcode" aria-describedby="basic-addon1">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">Total Price</span>
+                        <input type="text" id="inputTotalPrice" @bind=totalprice class="form-control" placeholder="Total Price" aria-label="Total Price" aria-describedby="basic-addon1">
+                    </div>
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-primary" @onclick=@SearchPurchaseOrders id="searchPurchaseOrders">Search purchase orders</button>
+                </div>
+            </div>
+            <div class="row">
+                @if (purchaseOrders == null)
+                {
+                    <p>Loading purchase orders....</p>
+                }
+                else
+                {
+                    <div class="mh-100 table-responsive">
+                        <table class="table table-condensed table-hover" id="TableOfPurchaseOrders">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Date</th>
+                                    <th>Total Price</th>
+                                    <th>City</th>
+                                    <th>Street</th>
+                                    <th>Postal Code</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var purchaseOrder in purchaseOrders)
+                                {
+                                    <tr id="PurchaseOrderData_@purchaseOrder.Id">
+                                        <td>@purchaseOrder.Id</td>
+                                        <td>@purchaseOrder.Date</td>
+                                        <td>@purchaseOrder.TotalPrice</td>
+                                        <td>@purchaseOrder.City</td>
+                                        <td>@purchaseOrder.Street</td>
+                                        <td>@purchaseOrder.PostalCode</td>
+                                        <td>
+                                             <button class="btn btn-outline-secondary" id="movieToRent_@purchaseOrder.Id" @onclick="@(() => AddPurchaseOrder(purchaseOrder))">Add</button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                }
+            </div>
+        </div>
+        <div class="col-2" hidden="@hiddenPurchaseDeliveryList">
+            <div class="row">
+                <h3>Shopping Cart</h3>
+            </div>
+            @foreach (PurchaseDeliveryDTO purchaseDelivery in deliveryAssignment.PurchaseDeliveries)
+            {
+                <div class="row">
+                    <button type="button" class="btn btn-light" id="purchaseDeliveryToDelete_@purchaseDelivery.PurchaseOrderId" @onclick="@(() => RemovePurchaseDelivery(purchaseDelivery))">x @purchaseDelivery.PurchaseOrderId - @purchaseDelivery.TotalPrice€</button>
+                </div>
+            }
+            <div class="row">
+                <button type="button" class="btn btn-primary" id="assignDeliveryButton" @onclick=@AssignDelivery>Assign Delivery</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+@code {
+    private ICollection<PurchaseOrderForDeliveryDTO> purchaseOrders;
+    private bool hideErrors { get { return errors.Length == 0; } }
+    private string errors = "";
+    private string? postalcode { get; set; }
+    private double? totalprice { get; set; }
+
+    private DeliveryAssignmentForCreateDTO deliveryAssignment => deleveryAssignmentState.DeliveryAssgnment;
+
+    private bool hiddenPurchaseDeliveryList { get { return deliveryAssignment.PurchaseDeliveries.Count == 0; } }
+
+    private void AddPurchaseOrder(PurchaseOrderForDeliveryDTO purchaseOrder)
+    {
+        deleveryAssignmentState.AddPurchaseOrderToDeliveryAssignment(purchaseOrder);
+    }
+
+    private void RemovePurchaseDelivery(PurchaseDeliveryDTO purchaseDelivery)
+    {
+        deleveryAssignmentState.RemovePurchaseDeliveryToDelivery(purchaseDelivery);
+        // if (deliveryAssignment.PurchaseDeliveries.Count == 0) hiddenPurchaseDeliveryList = true;
+    }
+
+    public async void SearchPurchaseOrders()
+    {
+        try
+        {
+            purchaseOrders = await apiclient.GetPurchaseOrdersToDeliveryAsync(postalcode, totalprice);
+
+        }
+        catch (ApiException ex)
+        {
+            if (ex.StatusCode == 400)
+            {
+                purchaseOrders = [];
+            }
+            else
+            {
+                logger.LogError($"{DateTime.Now} Error: {ex}");
+                errors = "Error while connecting to the system";
+            }
+        }
+        StateHasChanged();
+    }
+
+    protected override Task OnInitializedAsync()
+    {
+        SearchPurchaseOrders();
+
+        return base.OnInitializedAsync();
+    }
+
+    private void AssignDelivery()
+    {
+        navigation.NavigateTo("/purchasedelivery/createdeliveryassignment");
+    }
+
+}

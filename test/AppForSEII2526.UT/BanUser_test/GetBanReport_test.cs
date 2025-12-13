@@ -81,11 +81,11 @@ namespace AppForSEII2526.UT.BanReportsController_test
             var reportCustomer = new ReportCustomer
             {
                 BanReportId = banReport.ID,
-                CustomerId = 1,
+                CustomerId = "1",
                 State = ReportState.InProgress,
                 Message = "Your account has been banned.",
                 BanReport = banReport,
-                User = user1,
+             //   User = user1,
                 ApplicationCustomer = user1
             };
 
@@ -112,7 +112,7 @@ namespace AppForSEII2526.UT.BanReportsController_test
                 "In progress",
                 new List<ReportCustomerForDetailDTO>
                 {
-                    new ReportCustomerForDetailDTO(1, "Juan", "García", "Your account has been banned.")
+                    new ReportCustomerForDetailDTO("1", "Juan", "García", "Your account has been banned.")
                 }
             );
 
