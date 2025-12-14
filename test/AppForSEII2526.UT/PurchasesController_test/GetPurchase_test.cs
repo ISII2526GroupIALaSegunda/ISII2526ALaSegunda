@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AppForSEII2526.API.Controllers;
 using AppForSEII2526.API.DTOs.PurchaseOrderDTOs;
@@ -12,13 +13,17 @@ namespace AppForSEII2526.UT.PurchasesController_test
 {
     public class GetPurchase_test : AppForSEII2526SqliteUT
     {
+        private PurchasesController CreateController()
+        {
+            return new PurchasesController(_context, new Mock<ILogger<PurchasesController>>().Object);
+        }
+
         [Fact]
         [Trait("Database", "SQLite:Memory")]
         [Trait("LevelTesting", "Unit Testing")]
         public async Task GetPurchase_NotFound_test()
         {
-            var logger = new Mock<ILogger<PurchasesController>>().Object;
-            var ctrl = new PurchasesController(_context, logger);
+            var ctrl = CreateController();
 
             var result = await ctrl.GetPurchase(0);
 
@@ -56,11 +61,11 @@ namespace AppForSEII2526.UT.PurchasesController_test
                 Street = "Calle Inventada",
                 PostalCode = "02001",
                 NameSurname = "Pepe Pérez",
-                Date = System.DateTime.Now, 
+                Date = System.DateTime.Now,
                 State = PurchaseState.Request,
                 Customer = user,
                 PaymentMethodId = pm.Id,
-                TotalPrice = 0m 
+                TotalPrice = 0m
             };
             _context.PurchaseOrders.Add(order);
             await _context.SaveChangesAsync();
@@ -70,25 +75,20 @@ namespace AppForSEII2526.UT.PurchasesController_test
             _context.PurchaseProducts.AddRange(line1, line2);
             await _context.SaveChangesAsync();
 
-            order.TotalPrice = line1.Price * line1.Quantity + line2.Price * line2.Quantity; 
+            order.TotalPrice = line1.Price * line1.Quantity + line2.Price * line2.Quantity;
             _context.PurchaseOrders.Update(order);
             await _context.SaveChangesAsync();
 
-            var expectedId = order.Id;
-            var expectedDate = order.Date;
-            var expectedTotal = order.TotalPrice;
+            var ctrl = CreateController();
 
-            var logger = new Mock<ILogger<PurchasesController>>().Object;
-            var ctrl = new PurchasesController(_context, logger);
-
-            var result = await ctrl.GetPurchase(expectedId);
+            var result = await ctrl.GetPurchase(order.Id);
 
             var ok = Assert.IsType<OkObjectResult>(result);
             var dto = Assert.IsType<PurchaseForDetailDTO>(ok.Value);
 
-            Assert.Equal(expectedId, dto.Id);
-            Assert.Equal(expectedTotal, dto.TotalPrice);
-            Assert.Equal(expectedDate, dto.Date);
+            Assert.Equal(order.Id, dto.Id);
+            Assert.Equal(order.TotalPrice, dto.TotalPrice);
+            Assert.Equal(order.Date, dto.Date);
             Assert.Equal("Calle Inventada", dto.Street);
             Assert.Equal("Albacete", dto.City);
             Assert.Equal("02001", dto.PostalCode);
@@ -99,21 +99,20 @@ namespace AppForSEII2526.UT.PurchasesController_test
 
             Assert.Equal("pepe@test.com", dto.CustomerUserName);
 
-            Assert.Equal(2, dto.Items.Count);
+            var expectedItems = new List<PurchaseItemDTO>
+            {
+                new PurchaseItemDTO(prod1.ProductId, "Jacket", "Zara", "Red", 20.0m, 2),
+                new PurchaseItemDTO(prod2.ProductId, "Shirt",  "Zara", "Blue",10.0m, 1)
+            }
+            .OrderBy(i => i.ProductId)
+            .ToList();
 
-            var item1 = dto.Items.Single(i => i.ProductId == prod1.ProductId);
-            Assert.Equal("Jacket", item1.Name);
-            Assert.Equal("Zara", item1.Brand);
-            Assert.Equal("Red", item1.Colour);
-            Assert.Equal(20.0m, item1.UnitPrice);
-            Assert.Equal(2, item1.Quantity);
+            var actualItems = dto.Items
+                .OrderBy(i => i.ProductId)
+                .ToList();
 
-            var item2 = dto.Items.Single(i => i.ProductId == prod2.ProductId);
-            Assert.Equal("Shirt", item2.Name);
-            Assert.Equal("Zara", item2.Brand);
-            Assert.Equal("Blue", item2.Colour);
-            Assert.Equal(10.0m, item2.UnitPrice);
-            Assert.Equal(1, item2.Quantity);
+            Assert.Equal(2, actualItems.Count);
+            Assert.True(expectedItems.SequenceEqual(actualItems));
         }
     }
 }
