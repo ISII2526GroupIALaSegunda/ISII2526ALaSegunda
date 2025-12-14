@@ -141,7 +141,7 @@ public static class SeedData
                 Date = new DateTime(2025, 12, 12),
                 Rating = null,
                 TotalPrice = 30.00m,
-                State = PurchaseState.Processing,
+                State = PurchaseState.Done,
                 Customer = user,
                 PaymentMethod = bizum
             };
@@ -180,6 +180,88 @@ public static class SeedData
             logger.LogInformation("PurchaseProduct (Order={OrderId}, Product={ProductId}) creado.", purchaseOrder.Id, productShirt.ProductId);
         }
 
-        logger.LogInformation("Seed data completado.");
+        {
+            ApplicationUser user2 = new ApplicationUser
+            {
+                Id = "2",
+                UserName = "Alejandro.Gomez",
+                Email = "Alejandro.Gomez31@alu.uclm.es",
+                EmailConfirmed = true,
+                Name = "Alejandro",
+                Surname = "Gomez",
+                Address = "Calle Inventada, 1",
+                AccountCreationDate = new DateTime(2020, 12, 6),
+                PhoneNumber = "+34611343434",
+                PhoneNumberConfirmed = true
+            };
+
+            var result = await userManager.CreateAsync(user2, "Alejandro@1234");
+
+            PurchaseOrder? purchaseOrder4 = await context.PurchaseOrders.FirstOrDefaultAsync(po => po.Id == 4);
+
+            if (purchaseOrder4 == null)
+            {
+                purchaseOrder4 = new PurchaseOrder
+                {
+                    Id = 4,
+                    City = "Ab",
+                    Street = "Av españa",
+                    PostalCode = "02002",
+                    NameSurname = "Alejandro Gomez",
+                    Description = null,
+                    Date = new DateTime(2025, 10, 13),
+                    Rating = 5,
+                    TotalPrice = 5.00m,
+                    State = PurchaseState.Processing,
+                    Customer = user2,
+                    PaymentMethodId = 1
+                };
+
+                await context.Database.ExecuteSqlRawAsync(
+                    "SET IDENTITY_INSERT [dbo].[PurchaseOrders] ON");
+
+                context.PurchaseOrders.Add(purchaseOrder4);
+                await context.SaveChangesAsync();
+
+                await context.Database.ExecuteSqlRawAsync(
+                    "SET IDENTITY_INSERT [dbo].[PurchaseOrders] OFF");
+            }
+
+            PurchaseOrder? purchaseOrder5 = await context.PurchaseOrders
+        .FirstOrDefaultAsync(po => po.Id == 5);
+
+            if (purchaseOrder5 == null)
+            {
+                purchaseOrder5 = new PurchaseOrder
+                {
+                    Id = 5,
+                    City = "Ab",
+                    Street = "Av españa",
+                    PostalCode = "02005",
+                    NameSurname = "Alejandro Gomez",
+                    Description = null,
+                    Date = new DateTime(2025, 10, 13),
+                    Rating = 5,
+                    TotalPrice = 5.00m,
+                    State = PurchaseState.Processing,
+                    Customer = user2,
+                    PaymentMethodId = 1
+                };
+
+                await context.Database.ExecuteSqlRawAsync(
+                    "SET IDENTITY_INSERT [dbo].[PurchaseOrders] ON");
+
+                context.PurchaseOrders.Add(purchaseOrder5);
+                await context.SaveChangesAsync();
+
+                await context.Database.ExecuteSqlRawAsync(
+                    "SET IDENTITY_INSERT [dbo].[PurchaseOrders] OFF");
+
+                logger.LogInformation("PurchaseOrder creada con Id={Id}.", purchaseOrder5.Id);
+            }
+
+
+            logger.LogInformation("Seed data completado.");
+        }
     }
 }
