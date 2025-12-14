@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 using OpenQA.Selenium;
@@ -28,7 +25,6 @@ namespace AppForSEII2526.UIT.UC_Purchase
         private void InitialStepsForSelectProducts()
         {
             Precondition_perform_login();
-
             selectProductsForPurchasing_PO.WaitForBeingVisible(By.XPath("//button[contains(., 'Logout')]"));
 
             selectProductsForPurchasing_PO.WaitForBeingVisible(By.Id("menuSelectProducts"));
@@ -39,24 +35,39 @@ namespace AppForSEII2526.UIT.UC_Purchase
         [Trait("LevelTesting", "Funcional Testing")]
         public void UC2_1_SelectProducts_No_Filtering_Test()
         {
+            InitialStepsForSelectProducts();
 
-            InitialStepsForSelectProducts();       
             selectProductsForPurchasing_PO.SearchProducts("", "");
 
-            selectProductsForPurchasing_PO.WaitForBeingVisible(By.Id("productsTable"));
-            Assert.True(true);
+            var expectedProducts = new List<string[]>
+            {
+                
+                new string[] { "Shirt", "Uniqlo", "Blue", "2", "Albacete", "Add" },
+                new string[] { "Jacket", "Zara", "Red", "4", "Albacete", "Add" }
+              
+            };
+
+            bool areEqual = selectProductsForPurchasing_PO.CheckProductsList(expectedProducts);
+
+            Assert.True(areEqual, "La tabla no contiene los productos del SeedData");
         }
 
         [Theory(DisplayName = "UC2_2 - SelectProducts Filtering")]
-        [InlineData("T-Shirt", "Red")]
+        [InlineData("Jacket", "Red")]
         [Trait("LevelTesting", "Funcional Testing")]
         public void UC2_2_SelectProducts_Filtering_Test(string name, string colour)
-        {      
+        {
             InitialStepsForSelectProducts();
+
             selectProductsForPurchasing_PO.SearchProducts(name, colour);
 
-            selectProductsForPurchasing_PO.WaitForBeingVisible(By.Id("productsTable"));
-            Assert.True(true);
+            var expectedProducts = new List<string[]>
+            {
+                new string[] { "Jacket", "Zara", "Red", "4", "Albacete", "Add" }
+            };
+
+            bool areEqual = selectProductsForPurchasing_PO.CheckProductsList(expectedProducts);
+            Assert.True(areEqual, $"El filtrado por {name} y {colour} falló.");
         }
 
         [Fact(DisplayName = "UC2_3 - Add Product To Cart")]
@@ -65,10 +76,10 @@ namespace AppForSEII2526.UIT.UC_Purchase
         {
             InitialStepsForSelectProducts();
 
-            string productName = "T-Shirt";
+            string productName = "Jacket";
             selectProductsForPurchasing_PO.SearchProducts(productName, "");
 
-            // If the product exists, add it.
+            selectProductsForPurchasing_PO.AddProductToCart(productName);
 
             Assert.True(true);
         }
