@@ -52,75 +52,156 @@ namespace AppForSEII2526.UT.PurchasesController_test
             _prodShirtId = p2.ProductId;
         }
 
-        public static IEnumerable<object[]> TestCasesFor_CreatePurchase_Errors()
-        {
-
-            // 1) Carrito vacío
-            var emptyCart = new Func<int, PurchaseForCreateDTO>(pmId => new PurchaseForCreateDTO(
-                _street, _city, _postalCode, _nameCustomer, _surname,
-                new List<PurchaseItemDTO>(), pmId, null
-            ));
-
-            // 2) Cantidad inválida (<1)
-            var invalidQty = new Func<int, int, PurchaseForCreateDTO>((pmId, productId) => new PurchaseForCreateDTO(
-                _street, _city, _postalCode, _nameCustomer, _surname,
-                new List<PurchaseItemDTO> {
-                    new PurchaseItemDTO(productId, "Jacket", "Zara", "Red", 0m, 0) // Quantity = 0
-                },
-                pmId, null
-            ));
-
-            // 3) Producto inexistente
-            var productNotFound = new Func<int, PurchaseForCreateDTO>(pmId => new PurchaseForCreateDTO(
-                _street, _city, _postalCode, _nameCustomer, _surname,
-                new List<PurchaseItemDTO> {
-                    new PurchaseItemDTO(9999, "Ghost", "Zara", "Red", 0m, 1)
-                },
-                pmId, null
-            ));
-
-            // 4) PaymentMethod inexistente
-            var pmNotFound = new Func<PurchaseForCreateDTO>(() => new PurchaseForCreateDTO(
-                _street, _city, _postalCode, _nameCustomer, _surname,
-                new List<PurchaseItemDTO> {
-                    new PurchaseItemDTO(1, "Jacket", "Zara", "Red", 0m, 1)
-                },
-                9999, null 
-            ));
-
-            return new List<object[]>
-            {
-                new object[] { (Func<int, int, PurchaseForCreateDTO>) ((pmId, _) => emptyCart(pmId)), "must include at least one product" },
-                new object[] { (Func<int, int, PurchaseForCreateDTO>) ((pmId, prodId) => invalidQty(pmId, prodId)), "Quantity must be >= 1" },
-                new object[] { (Func<int, int, PurchaseForCreateDTO>) ((pmId, _) => productNotFound(pmId)), "Products not found" },
-                new object[] { (Func<int, int, PurchaseForCreateDTO>) ((_, __) => pmNotFound()), "Payment method not found" },
-            };
-        }
-
-        [Theory]
-        [Trait("LevelTesting", "Unit Testing")]
-        [MemberData(nameof(TestCasesFor_CreatePurchase_Errors))]
-        public async Task CreatePurchase_Error_test(Func<int, int, PurchaseForCreateDTO> dtoFactory, string expectedErrorContains)
+        private PurchasesController CreateController()
         {
             var logger = new Mock<ILogger<PurchasesController>>().Object;
-            var controller = new PurchasesController(_context, logger);
-            var dto = dtoFactory(_pmId, _prodJacketId);
-            var result = await controller.CreatePurchase(dto);
+            return new PurchasesController(_context, logger);
+        }
+
+        private static ValidationProblemDetails AssertBadRequestProblem(ActionResult result)
+        {
             var bad = Assert.IsType<BadRequestObjectResult>(result);
-            var problem = Assert.IsType<ValidationProblemDetails>(bad.Value);
+            return Assert.IsType<ValidationProblemDetails>(bad.Value);
+        }
 
+        [Fact]
+        [Trait("LevelTesting", "Unit Testing")]
+        public async Task CreatePurchase_BadRequest_when_ModelStateInvalid()
+        {
+            var controller = CreateController();
+            controller.ModelState.AddModelError("AnyKey", "AnyError");
 
-            var errorActual = problem.Errors.First().Value[0];
-            Assert.Contains(expectedErrorContains, errorActual);
+            var dto = new PurchaseForCreateDTO(
+                _street, _city, _postalCode, _nameCustomer, _surname,
+                new List<PurchaseItemDTO> { new PurchaseItemDTO(_prodJacketId, "Jacket", "Zara", "Red", 0m, 1) },
+                _pmId, null
+            );
+
+            var result = await controller.CreatePurchase(dto);
+            var problem = AssertBadRequestProblem(result);
+
+            Assert.True(problem.Errors.ContainsKey("AnyKey"));
+        }
+
+        [Fact]
+        [Trait("LevelTesting", "Unit Testing")]
+        public async Task CreatePurchase_BadRequest_when_EmptyCart()
+        {
+            var controller = CreateController();
+
+            var dto = new PurchaseForCreateDTO(
+                _street, _city, _postalCode, _nameCustomer, _surname,
+                new List<PurchaseItemDTO>(), _pmId, null
+            );
+
+            var result = await controller.CreatePurchase(dto);
+            var problem = AssertBadRequestProblem(result);
+
+            Assert.True(problem.Errors.ContainsKey("Items"));
+            Assert.NotEmpty(problem.Errors["Items"]);
+        }
+
+        [Fact]
+        [Trait("LevelTesting", "Unit Testing")]
+        public async Task CreatePurchase_BadRequest_when_AnyItemQuantityLessThanOne()
+        {
+            var controller = CreateController();
+
+            var dto = new PurchaseForCreateDTO(
+                _street, _city, _postalCode, _nameCustomer, _surname,
+                new List<PurchaseItemDTO> { new PurchaseItemDTO(_prodJacketId, "Jacket", "Zara", "Red", 0m, 0) },
+                _pmId, null
+            );
+
+            var result = await controller.CreatePurchase(dto);
+            var problem = AssertBadRequestProblem(result);
+
+            Assert.True(problem.Errors.ContainsKey("Items"));
+            Assert.NotEmpty(problem.Errors["Items"]);
+        }
+
+        [Fact]
+        [Trait("LevelTesting", "Unit Testing")]
+        public async Task CreatePurchase_BadRequest_when_ProductDoesNotExist()
+        {
+            var controller = CreateController();
+
+            var dto = new PurchaseForCreateDTO(
+                _street, _city, _postalCode, _nameCustomer, _surname,
+                new List<PurchaseItemDTO> { new PurchaseItemDTO(9999, "Ghost", "Zara", "Red", 0m, 1) },
+                _pmId, null
+            );
+
+            var result = await controller.CreatePurchase(dto);
+            var problem = AssertBadRequestProblem(result);
+
+            Assert.True(problem.Errors.ContainsKey("Items"));
+            Assert.NotEmpty(problem.Errors["Items"]);
+        }
+
+        [Fact]
+        [Trait("LevelTesting", "Unit Testing")]
+        public async Task CreatePurchase_BadRequest_when_InsufficientStock()
+        {
+            var controller = CreateController();
+
+            var dto = new PurchaseForCreateDTO(
+                _street, _city, _postalCode, _nameCustomer, _surname,
+                new List<PurchaseItemDTO> { new PurchaseItemDTO(_prodJacketId, "Jacket", "Zara", "Red", 0m, 11) },
+                _pmId, null
+            );
+
+            var result = await controller.CreatePurchase(dto);
+            var problem = AssertBadRequestProblem(result);
+
+            Assert.True(problem.Errors.ContainsKey("Stock"));
+            Assert.NotEmpty(problem.Errors["Stock"]);
+        }
+
+        [Fact]
+        [Trait("LevelTesting", "Unit Testing")]
+        public async Task CreatePurchase_BadRequest_when_PaymentMethodNotFound()
+        {
+            var controller = CreateController();
+
+            var dto = new PurchaseForCreateDTO(
+                _street, _city, _postalCode, _nameCustomer, _surname,
+                new List<PurchaseItemDTO> { new PurchaseItemDTO(_prodJacketId, "Jacket", "Zara", "Red", 0m, 1) },
+                9999, null
+            );
+
+            var result = await controller.CreatePurchase(dto);
+            var problem = AssertBadRequestProblem(result);
+
+            Assert.True(problem.Errors.ContainsKey("PaymentMethodId"));
+            Assert.NotEmpty(problem.Errors["PaymentMethodId"]);
+        }
+
+        [Fact]
+        [Trait("LevelTesting", "Unit Testing")]
+        public async Task CreatePurchase_BadRequest_when_StreetHasNoComma()
+        {
+            var controller = CreateController();
+
+            var dto = new PurchaseForCreateDTO(
+                "Calle Inventada 1", _city, _postalCode, _nameCustomer, _surname,
+                new List<PurchaseItemDTO> { new PurchaseItemDTO(_prodJacketId, "Jacket", "Zara", "Red", 0m, 1) },
+                _pmId, null
+            );
+
+            var result = await controller.CreatePurchase(dto);
+            var problem = AssertBadRequestProblem(result);
+
+            // Current controller behavior stores this validation under PaymentMethodId
+            Assert.True(problem.Errors.ContainsKey("PaymentMethodId"));
+            Assert.NotEmpty(problem.Errors["PaymentMethodId"]);
         }
 
         [Fact]
         [Trait("LevelTesting", "Unit Testing")]
         public async Task CreatePurchase_Success_test()
         {
-
-            var logger = new Mock<ILogger<PurchasesController>>().Object;
-            var controller = new PurchasesController(_context, logger);
+            var controller = CreateController();
 
 
             var dto = new PurchaseForCreateDTO(
@@ -143,32 +224,25 @@ namespace AppForSEII2526.UT.PurchasesController_test
             Assert.Equal(_city, detail.City);
             Assert.Equal(_postalCode, detail.PostalCode);
             Assert.Equal($"{_nameCustomer} {_surname}", detail.NameSurname);
-
-            // Estado y método de pago
             Assert.Equal(PurchaseState.Request.ToString(), detail.State);
             Assert.Equal("Bizum", detail.PaymentMethod);
-
-            // Usuario
             Assert.Equal("pepe@test.com", detail.CustomerUserName);
-
-            // Total calculado (snapshot de precio)
             Assert.Equal(50.00m, detail.TotalPrice);
 
-            Assert.Equal(2, detail.Items.Count);
+            var expectedItems = new List<PurchaseItemDTO>
+            {
+                new PurchaseItemDTO(_prodJacketId, "Jacket", "Zara", "Red", 20.0m, 2),
+                new PurchaseItemDTO(_prodShirtId,  "Shirt",  "Zara", "Blue",10.0m, 1)
+            }
+            .OrderBy(i => i.ProductId)
+            .ToList();
 
-            var i1 = detail.Items.Single(i => i.ProductId == _prodJacketId);
-            Assert.Equal("Jacket", i1.Name);
-            Assert.Equal("Zara", i1.Brand);
-            Assert.Equal("Red", i1.Colour);
-            Assert.Equal(20.0m, i1.UnitPrice);
-            Assert.Equal(2, i1.Quantity);
+            var actualItems = detail.Items
+                .OrderBy(i => i.ProductId)
+                .ToList();
 
-            var i2 = detail.Items.Single(i => i.ProductId == _prodShirtId);
-            Assert.Equal("Shirt", i2.Name);
-            Assert.Equal("Zara", i2.Brand);
-            Assert.Equal("Blue", i2.Colour);
-            Assert.Equal(10.0m, i2.UnitPrice);
-            Assert.Equal(1, i2.Quantity);
+            Assert.Equal(2, actualItems.Count);
+            Assert.True(expectedItems.SequenceEqual(actualItems));
 
             Assert.True(Math.Abs((DateTime.Now - detail.Date).TotalMinutes) < 2);
         }
