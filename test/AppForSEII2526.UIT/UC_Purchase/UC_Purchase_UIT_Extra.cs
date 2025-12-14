@@ -90,5 +90,29 @@ namespace AppForSEII2526.UIT.UC_Purchase
 
             Assert.True(navigated, "Clicking 'Purchase products' should navigate to the create purchase page.");
         }
+
+        [Fact(DisplayName = "UC2_7 - Complete Full Purchase Flow")]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void UC2_7_Complete_Full_Purchase_Flow()
+        {
+            InitialStepsForSelectProducts();
+
+            string productName = "Jacket";
+            selectProductsForPurchasing_PO.SearchProducts(productName, "");
+            selectProductsForPurchasing_PO.AddProductToCart(productName);
+
+            selectProductsForPurchasing_PO.WaitForBeingVisible(By.Id("btnPurchase"));
+            selectProductsForPurchasing_PO.ClickPurchaseProducts();
+
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            bool navigated = wait.Until(d => d.Url.Contains("/purchases/createpurchase"));
+            Assert.True(navigated, "Navigation to create purchase page did not happen.");
+
+            selectProductsForPurchasing_PO.FillPurchaseForm("Pepe", "Perez", "Calle Real, 1", "Albacete", "02001");
+            selectProductsForPurchasing_PO.SelectFirstAvailablePaymentMethod();
+            selectProductsForPurchasing_PO.SubmitPurchaseForm();
+
+            Assert.True(selectProductsForPurchasing_PO.IsPurchaseCreated(), "Purchase creation failed or redirection did not happen.");
+        }
     }
 }
