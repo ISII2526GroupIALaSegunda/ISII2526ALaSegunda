@@ -1,10 +1,12 @@
-using System;
-using System.Collections.Generic;
-using Xunit;
-using Xunit.Abstractions;
-using OpenQA.Selenium;
 using AppForMovies.UIT.Shared;
 using AppForSEII2526.UIT.Shared;
+using OpenQA.Selenium;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Xml.Linq;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace AppForSEII2526.UIT.UC_Purchase
 {
@@ -83,5 +85,35 @@ namespace AppForSEII2526.UIT.UC_Purchase
 
             Assert.True(true);
         }
+
+        [Fact(DisplayName = "UC Exam")]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void UCExam()
+        {
+            InitialStepsForSelectProducts();
+
+            selectProductsForPurchasing_PO.SearchProducts("Jacket", "");
+  
+            selectProductsForPurchasing_PO.SearchProducts("", "Red");
+
+
+            selectProductsForPurchasing_PO.AddProductToCart("Jacket");
+
+            selectProductsForPurchasing_PO.DecreaseItems();
+
+            selectProductsForPurchasing_PO.WaitForBeingVisible(By.Id("btnPurchase"));
+            selectProductsForPurchasing_PO.ClickPurchaseProducts();
+
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            bool navigated = wait.Until(d => d.Url.Contains("/purchases/createpurchase"));
+            Assert.True(navigated, "Navigation to create purchase page did not happen.");
+
+            selectProductsForPurchasing_PO.FillPurchaseForm("Pepe", "Perez", "Calle Real, 1", "Albacete", "02001");
+            selectProductsForPurchasing_PO.SelectFirstAvailablePaymentMethod();
+            selectProductsForPurchasing_PO.SubmitPurchaseForm();
+
+            Assert.True(selectProductsForPurchasing_PO.IsPurchaseCreated(), "Purchase creation failed or redirection did not happen.");
+        }
     }
+   
 }

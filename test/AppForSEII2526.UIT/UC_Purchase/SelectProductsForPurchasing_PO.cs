@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using AppForSEII2526.UIT.Shared;
+using System.Data;
 
 namespace AppForSEII2526.UIT.UC_Purchase
 {
@@ -108,6 +109,11 @@ namespace AppForSEII2526.UIT.UC_Purchase
                 throw new InvalidOperationException("No payment methods available for selection.");
 
             select.SelectByIndex(1);
+        }
+
+        public void DecreaseItems()
+        {
+            var removeButton = _driver.FindElement(By.CssSelector("button.btn.outline-danger"));
         }
 
         public void SubmitPurchaseForm()
