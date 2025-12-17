@@ -131,9 +131,9 @@ namespace AppForSEII2526.UIT.UC_PurchaseDelivery
 
             // Act
             createDeliveryAssignment_PO.FillDeliveryAssignmentForm(
-                deliveryDriverId, 
-                deliveryDeadline, 
-                personalMessage, 
+                deliveryDriverId,
+                deliveryDeadline,
+                personalMessage,
                 extraReward);
             createDeliveryAssignment_PO.SubmitForm();
             createDeliveryAssignment_PO.ConfirmDialog();
@@ -141,5 +141,51 @@ namespace AppForSEII2526.UIT.UC_PurchaseDelivery
             // Assert
             Assert.True(createDeliveryAssignment_PO.CheckErrorMessageDisplayed("Delivery deadline must be later than now"));
         }
+
+        [Fact(DisplayName = "UC2_AF2+AF3 - Test Case For Exam")]
+        [Trait("UseCase", "UC2_AF2+AF3")]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void UC2_AF2_AF3_Exam_Test()
+        {
+            // Arrange
+            Precondition_perform_login();
+            selectPurchaseOrdersForDelivery_PO.WaitForBeingVisible(By.Id("CreateDeliveryAssignment"));
+            _driver.FindElement(By.Id("CreateDeliveryAssignment")).Click();
+
+            string deliveryDriverId = "1";
+            string deliveryDriverName = "Juan";
+            string deliveryDeadline = "31/12/2025";
+            string personalMessage = "Please, deliver fast";
+            string extraReward = "10";
+
+            var expectedPurchaseDeliveries = new List<string[]>
+                {
+                    new string[] { "13/10/2025", "Av españa", "Ab", "02005", "5 €" }
+                };
+
+            // Act
+            selectPurchaseOrdersForDelivery_PO.AddPurchaseOrderToDeliveryList("1");
+            selectPurchaseOrdersForDelivery_PO.SearchPurchaseOrders("02005", ""); 
+            selectPurchaseOrdersForDelivery_PO.AddPurchaseOrderToDeliveryList("5");
+            selectPurchaseOrdersForDelivery_PO.RemovePurchaseOrderToDeliveryList("1");
+
+            selectPurchaseOrdersForDelivery_PO.WaitForBeingVisible(By.Id("assignDeliveryButton"));
+            _driver.FindElement(By.Id("assignDeliveryButton")).Click();
+
+            createDeliveryAssignment_PO.FillDeliveryAssignmentForm(
+                deliveryDriverId,
+                deliveryDeadline,
+                personalMessage,
+                extraReward);
+            createDeliveryAssignment_PO.SubmitForm();
+            createDeliveryAssignment_PO.ConfirmDialog();
+
+            // Assert
+            Assert.True(getDetailsDeliveryAssignment_PO.CheckListOfPurchaseDeliveries(expectedPurchaseDeliveries));
+            Assert.True(getDetailsDeliveryAssignment_PO.CheckDeliveryAssignmentDetailWithoutID(deliveryDriverName, personalMessage, deliveryDeadline, extraReward));
+            Assert.True(createDeliveryAssignment_PO.IsOnDetailPage());
+        }
+
+
     }
 }

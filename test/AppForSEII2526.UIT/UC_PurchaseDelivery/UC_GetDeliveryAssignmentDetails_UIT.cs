@@ -43,7 +43,7 @@ namespace AppForSEII2526.UIT.UC_PurchaseDelivery
 
             var expectedPurchaseDeliveries = new List<string[]>
                 {
-                    new string[] { "13/10/2025", "Av españa", "Ab", "02004", "5 €" }
+                    new string[] { "13/10/2025", "Av españa", "Ab", "02005", "5 €" }
                 };
 
             // Act
