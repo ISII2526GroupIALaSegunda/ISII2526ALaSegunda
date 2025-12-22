@@ -4,84 +4,134 @@ using Xunit;
 using Xunit.Abstractions;
 using OpenQA.Selenium;
 using AppForMovies.UIT.Shared;
+
 using AppForSEII2526.UIT.Shared;
 
 namespace AppForSEII2526.UIT.UC_Purchase
 {
-    public class UC_Purchase_UIT : UC_UIT
+    public class UCPurchase_UIT : UC_UIT
     {
-        private SelectProductsForPurchasing_PO selectProductsForPurchasing_PO;
+        private readonly SelectProductsForPurchasing_PO selectProducts_PO;
+        private readonly CreatePurchase_PO createPurchase_PO;
+        private readonly PurchaseDetail_PO purchaseDetail_PO;
 
-        public UC_Purchase_UIT(ITestOutputHelper output) : base(output)
+        public UCPurchase_UIT(ITestOutputHelper output) : base(output)
         {
-            selectProductsForPurchasing_PO = new SelectProductsForPurchasing_PO(_driver, _output);
+            Initial_step_opening_the_web_page();
+            selectProducts_PO = new SelectProductsForPurchasing_PO(_driver, _output);
+            createPurchase_PO = new CreatePurchase_PO(_driver, _output);
+            purchaseDetail_PO = new PurchaseDetail_PO(_driver, _output);
         }
 
-        private void Precondition_perform_login()
+
+        private void Precondition_LoginAndNavigate()
         {
-            Perform_login("pepe@uclm.es", "Password1234%");
+            Perform_login("pepe@uclm.es", "Password1234%"); 
+            selectProducts_PO.WaitForBeingVisible(By.XPath("//button[contains(., 'Logout')]"));
+            selectProducts_PO.OpenFromMenu(); 
         }
 
-        private void InitialStepsForSelectProducts()
-        {
-            Precondition_perform_login();
-            selectProductsForPurchasing_PO.WaitForBeingVisible(By.XPath("//button[contains(., 'Logout')]"));
 
-            selectProductsForPurchasing_PO.WaitForBeingVisible(By.Id("menuSelectProducts"));
-            _driver.FindElement(By.Id("menuSelectProducts")).Click();
+        private void Helper_AddProductAndProceed(string productName)
+        {
+            selectProducts_PO.SearchProducts(productName, "");
+            selectProducts_PO.AddProductToCart(productName); 
+            selectProducts_PO.ClickPurchaseProducts();       
         }
 
-        [Fact(DisplayName = "UC2_1 - SelectProducts No Filtering")]
-        [Trait("LevelTesting", "Funcional Testing")]
-        public void UC2_1_SelectProducts_No_Filtering_Test()
+
+        //Main flow
+        
+        [Fact(DisplayName = "Main Flow - Successful Purchase")]
+        [Trait("LevelTesting", "Functional Testing")]
+        public void MainFlow_SuccessfulPurchase()
         {
-            InitialStepsForSelectProducts();
 
-            selectProductsForPurchasing_PO.SearchProducts("", "");
-
-            var expectedProducts = new List<string[]>
-            {
-                
-                new string[] { "Shirt", "Uniqlo", "Blue", "2", "Albacete", "Add" },
-                new string[] { "Jacket", "Zara", "Red", "4", "Albacete", "Add" }
-              
-            };
-
-            bool areEqual = selectProductsForPurchasing_PO.CheckProductsList(expectedProducts);
-
-            Assert.True(areEqual, "La tabla no contiene los productos del SeedData");
-        }
-
-        [Theory(DisplayName = "UC2_2 - SelectProducts Filtering")]
-        [InlineData("Jacket", "Red")]
-        [Trait("LevelTesting", "Funcional Testing")]
-        public void UC2_2_SelectProducts_Filtering_Test(string name, string colour)
-        {
-            InitialStepsForSelectProducts();
-
-            selectProductsForPurchasing_PO.SearchProducts(name, colour);
-
-            var expectedProducts = new List<string[]>
-            {
-                new string[] { "Jacket", "Zara", "Red", "4", "Albacete", "Add" }
-            };
-
-            bool areEqual = selectProductsForPurchasing_PO.CheckProductsList(expectedProducts);
-            Assert.True(areEqual, $"El filtrado por {name} y {colour} falló.");
-        }
-
-        [Fact(DisplayName = "UC2_3 - Add Product To Cart")]
-        [Trait("LevelTesting", "Funcional Testing")]
-        public void UC2_3_Add_Product_To_Cart()
-        {
-            InitialStepsForSelectProducts();
+            Precondition_LoginAndNavigate();
 
             string productName = "Jacket";
-            selectProductsForPurchasing_PO.SearchProducts(productName, "");
+            Helper_AddProductAndProceed(productName);
 
-            selectProductsForPurchasing_PO.AddProductToCart(productName);
+            
+            Assert.True(createPurchase_PO.IsOnCreatePurchasePage(), "Should be on Create Purchase page");
 
-            Assert.True(true);
+            createPurchase_PO.FillPurchaseForm("Pepe", "Perez", "Calle Real, 1", "Albacete", "02001");
+            createPurchase_PO.SelectFirstAvailablePaymentMethod();
+            createPurchase_PO.Submit();
+            Assert.True(purchaseDetail_PO.WaitUntilOnPage(), "Should navigate to Details page");
+
+            Assert.True(purchaseDetail_PO.CheckCustomerAndAddress("Pepe Perez", "Calle Real, 1", "Albacete", "02001"),
+                "Customer data or address incorrect in details");
+            Assert.True(purchaseDetail_PO.HasPurchasedProduct(productName),
+                "Purchased product missing in details");
+        }
+
+
+        //AF0
+        [Fact(DisplayName = "Alternative Flow 0 - No products warning")]
+        [Trait("LevelTesting", "Functional Testing")]
+        public void AF0_NoProductsToPurchase()
+        {
+            Precondition_LoginAndNavigate();
+            selectProducts_PO.SearchProducts("NonExistentProductXYZ", "");
+            Assert.True(selectProducts_PO.IsNoProductsResultShown(),
+                "System should warn the user when no products are found");
+        }
+
+
+        //AF1
+        [Theory(DisplayName = "Alternative Flow 1 - Filtering Products")]
+        [InlineData("Jacket", "Red")]
+        [Trait("LevelTesting", "Functional Testing")]
+        public void AF1_FilteringProducts(string name, string colour)
+        {
+            Precondition_LoginAndNavigate();
+            selectProducts_PO.SearchProducts(name, colour);
+
+            var expectedProducts = new List<string[]>
+            {
+                new string[] { "Jacket", "Zara", "Red", "4", "Albacete", "Add" }
+            };
+            Assert.True(selectProducts_PO.CheckProductsList(expectedProducts),
+                "Filtering did not return expected products");
+        }
+
+        [Fact(DisplayName = "Alternative Flow 1 - Filtering No Results")]
+        public void AF1_Filtering_NoResults()
+        {
+            Precondition_LoginAndNavigate();
+            selectProducts_PO.SearchProducts("NonExistent", "Pink");
+            Assert.True(selectProducts_PO.IsNoProductsResultShown(),
+                "Should show empty table or message");
+        }
+
+        //AF3
+
+        [Fact(DisplayName = "Alternative Flow 3 - Empty Cart Button Disabled/Hidden")]
+        [Trait("LevelTesting", "Functional Testing")]
+        public void AF3_EmptyCart_PurchaseUnavailable()
+        {
+            Precondition_LoginAndNavigate();
+            Assert.False(selectProducts_PO.IsPurchaseButtonEnabled(),
+                "Purchase button should be disabled when cart is empty");
+        }
+
+        //AF5
+
+        [Theory(DisplayName = "Alternative Flow 5 - Validation Errors")]
+        [InlineData("", "Perez", "Street 1", "City", "00000", "The NameCustomer field is required.")]
+        [InlineData("Pepe", "", "Street 1", "City", "00000", "The SurnameCustomer field is required.")]
+        [Trait("LevelTesting", "Functional Testing")]
+        public void AF5_ValidationErrors(string name, string surname, string street, string city, string zip, string expectedError)
+        {
+            Precondition_LoginAndNavigate();
+            Helper_AddProductAndProceed("Jacket");
+            createPurchase_PO.FillPurchaseForm(name, surname, street, city, zip);
+            createPurchase_PO.Submit();
+
+            Assert.True(createPurchase_PO.IsOnCreatePurchasePage(), "Should stay on page");
+            Assert.True(createPurchase_PO.HasValidationError(expectedError),
+                $"Expected error message '{expectedError}' was not found in the page source.");
         }
     }
 }
