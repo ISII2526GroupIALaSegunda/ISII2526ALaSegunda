@@ -127,5 +127,35 @@ namespace AppForSEII2526.UIT.UC_Purchase
             WaitForBeingVisible(totalPrice);
             return true;
         }
+
+        // New helpers used by tests
+        public void OpenFromMenu()
+        {
+            WaitForBeingVisible(By.Id("menuSelectProducts"));
+            _driver.FindElement(By.Id("menuSelectProducts")).Click();
+        }
+
+        public bool IsNoProductsResultShown()
+        {
+            WaitForBeingVisible(By.Id("productsTable"));
+            // if tbody has a row that contains "No products" or single cell with that text
+            var table = _driver.FindElement(productsTable);
+            var bodyText = table.FindElement(By.TagName("tbody")).Text;
+            return bodyText.Contains("No products") || bodyText.Contains("No products");
+        }
+
+        public bool IsPurchaseButtonEnabled()
+        {
+            try
+            {
+                WaitForBeingVisible(btnPurchase);
+                var btn = _driver.FindElement(btnPurchase);
+                return btn.Enabled && btn.Displayed;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }
