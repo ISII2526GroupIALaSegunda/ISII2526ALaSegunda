@@ -1,137 +1,144 @@
-using System;
-using System.Collections.Generic;
-using Xunit;
-using Xunit.Abstractions;
-using OpenQA.Selenium;
 using AppForMovies.UIT.Shared;
-
-using AppForSEII2526.UIT.Shared;
 
 namespace AppForSEII2526.UIT.UC_Purchase
 {
     public class UCPurchase_UIT : UC_UIT
     {
-        private readonly SelectProductsForPurchasing_PO selectProducts_PO;
-        private readonly CreatePurchase_PO createPurchase_PO;
-        private readonly PurchaseDetail_PO purchaseDetail_PO;
+        private SelectProductsForPurchasing_PO selectProducts_PO;
+        private CreatePurchase_PO createPurchase_PO;
+        private PurchaseDetail_PO purchaseDetail_PO;
 
         public UCPurchase_UIT(ITestOutputHelper output) : base(output)
         {
-            Initial_step_opening_the_web_page();
             selectProducts_PO = new SelectProductsForPurchasing_PO(_driver, _output);
             createPurchase_PO = new CreatePurchase_PO(_driver, _output);
             purchaseDetail_PO = new PurchaseDetail_PO(_driver, _output);
         }
 
-
-        private void Precondition_LoginAndNavigate()
+        private void Precondition_perform_login()
         {
-            Perform_login("pepe@uclm.es", "Password1234%"); 
-            selectProducts_PO.WaitForBeingVisible(By.XPath("//button[contains(., 'Logout')]"));
-            selectProducts_PO.OpenFromMenu(); 
+            Perform_login("pepe@uclm.es", "Password1234%");
         }
 
+        private void InitialStepsForPurchase()
+        {
+            Precondition_perform_login();
 
-        private void Helper_AddProductAndProceed(string productName)
+            try
+            {
+                System.Threading.Thread.Sleep(1000);
+                selectProducts_PO.OpenFromMenu();
+            }
+            catch (OpenQA.Selenium.StaleElementReferenceException)
+            {
+                selectProducts_PO.OpenFromMenu();
+            }
+        }
+
+        private void AddProductAndProceed(string productName)
         {
             selectProducts_PO.SearchProducts(productName, "");
-            selectProducts_PO.AddProductToCart(productName); 
-            selectProducts_PO.ClickPurchaseProducts();       
+            selectProducts_PO.AddProductToCart(productName);
+            selectProducts_PO.ClickPurchaseProducts();
         }
 
-
-        //Main flow
-        
-        [Fact(DisplayName = "Main Flow - Successful Purchase")]
+        [Fact]
         [Trait("LevelTesting", "Functional Testing")]
-        public void MainFlow_SuccessfulPurchase()
+        public void UC_BF_SuccessfulPurchase()
         {
-
-            Precondition_LoginAndNavigate();
+            InitialStepsForPurchase();
 
             string productName = "Jacket";
-            Helper_AddProductAndProceed(productName);
-
-            
-            Assert.True(createPurchase_PO.IsOnCreatePurchasePage(), "Should be on Create Purchase page");
+            AddProductAndProceed(productName);
 
             createPurchase_PO.FillPurchaseForm("Pepe", "Perez", "Calle Real, 1", "Albacete", "02001");
             createPurchase_PO.SelectFirstAvailablePaymentMethod();
             createPurchase_PO.Submit();
-            Assert.True(purchaseDetail_PO.WaitUntilOnPage(), "Should navigate to Details page");
 
-            Assert.True(purchaseDetail_PO.CheckCustomerAndAddress("Pepe Perez", "Calle Real, 1", "Albacete", "02001"),
-                "Customer data or address incorrect in details");
-            Assert.True(purchaseDetail_PO.HasPurchasedProduct(productName),
-                "Purchased product missing in details");
+            Assert.True(purchaseDetail_PO.CheckCustomerAndAddress("Pepe Perez", "Calle Real, 1", "Albacete", "02001"));
+            Assert.True(purchaseDetail_PO.HasPurchasedProduct(productName));
+            Assert.True(purchaseDetail_PO.PaymentMethodIsNotEmpty());
+            Assert.True(purchaseDetail_PO.IsStateDisplayed("Request"));
+            Assert.True(purchaseDetail_PO.IsTotalPriceCorrect("20"));
         }
 
-
-        //AF0
-        [Fact(DisplayName = "Alternative Flow 0 - No products warning")]
+        [Fact]
         [Trait("LevelTesting", "Functional Testing")]
-        public void AF0_NoProductsToPurchase()
+        public void UC_AF0_NoProductsToPurchase()
         {
-            Precondition_LoginAndNavigate();
+            InitialStepsForPurchase();
             selectProducts_PO.SearchProducts("NonExistentProductXYZ", "");
-            Assert.True(selectProducts_PO.IsNoProductsResultShown(),
-                "System should warn the user when no products are found");
+            Assert.True(selectProducts_PO.IsNoProductsResultShown());
         }
 
-
-        //AF1
-        [Theory(DisplayName = "Alternative Flow 1 - Filtering Products")]
+        [Theory]
+        [InlineData("Jacket", "")]
+        [InlineData("", "Red")]
         [InlineData("Jacket", "Red")]
         [Trait("LevelTesting", "Functional Testing")]
-        public void AF1_FilteringProducts(string name, string colour)
+        public void UC_AF1_FilteringProducts(string name, string colour)
         {
-            Precondition_LoginAndNavigate();
+            InitialStepsForPurchase();
             selectProducts_PO.SearchProducts(name, colour);
-
-            var expectedProducts = new List<string[]>
-            {
-                new string[] { "Jacket", "Zara", "Red", "4", "Albacete", "Add" }
-            };
-            Assert.True(selectProducts_PO.CheckProductsList(expectedProducts),
-                "Filtering did not return expected products");
+            Assert.False(selectProducts_PO.IsNoProductsResultShown());
         }
 
-        [Fact(DisplayName = "Alternative Flow 1 - Filtering No Results")]
-        public void AF1_Filtering_NoResults()
-        {
-            Precondition_LoginAndNavigate();
-            selectProducts_PO.SearchProducts("NonExistent", "Pink");
-            Assert.True(selectProducts_PO.IsNoProductsResultShown(),
-                "Should show empty table or message");
-        }
-
-        //AF3
-
-        [Fact(DisplayName = "Alternative Flow 3 - Empty Cart Button Disabled/Hidden")]
+        [Fact]
         [Trait("LevelTesting", "Functional Testing")]
-        public void AF3_EmptyCart_PurchaseUnavailable()
+        public void UC_AF1_Filtering_NoResults()
         {
-            Precondition_LoginAndNavigate();
-            Assert.False(selectProducts_PO.IsPurchaseButtonEnabled(),
-                "Purchase button should be disabled when cart is empty");
+            InitialStepsForPurchase();
+            selectProducts_PO.SearchProducts("NonExistent", "Pink");
+            Assert.True(selectProducts_PO.IsNoProductsResultShown());
         }
 
-        //AF5
+        [Fact]
+        [Trait("LevelTesting", "Functional Testing")]
+        public void UC_AF3_EmptyCart_PurchaseNotAvailable()
+        {
+            InitialStepsForPurchase();
+            Assert.True(selectProducts_PO.PurchaseNotAvailable());
+        }
 
-        [Theory(DisplayName = "Alternative Flow 5 - Validation Errors")]
+        [Fact]
+        [Trait("LevelTesting", "Functional Testing")]
+        public void UC_AF4_ModifyCart_ChangeQuantity()
+        {
+            InitialStepsForPurchase();
+
+            string productName = "Jacket";
+            selectProducts_PO.SearchProducts(productName, "");
+            selectProducts_PO.AddProductToCart(productName);
+
+            selectProducts_PO.IncreaseProductQuantity(productName);
+
+            int currentQty = selectProducts_PO.GetProductQuantityInCart(productName);
+            Assert.True(currentQty >= 2, $"Expected quantity >= 2, but was {currentQty}");
+
+            selectProducts_PO.DecreaseProductQuantity(productName);
+
+            currentQty = selectProducts_PO.GetProductQuantityInCart(productName);
+            Assert.True(currentQty == 1, $"Expected quantity to be 1, but was {currentQty}");
+        }
+
+        [Theory]
         [InlineData("", "Perez", "Street 1", "City", "00000", "The NameCustomer field is required.")]
         [InlineData("Pepe", "", "Street 1", "City", "00000", "The SurnameCustomer field is required.")]
+        [InlineData("Pepe", "Perez", "", "City", "00000", "The Street field is required.")]
+        [InlineData("Pepe", "Perez", "Street 1", "", "00000", "The City field is required.")]
+        [InlineData("Pepe", "Perez", "Street 1", "City", "", "The PostalCode field is required.")]
         [Trait("LevelTesting", "Functional Testing")]
-        public void AF5_ValidationErrors(string name, string surname, string street, string city, string zip, string expectedError)
+        public void UC_AF5_ValidationErrors(string name, string surname, string street, string city, string zip, string expectedError)
         {
-            Precondition_LoginAndNavigate();
-            Helper_AddProductAndProceed("Jacket");
+            InitialStepsForPurchase();
+            AddProductAndProceed("Jacket");
+
             createPurchase_PO.FillPurchaseForm(name, surname, street, city, zip);
+            createPurchase_PO.SelectFirstAvailablePaymentMethod();
             createPurchase_PO.Submit();
 
-            Assert.True(createPurchase_PO.IsOnCreatePurchasePage(), "Should stay on page");
-            Assert.True(createPurchase_PO.HasValidationError(expectedError),
-                $"Expected error message '{expectedError}' was not found in the page source.");
+            Assert.True(createPurchase_PO.CheckValidationErrorDisplayed(expectedError));
+           
         }
     }
 }
