@@ -15,9 +15,23 @@ namespace AppForSEII2526.UIT.UC_PurchaseDelivery
         public bool CheckDeliveryAssignmentDetail(string id, string deliveryDriverName, string personalMessage,
             string deliveryAssignmentDone, string extraReward)
         {
-            WaitForBeingVisible(By.Id("ExtraReward"));
+            WaitForBeingVisible(By.Id("ID"));
             bool result = true;
             result = result && _driver.FindElement(By.Id("ID")).Text.Contains(id);
+            result = result && _driver.FindElement(By.Id("DeliveyDriverName")).Text.Contains(deliveryDriverName);
+            result = result && _driver.FindElement(By.Id("PersonalMessage")).Text.Contains(personalMessage);
+            result = result && _driver.FindElement(By.Id("DeliveryAssignmentDone")).Text.Contains(deliveryAssignmentDone);
+            result = result && _driver.FindElement(By.Id("ExtraReward")).Text.Contains(extraReward);
+
+            return result;
+
+        }
+
+        public bool CheckDeliveryAssignmentDetailWithoutID(string deliveryDriverName, string personalMessage,
+            string deliveryAssignmentDone, string extraReward)
+        {
+            WaitForBeingVisible(By.Id("ID"));
+            bool result = true;
             result = result && _driver.FindElement(By.Id("DeliveyDriverName")).Text.Contains(deliveryDriverName);
             result = result && _driver.FindElement(By.Id("PersonalMessage")).Text.Contains(personalMessage);
             result = result && _driver.FindElement(By.Id("DeliveryAssignmentDone")).Text.Contains(deliveryAssignmentDone);

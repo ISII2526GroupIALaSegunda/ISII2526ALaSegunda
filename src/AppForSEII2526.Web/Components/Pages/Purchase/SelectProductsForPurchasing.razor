@@ -10,25 +10,25 @@
 
 <div class="row g-3 mb-3">
     <div class="col-md-3">
-        <input class="form-control" placeholder="Name" @bind-value="name" />
+        <input id="inputName" class="form-control" placeholder="Name" @bind-value="name" />
     </div>
     <div class="col-md-3">
-        <input class="form-control" placeholder="Colour" @bind-value="colour" />
+        <input id="inputColour" class="form-control" placeholder="Colour" @bind-value="colour" />
     </div>
     <div class="col-md-3">
-        <button class="btn btn-primary" @onclick="Search">Search products</button>
+        <button id="btnSearch" class="btn btn-primary" @onclick="Search">Search products</button>
     </div>
 </div>
 
 @if (!string.IsNullOrWhiteSpace(errors))
 {
-    <div class="alert alert-warning">@errors</div>
+    <div id="errorBox" class="alert alert-warning">@errors</div>
 }
 
 <div class="row">
     <div class="col-md-8">
         <div class="table-responsive">
-            <table class="table table-striped">
+            <table id="productsTable" class="table table-striped">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -59,7 +59,7 @@
                                 <td>@p.Stock</td>
                                 <td>@p.City</td>
                                 <td>
-                                    <button class="btn btn-sm btn-success" @onclick="(() => AddToCart(p))">Add</button>
+                                    <button id="btnAdd_@p.Name" class="btn btn-sm btn-success" @onclick="(() => AddToCart(p))">Add</button>
                                 </td>
                             </tr>
                         }
@@ -90,7 +90,7 @@
                         </div>
                     }
                     <div class="mt-2">Total: @purchaseState.TotalPriceClient</div>
-                    <button class="btn btn-primary mt-3" @onclick="GoToCreate">Purchase products</button>
+                    <button id="btnPurchase" class="btn btn-primary mt-3" @onclick="GoToCreate">Purchase products</button>
                 </div>
             </div>
         }

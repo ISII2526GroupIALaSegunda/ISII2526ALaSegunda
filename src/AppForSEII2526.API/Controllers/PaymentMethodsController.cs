@@ -1,9 +1,9 @@
 using AppForSEII2526.API.Data;
 using AppForSEII2526.API.DTOs.PaymentDTOs;
 using AppForSEII2526.API.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,25 +12,31 @@ namespace AppForSEII2526.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    
     public class PaymentMethodsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;      
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public PaymentMethodsController(ApplicationDbContext context)
+        public PaymentMethodsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         [HttpGet]
         [Route("[action]")]
         public async Task<ActionResult<List<PaymentMethodDTO>>> GetMyPaymentMethods()
         {
-            string userName = User.Identity.Name;
+            //Fix errors
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == "pepe@uclm.es");
+
+            if (user == null)
+            {
+                return NotFound("The user not exist in the db");
+            }
 
             var methods = await _context.PaymentMethods
-                .Include(pm => pm.User)
-                .Where(pm => pm.User.UserName == userName)
+                .Where(pm => pm.User.Id == user.Id)
                 .Select(pm => new PaymentMethodDTO
                 {
                     Id = pm.Id,
