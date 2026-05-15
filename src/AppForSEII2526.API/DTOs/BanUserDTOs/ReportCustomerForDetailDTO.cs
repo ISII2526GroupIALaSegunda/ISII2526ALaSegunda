@@ -2,12 +2,12 @@
 {
     public class ReportCustomerForDetailDTO
     {
-        public ReportCustomerForDetailDTO(string customerId, string name, string surname, string? personalMessage)
+        public ReportCustomerForDetailDTO(string customerId, string name, string surname, string? Message)
         {
             CustomerId = customerId;
             Name = name;
             Surname = surname;
-            PersonalMessage = personalMessage;
+            Message = Message;
         }
 
         public string CustomerId { get; set; }
@@ -19,7 +19,7 @@
         public string Surname { get; set; }
 
         [StringLength(250, ErrorMessage = "Personal message cannot be longer than 250 characters.")]
-        public string? PersonalMessage { get; set; }
+        public string? Message { get; set; }
 
         public override bool Equals(object? obj)
         {
@@ -27,7 +27,7 @@
                    CustomerId == dto.CustomerId &&
                    Name == dto.Name &&
                    Surname == dto.Surname &&
-                   PersonalMessage == dto.PersonalMessage;
+                   Message == dto.Message;
         }
     }
 }

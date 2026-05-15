@@ -86,7 +86,7 @@ namespace AppForSEII2526.UT.BanReportsController_test
                 Message = "Your account has been banned.",
                 BanReport = banReport,
              //   User = user1,
-                ApplicationCustomer = user1
+                Customer = user1
             };
 
             banReport.ReportCustomers.Add(reportCustomer);
@@ -160,7 +160,7 @@ namespace AppForSEII2526.UT.BanReportsController_test
                 Assert.Equal(expected.ReportedUsers[0].CustomerId, actual.ReportedUsers[0].CustomerId);
                 Assert.Equal(expected.ReportedUsers[0].Name, actual.ReportedUsers[0].Name);
                 Assert.Equal(expected.ReportedUsers[0].Surname, actual.ReportedUsers[0].Surname);
-                Assert.Equal(expected.ReportedUsers[0].PersonalMessage, actual.ReportedUsers[0].PersonalMessage);
+                Assert.Equal(expected.ReportedUsers[0].Message, actual.ReportedUsers[0].Message);
             }
         }
     }

@@ -4,6 +4,6 @@
     {
         public string CustomerId { get; set; }
         public string Message { get; set; }
-        public int State { get; set; }
+        public string State { get; set; }
     }
 }
