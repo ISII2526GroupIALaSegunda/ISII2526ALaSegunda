@@ -17,25 +17,31 @@ namespace AppForSEII2526.UT.BanReportController_test
     {
         public CreateBanReport_test()
         {
-
             var user1 = new ApplicationUser
             {
                 Id = "1",
+                UserName = "pepe@test.com",
+                Email = "pepe@test.com",
                 Name = "Pepe",
                 Surname = "Test",
-                UserName = "pepe@test.com",
-                Email = "pepe@test.com"
+                Address = "Fake Street 123",
+                AccountCreationDate = DateTime.UtcNow,
+                Complaints = new List<Complaint>(),
+                ReturnOrders = new List<ReturnPurchaseOrder>()
             };
 
             var user2 = new ApplicationUser
             {
                 Id = "2",
+                UserName = "ana@test.com",
+                Email = "ana@test.com",
                 Name = "Ana",
                 Surname = "Test",
-                UserName = "ana@test.com",
-                Email = "ana@test.com"
+                Address = "Fake Street 456",
+                AccountCreationDate = DateTime.UtcNow,
+                Complaints = new List<Complaint>(),
+                ReturnOrders = new List<ReturnPurchaseOrder>()
             };
-
 
             _context.Users.AddRange(user1, user2);
 
@@ -50,6 +56,7 @@ namespace AppForSEII2526.UT.BanReportController_test
 
             _context.SaveChanges();
         }
+
 
         [Fact(DisplayName = "UC_BF – CreateBanReport Success")]
         [Trait("UseCase", "UC_BF")]
