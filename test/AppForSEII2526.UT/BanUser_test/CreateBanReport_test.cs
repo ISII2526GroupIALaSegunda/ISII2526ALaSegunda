@@ -27,7 +27,8 @@ namespace AppForSEII2526.UT.BanReportController_test
                 Address = "Fake Street 123",
                 AccountCreationDate = DateTime.UtcNow,
                 Complaints = new List<Complaint>(),
-                ReturnOrders = new List<ReturnPurchaseOrder>()
+                ReturnOrders = new List<ReturnPurchaseOrder>(),
+                ReportCustomers = new List<ReportCustomer>()
             };
 
             var user2 = new ApplicationUser
@@ -40,7 +41,8 @@ namespace AppForSEII2526.UT.BanReportController_test
                 Address = "Fake Street 456",
                 AccountCreationDate = DateTime.UtcNow,
                 Complaints = new List<Complaint>(),
-                ReturnOrders = new List<ReturnPurchaseOrder>()
+                ReturnOrders = new List<ReturnPurchaseOrder>(),
+                ReportCustomers = new List<ReportCustomer>()
             };
 
             _context.Users.AddRange(user1, user2);
@@ -56,6 +58,7 @@ namespace AppForSEII2526.UT.BanReportController_test
 
             _context.SaveChanges();
         }
+
 
 
         [Fact(DisplayName = "UC_BF – CreateBanReport Success")]
