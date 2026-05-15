@@ -100,18 +100,25 @@ namespace AppForSEII2526.API.Controllers
                 ReportCustomers = new List<ReportCustomer>()
             };
 
-            
-            foreach (var customer in dto.Customers)
+
+            foreach (var dtoCustomer in dto.Customers)
             {
+                var customerEntity = await _context.Users.FindAsync(dtoCustomer.CustomerId);
+
+                if (customerEntity == null)
+                    return BadRequest($"Customer {dtoCustomer.CustomerId} does not exist.");
+
                 banReport.ReportCustomers.Add(new ReportCustomer
                 {
-                    CustomerId = customer.CustomerId,
-                    Message = customer.Message,
+                    CustomerId = dtoCustomer.CustomerId,
+                    Customer = customerEntity,   
+                    Message = dtoCustomer.Message,
                     State = ReportState.InProgress
                 });
             }
 
-           
+
+
             var complaintsToProcess = await _context.Complaints
                 .Where(c => customerIds.Contains(c.User.Id) && !c.Processed)
                 .ToListAsync();
