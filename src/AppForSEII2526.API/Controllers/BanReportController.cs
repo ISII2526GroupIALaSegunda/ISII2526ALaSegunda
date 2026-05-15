@@ -124,12 +124,20 @@ namespace AppForSEII2526.API.Controllers
                 .ToListAsync();
 
 
-            foreach (var complaint in complaintsToProcess) {
+            _context.BanReports.Add(banReport);
+            await _context.SaveChangesAsync();
+
+            
+            foreach (var complaint in complaintsToProcess)
+            {
                 complaint.Processed = true;
                 complaint.BanReportId = banReport.ID;
             }
-               
-            
+
+           
+            await _context.SaveChangesAsync();
+
+
 
             _context.BanReports.Add(banReport);
             await _context.SaveChangesAsync();
