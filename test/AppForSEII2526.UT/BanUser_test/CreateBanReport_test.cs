@@ -17,9 +17,25 @@ namespace AppForSEII2526.UT.BanReportController_test
     {
         public CreateBanReport_test()
         {
-            
-            var user1 = new ApplicationUser { Id = "1", Name = "Pepe" };
-            var user2 = new ApplicationUser { Id = "2", Name = "Ana" };
+
+            var user1 = new ApplicationUser
+            {
+                Id = "1",
+                Name = "Pepe",
+                Surname = "Test",
+                UserName = "pepe@test.com",
+                Email = "pepe@test.com"
+            };
+
+            var user2 = new ApplicationUser
+            {
+                Id = "2",
+                Name = "Ana",
+                Surname = "Test",
+                UserName = "ana@test.com",
+                Email = "ana@test.com"
+            };
+
 
             _context.Users.AddRange(user1, user2);
 
