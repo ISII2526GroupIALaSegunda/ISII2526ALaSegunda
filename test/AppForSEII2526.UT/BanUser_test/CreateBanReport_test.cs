@@ -47,17 +47,28 @@ namespace AppForSEII2526.UT.BanReportController_test
 
             _context.Users.AddRange(user1, user2);
 
+           
+            var type = new ComplaintType
+            {
+                ID = 1,
+                Name = "General"
+            };
+            _context.ComplaintTypes.Add(type);
+
+            
             _context.Complaints.Add(new Complaint
             {
                 ID = 10,
                 User = user1,
                 Processed = false,
                 Description = "Toxic behavior",
-                ComplaintDate = DateTime.UtcNow
+                ComplaintDate = DateTime.UtcNow,
+                Type = type
             });
 
             _context.SaveChanges();
         }
+
 
 
 
