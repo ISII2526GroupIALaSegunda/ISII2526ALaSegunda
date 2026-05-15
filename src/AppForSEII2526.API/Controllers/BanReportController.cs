@@ -137,11 +137,6 @@ namespace AppForSEII2526.API.Controllers
            
             await _context.SaveChangesAsync();
 
-
-
-            _context.BanReports.Add(banReport);
-            await _context.SaveChangesAsync();
-
             
             var result = new BanReportDTO
             {
