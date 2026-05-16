@@ -85,7 +85,6 @@ namespace AppForSEII2526.UT.BanReportsController_test
                 State = ReportState.InProgress,
                 Message = "Your account has been banned.",
                 BanReport = banReport,
-             //   User = user1,
                 Customer = user1
             };
 
@@ -118,8 +117,8 @@ namespace AppForSEII2526.UT.BanReportsController_test
 
             return new List<object[]>
             {
-                new object[] { 1, expected },   // BF: Report exists
-                new object[] { 999, null }      // AF1: Report not found
+                new object[] { 1, expected },   
+                new object[] { 999, null }      
             };
         }
 
@@ -130,22 +129,20 @@ namespace AppForSEII2526.UT.BanReportsController_test
         [MemberData(nameof(TestCasesFor_GetBanReport))]
         public async Task UC_BF_AF1_GetBanReport_Test(int reportId, BanDetailDTO expected)
         {
-            // Arrange
+            
             var mockLogger = new Mock<ILogger<BanController>>();
             var controller = new BanController(_context, mockLogger.Object);
 
-            // Act
             var result = await controller.GetBanReport(reportId);
 
-            // Assert
             if (expected == null)
             {
-                // AF1: Report not found
+                
                 Assert.IsType<NotFoundResult>(result);
             }
             else
             {
-                // BF: Report exists
+              
                 var ok = Assert.IsType<OkObjectResult>(result);
                 var actual = Assert.IsType<BanDetailDTO>(ok.Value);
 
