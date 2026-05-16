@@ -20,9 +20,12 @@ SET IDENTITY_INSERT [dbo].[Brands] OFF;
 
 SET IDENTITY_INSERT [dbo].[Products] ON;
 INSERT INTO [dbo].[Products] ([ProductId],[Name],[Description],[Colour],[Price],[Stock],[IsReturnable],[BrandId])
-VALUES (1,N'Jacket',NULL,N'Red', 20.00,4,1,1),
-       (2,N'Shirt', NULL,N'Blue',10.00,2,0,2);
+VALUES (1,N'Jacket',NULL,N'Red', 20.00,100,1,1),
+       (2,N'Shirt', NULL,N'Blue',10.00,100,0,2);
 SET IDENTITY_INSERT [dbo].[Products] OFF;
+
+UPDATE [dbo].[Products] SET [Stock] = 100 WHERE [ProductId] = 1;
+UPDATE [dbo].[Products] SET [Stock] = 100 WHERE [ProductId] = 2;
 
 -- 5) Pedido (hijo de AspNetUsers y PaymentMethods)
 SET IDENTITY_INSERT [dbo].[PurchaseOrders] ON;

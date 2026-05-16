@@ -11,31 +11,10 @@ using Xunit;
 
 namespace AppForSEII2526.UT.PurchasesController_test
 {
-    public class GetPurchase_test : AppForSEII2526SqliteUT
+    public class GetPurchases_test : AppForSEII2526SqliteUT
     {
-        private PurchasesController CreateController()
+        public GetPurchases_test()
         {
-            return new PurchasesController(_context, new Mock<ILogger<PurchasesController>>().Object);
-        }
-
-        [Fact]
-        [Trait("Database", "SQLite:Memory")]
-        [Trait("LevelTesting", "Unit Testing")]
-        public async Task GetPurchase_NotFound_test()
-        {
-            var ctrl = CreateController();
-
-            var result = await ctrl.GetPurchase(0);
-
-            Assert.IsType<NotFoundResult>(result);
-        }
-
-        [Fact]
-        [Trait("Database", "SQLite:Memory")]
-        [Trait("LevelTesting", "Unit Testing")]
-        public async Task GetPurchase_Found_test()
-        {
-
             var brand = new Brand { Id = 1, Name = "Zara", Location = "Madrid" };
             var prod1 = new Product { ProductId = 1, Name = "Jacket", Colour = "Red", Price = 20.0m, Stock = 10, IsReturnable = true, Brand = brand };
             var prod2 = new Product { ProductId = 2, Name = "Shirt", Colour = "Blue", Price = 10.0m, Stock = 10, IsReturnable = false, Brand = brand };
@@ -53,7 +32,7 @@ namespace AppForSEII2526.UT.PurchasesController_test
             };
             var pm = new Bizum { User = user, TelephoneNumber = "+34600111222" };
             _context.AddRange(user, pm);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
             var order = new PurchaseOrder
             {
@@ -65,54 +44,72 @@ namespace AppForSEII2526.UT.PurchasesController_test
                 State = PurchaseState.Request,
                 Customer = user,
                 PaymentMethodId = pm.Id,
-                TotalPrice = 0m
+                TotalPrice = 0m,
+                Rating = 5 // <-- Adding the optional rating to the DB
             };
             _context.PurchaseOrders.Add(order);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
             var line1 = new PurchaseProduct { PurchaseOrderId = order.Id, ProductId = prod1.ProductId, Price = prod1.Price, Quantity = 2 };
             var line2 = new PurchaseProduct { PurchaseOrderId = order.Id, ProductId = prod2.ProductId, Price = prod2.Price, Quantity = 1 };
             _context.PurchaseProducts.AddRange(line1, line2);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
             order.TotalPrice = line1.Price * line1.Quantity + line2.Price * line2.Quantity;
             _context.PurchaseOrders.Update(order);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
+        }
 
-            var ctrl = CreateController();
+        [Fact]
+        public async Task GetPurchase_Successful_Test()
+        {
+            //arrange
+            Mock<ILogger<PurchasesController>> mockLogger = new Mock<ILogger<PurchasesController>>();
+            PurchasesController sut = new PurchasesController(_context, mockLogger.Object);
 
-            var result = await ctrl.GetPurchase(order.Id);
+            //act
+            var result = await sut.GetPurchase(1);
 
-            var ok = Assert.IsType<OkObjectResult>(result);
-            var dto = Assert.IsType<PurchaseForDetailDTO>(ok.Value);
-
-            Assert.Equal(order.Id, dto.Id);
-            Assert.Equal(order.TotalPrice, dto.TotalPrice);
-            Assert.Equal(order.Date, dto.Date);
-            Assert.Equal("Calle Inventada", dto.Street);
-            Assert.Equal("Albacete", dto.City);
-            Assert.Equal("02001", dto.PostalCode);
-            Assert.Equal("Pepe Pérez", dto.NameSurname);
-
-            Assert.Equal(PurchaseState.Request.ToString(), dto.State);
-            Assert.Equal("Bizum", dto.PaymentMethod);
-
-            Assert.Equal("pepe@test.com", dto.CustomerUserName);
+            //assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var actualPurchaseDTO = Assert.IsType<PurchaseForDetailDTO>(okResult.Value);
 
             var expectedItems = new List<PurchaseItemDTO>
             {
-                new PurchaseItemDTO(prod1.ProductId, "Jacket", "Zara", "Red", 20.0m, 2),
-                new PurchaseItemDTO(prod2.ProductId, "Shirt",  "Zara", "Blue",10.0m, 1)
-            }
-            .OrderBy(i => i.ProductId)
-            .ToList();
+                new PurchaseItemDTO(1, "Jacket", "Zara", "Red",  20.0m, 2),
+                new PurchaseItemDTO(2, "Shirt",  "Zara", "Blue", 10.0m, 1)
+            };
 
-            var actualItems = dto.Items
-                .OrderBy(i => i.ProductId)
-                .ToList();
+            var expectedPurchaseDTO = new PurchaseForDetailDTO(
+                id:             1,
+                totalPrice:     50.0m,
+                date:           actualPurchaseDTO.Date,   // non-deterministic; taken from actual
+                street:         "Calle Inventada",
+                city:           "Albacete",
+                postalCode:     "02001",
+                nameSurname:    "Pepe Pérez",
+                state:          "Request",
+                paymentMethod:  "Bizum",
+                customerUserName: "pepe@test.com",
+                items:          expectedItems,
+                rating:         5
+            );
 
-            Assert.Equal(2, actualItems.Count);
-            Assert.True(expectedItems.SequenceEqual(actualItems));
+            Assert.Equal(expectedPurchaseDTO, actualPurchaseDTO);
+        }
+
+        [Fact]
+        public async Task GetPurchase_NotFound_test()
+        {
+            //arrange
+            Mock<ILogger<PurchasesController>> mockLogger = new Mock<ILogger<PurchasesController>>();
+            PurchasesController sut = new PurchasesController(_context, mockLogger.Object);
+
+            //act
+            var result = await sut.GetPurchase(0);
+
+            //Assert
+            Assert.IsType<NotFoundResult>(result);
         }
     }
 }

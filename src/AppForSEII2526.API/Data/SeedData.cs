@@ -86,7 +86,7 @@ public static class SeedData
                 Description = null,
                 Colour = "Red",
                 Price = 20.00m,
-                Stock = 4,
+                Stock = 100,
                 IsReturnable = true,
                 Brand = brandZara
             };
@@ -104,7 +104,7 @@ public static class SeedData
                 Description = null,
                 Colour = "Blue",
                 Price = 10.00m,
-                Stock = 2,
+                Stock = 100,
                 IsReturnable = false,
                 Brand = brandUniqlo
             };
