@@ -91,7 +91,7 @@ namespace AppForSEII2526.API.Controllers
             if (string.IsNullOrWhiteSpace(returnForCreate.Reason))
                 ModelState.AddModelError("Reason", "Error! Reason is mandatory.");
 
-            if (returnForCreate.PaymentMethod <= 0)
+            if (returnForCreate.PaymentMethodId <= 0)
                 ModelState.AddModelError("PaymentMethodId", "Error! Payment method is mandatory.");
 
             if (returnForCreate.ReturnItems == null || returnForCreate.ReturnItems.Count == 0)
@@ -115,7 +115,7 @@ namespace AppForSEII2526.API.Controllers
             // --- Cargamos el PaymentMethod por Id ---
 
             var paymentMethod = await _context.PaymentMethods
-                .FirstOrDefaultAsync(pm => pm.Id == returnForCreate.PaymentMethod);
+                .FirstOrDefaultAsync(pm => pm.Id == returnForCreate.PaymentMethodId);
 
             if (paymentMethod == null)
             {
@@ -245,8 +245,9 @@ namespace AppForSEII2526.API.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(DateTime.Now + ":" + ex.Message);
-                return Conflict("Error " + ex.Message);
+                _logger.LogError(ex, "Error while saving return");
+
+                return Conflict("Error: " + (ex.InnerException?.Message ?? ex.Message));
             }
 
 

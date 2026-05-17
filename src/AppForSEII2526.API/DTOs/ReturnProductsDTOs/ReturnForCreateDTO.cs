@@ -6,14 +6,14 @@
             int purchaseOrderId,
             string userNameCustomer,
             string reason,
-            int paymentMethod,
+            int paymentMethodId,
             int? rating,
             List<ReturnItemForCreateDTO> returnItems)
         {
             PurchaseOrderId = purchaseOrderId;
             UserNameCustomer = userNameCustomer;
             Reason = reason;
-            PaymentMethod = paymentMethod;
+            PaymentMethodId = paymentMethodId;
             Rating = rating;
             ReturnItems = returnItems;
         }
@@ -22,7 +22,7 @@
         public string UserNameCustomer { get; set; }  
 
         public string Reason { get; set; }            
-        public int PaymentMethod { get; set; }     
+        public int PaymentMethodId { get; set; }     
         public int? Rating { get; set; }              
 
         public List<ReturnItemForCreateDTO> ReturnItems { get; set; }
