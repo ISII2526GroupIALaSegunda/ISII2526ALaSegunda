@@ -1,13 +1,15 @@
 ﻿using AppForSEII2526.API.DTOs.BanUserDTOs;
 using AppForSEII2526.API.Models;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 
 namespace AppForSEII2526.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    
     public class BanController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -35,7 +37,7 @@ namespace AppForSEII2526.API.Controllers
             var banReport = await _context.BanReports
                 .Where(r => r.ID == id) 
                 .Include(r => r.ReportCustomers)
-                    .ThenInclude(rc => rc.ApplicationCustomer)
+                    .ThenInclude(rc => rc.Customer)
                 .Select(r => new BanDetailDTO(
 
                     r.ID,
@@ -43,11 +45,11 @@ namespace AppForSEII2526.API.Controllers
                     r.DetailedDescription,
                     r.StartDate,
                     r.EndDate,
-                    "In progress",
+                    r.State == ReportState.InProgress ? "In progress" : "Completed",
                     r.ReportCustomers.Select(rc => new ReportCustomerForDetailDTO(
                             rc.CustomerId,
-                            rc.ApplicationCustomer.Name,
-                            rc.ApplicationCustomer.Surname,
+                            rc.Customer.Name,
+                            rc.Customer.Surname,
                             rc.Message
                         )).ToList()
                 ))
@@ -62,9 +64,5 @@ namespace AppForSEII2526.API.Controllers
 
 
         }
-
-
-
-
     }
 }

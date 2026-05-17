@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using AppForSEII2526.API.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using AppForSEII2526.API.Models;
+using System.Reflection.Emit;
 
 namespace AppForSEII2526.API.Data;
 
@@ -44,6 +45,13 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .HasForeignKey(po => po.PaymentMethodId)
             .OnDelete(DeleteBehavior.NoAction);
 
+            builder.Entity<Complaint>()
+            .HasOne(c => c.BanReport)
+            .WithMany(br => br.Complaints)
+            .HasForeignKey(c => c.BanReportId)
+             .OnDelete(DeleteBehavior.SetNull);
+
+
         builder.Entity<ReportCustomer>(entity =>
 
         {  
@@ -55,8 +63,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 .OnDelete(DeleteBehavior.NoAction);
             
 
-            entity.HasOne(rc => rc.ApplicationCustomer)
-                .WithMany()
+            entity.HasOne(rc => rc.Customer)
+                .WithMany(u => u.ReportCustomers)
                 .HasForeignKey(rc => rc.CustomerId)
                 .OnDelete(DeleteBehavior.NoAction);
 
