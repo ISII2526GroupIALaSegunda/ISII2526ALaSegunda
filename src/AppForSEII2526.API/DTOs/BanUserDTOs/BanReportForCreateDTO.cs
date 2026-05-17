@@ -57,6 +57,11 @@ namespace AppForSEII2526.API.DTOs.BanUserDTOs
                    EndDate == dto.EndDate &&
                    Customers.SequenceEqual(dto.Customers);
         }
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
 
 
     }

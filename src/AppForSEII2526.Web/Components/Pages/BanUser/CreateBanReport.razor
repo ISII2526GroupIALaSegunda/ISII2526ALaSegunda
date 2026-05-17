@@ -98,15 +98,15 @@
             Customers = Users.Select(u => new ReportCustomerForCreateDTO { CustomerId = u }).ToList()
         };
 
-        try
-        {
-            var created = await api.CreateBanReportAsync(dto);
-            SuccessMessage = "Ban report created successfully";
-            nav.NavigateTo($"/banuser/bandetails/{created}");
-        }
-        catch (ApiException ex)
-        {
-            ErrorMessage = ex.Message;
-        }
+        // try
+        // {
+        //     var created = await api.CreateBanReportAsync(dto);
+        //     SuccessMessage = "Ban report created successfully";
+        //     nav.NavigateTo($"/banuser/bandetails/{created}");
+        // }
+        // catch (ApiException ex)
+        // {
+        //     ErrorMessage = ex.Message;
+        // }
     }
 }

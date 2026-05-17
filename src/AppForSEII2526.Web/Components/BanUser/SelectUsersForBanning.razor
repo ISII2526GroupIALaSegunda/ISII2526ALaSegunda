@@ -167,35 +167,38 @@
         State.AddCustomer(user);
     }
 
-    private void RemoveFromBan(ReportCustomerForCreateDTO user)
+    private void RemoveFromBan(AppForSEII2526.API.DTOs.BanUserDTOs.ReportCustomerForCreateDTO user)
     {
         State.RemoveCustomer(user);
     }
 
 
-    private async Task BanUsers()
+    // private async Task BanUsers()
+    // {
+    //     try
+    //     {
+    //         await apiClient.CreateBanReportAsync(new AppForSEII2526.API.DTOs.BanUserDTOs.BanReportForCreateDTO
+    //         {
+    //             Reason = "Multiple complaints",
+    //             DetailedDescription = "This user has multiple complaints against them.",
+    //             StartDate = DateTime.Now,
+    //             EndDate = DateTime.Now.AddMonths(1),
+    //             Customers = State.BanReport.Users.Select(u => new ReportCustomerForCreateDTO { CustomerId = u.CustomerId }).ToList()
+    //         });
+
+
+    //         State.Clear();
+
+    //         navigation.NavigateTo("/"); // vuelve al home
+    //     }
+    //     catch (ApiException ex)
+    //     {
+    //         logger.LogError($"Error banning users: {ex}");
+    //         errors = "Error banning users.";
+    //     }
+    // }
+    private void BanUsers(MouseEventArgs args)
     {
-        try
-        {
-            await apiClient.CreateBanReportAsync(new BanReportForCreateDTO
-            {
-                Reason = "Multiple complaints",
-                DetailedDescription = "This user has multiple complaints against them.",
-                StartDate = DateTime.Now,
-                EndDate = DateTime.Now.AddMonths(1),
-                Customers = State.BanReport.Users.Select(u => new ReportCustomerForCreateDTO { CustomerId = u.CustomerId }).ToList()
-            });
-
-
-            State.Clear();
-
-            navigation.NavigateTo("/"); // vuelve al home
-        }
-        catch (ApiException ex)
-        {
-            logger.LogError($"Error banning users: {ex}");
-            errors = "Error banning users.";
-        }
+        throw new NotImplementedException();
     }
-
 }
