@@ -2,6 +2,8 @@
 {
     public class ReportCustomerForCreateDTO
     {
+        public ReportCustomerForCreateDTO() { }
+
         public ReportCustomerForCreateDTO(string customerId, string? message)
         {
             CustomerId = customerId;

@@ -3,6 +3,12 @@ namespace AppForSEII2526.API.DTOs.BanUserDTOs
 {
     public class BanReportForCreateDTO
     {
+
+        public BanReportForCreateDTO()
+        {
+            Customers = new List<ReportCustomerForCreateDTO>();
+        }
+
         public BanReportForCreateDTO(string reason,
                                     string detailedDescription,
                                     DateTime startDate,
@@ -34,6 +40,12 @@ namespace AppForSEII2526.API.DTOs.BanUserDTOs
         [Required(ErrorMessage = "At least one user must be included.")]
         [MinLength(1, ErrorMessage = "At least one user must be included.")]
         public IList<ReportCustomerForCreateDTO> Customers { get; set; }
+
+        public IList<ReportCustomerForCreateDTO> Users
+        {
+            get => Customers;
+            set => Customers = value;
+        }
 
 
         public override bool Equals(object? obj)
