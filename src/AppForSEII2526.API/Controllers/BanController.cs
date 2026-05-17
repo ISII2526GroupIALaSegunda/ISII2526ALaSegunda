@@ -64,5 +64,36 @@ namespace AppForSEII2526.API.Controllers
 
 
         }
+
+        [HttpPost]
+        [Route("CreateBanReport")]
+        [ProducesResponseType(typeof(BanDetailDTO), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> CreateBanReport([FromBody] BanReportForCreateDTO dto)
+        {
+            if (dto == null)
+                return BadRequest("Invalid ban report");
+
+            var banReport = new BanReport
+            {
+                Reason = dto.Reason,
+                DetailedDescription = dto.DetailedDescription,
+                StartDate = dto.StartDate,
+                EndDate = dto.EndDate,
+                State = ReportState.InProgress,
+                ReportCustomers = dto.Customers.Select(c => new ReportCustomer
+                {
+                    CustomerId = c.CustomerId,
+
+                    Message = c.Message
+                }).ToList()
+            };
+
+            _context.BanReports.Add(banReport);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetBanReport), new { id = banReport.ID }, banReport.ID);
+        }
+
     }
 }

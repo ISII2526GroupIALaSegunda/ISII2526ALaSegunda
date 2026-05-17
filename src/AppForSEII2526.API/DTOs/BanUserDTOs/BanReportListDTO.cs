@@ -9,5 +9,11 @@
         public DateTime EndDate { get; set; }
         public string State { get; set; }
         public List<ReportCustomerDTO> Customers { get; set; }
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
     }
+
 }

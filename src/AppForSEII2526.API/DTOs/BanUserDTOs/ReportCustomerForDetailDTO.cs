@@ -29,5 +29,9 @@
                    Surname == dto.Surname &&
                    Message == dto.Message;
         }
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }

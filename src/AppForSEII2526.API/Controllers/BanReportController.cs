@@ -19,7 +19,7 @@ namespace AppForSEII2526.API.Controllers
             _context = context;
         }
 
-        [HttpPost]
+        [HttpPost("CreateBanReport")]
         public async Task<IActionResult> CreateBanReport([FromBody] BanReportForCreateDTO dto)
         {
             if (!ModelState.IsValid)

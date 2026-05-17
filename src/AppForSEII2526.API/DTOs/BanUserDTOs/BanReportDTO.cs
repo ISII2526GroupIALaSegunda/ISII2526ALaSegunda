@@ -11,6 +11,11 @@
         public List<ReportCustomerDTO> Customers { get; set; }
 
         public string State { get; set; }
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
 
     }
 }

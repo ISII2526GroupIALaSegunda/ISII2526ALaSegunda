@@ -2,6 +2,8 @@
 {
     public class ReportCustomerForCreateDTO
     {
+        public ReportCustomerForCreateDTO() { }
+
         public ReportCustomerForCreateDTO(string customerId, string? message)
         {
             CustomerId = customerId;
@@ -19,6 +21,10 @@
             return obj is ReportCustomerForCreateDTO dto &&
                    CustomerId == dto.CustomerId &&
                    Message == dto.Message;
+        }
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
 
 

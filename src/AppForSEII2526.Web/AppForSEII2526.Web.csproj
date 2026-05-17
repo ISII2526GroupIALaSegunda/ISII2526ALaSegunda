@@ -37,4 +37,9 @@
     <Folder Include="API\" />
   </ItemGroup>
 
+	<ItemGroup>
+		<ProjectReference Include="..\AppForSEII2526.API\AppForSEII2526.API.csproj" />
+	</ItemGroup>
+
+
 </Project>
